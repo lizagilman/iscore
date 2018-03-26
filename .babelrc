@@ -1,0 +1,7 @@
+/* 
+    ./.babelrc
+*/  
+
+{
+   "presets": ["react", "stage-0"]
+}
