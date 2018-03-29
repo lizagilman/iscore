@@ -26,7 +26,12 @@ module.exports = {
       			{
         			presets: ["es2015", "es2016", "stage-0", "react"]
       			}
-	     }
+	     },
+            {
+                test: /\.css$/,
+                use: [ 'style-loader', 'css-loader' ]
+            },
+            { test: /\.(jpe|jpg|woff|woff2|eot|ttf|svg|png|gif)(\?.*$|$)/, loader: 'file-loader' }
         ],
     }
 }
