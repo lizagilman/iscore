@@ -3,10 +3,8 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-# Create your models here.
 
 class Catagories(models.Model):
-
     name = models.CharField(db_index=True, max_length=300)
 
     def __str__(self):
@@ -16,8 +14,7 @@ class Players(models.Model):
     name = models.CharField(db_index=True, max_length=300)
     age=models.IntegerField()
     gender=models.CharField(max_length=1)
-    nationality = models.CharField(max_length=300)
-
+    nationality = models.CharField(max_length=50)
     def __str__(self):
         return self.name
 
@@ -36,12 +33,12 @@ class Points_Distribution_Methods(models.Model):
         return self.name
 
 class Grades(models.Model):
-        name = models.CharField(db_index=True, max_length=300)
-        points = models.ForeignKey(Points_Distribution_Methods, on_delete=models.CASCADE)
-        money = models.ForeignKey(Money_Distribution_Methods, on_delete=models.CASCADE)
+    name = models.CharField(db_index=True, max_length=300)
+    points = models.ForeignKey(Points_Distribution_Methods, on_delete=models.CASCADE)
+    money = models.ForeignKey(Money_Distribution_Methods, on_delete=models.CASCADE)
 
-        def __str__(self):
-            return self.name
+    def __str__(self):
+        return self.name
 
 class Ranking_Lists(models.Model):
     name = models.CharField(db_index=True, max_length=300)
@@ -86,7 +83,6 @@ class Tournaments(models.Model):
         return self.name
 
 class Matches(models.Model):
-
     match_num=models.IntegerField(db_index=True,default=1)
     set_num = models.IntegerField()
     game_num = models.IntegerField()
@@ -99,7 +95,6 @@ class Matches(models.Model):
         return 'match id : %d , set id: %d , game id:%d'(self.match_id,self.set_id,self.game_id)
 
 class Draws(models.Model):
-
     tournament=models.ForeignKey(Tournaments,on_delete=models.DO_NOTHING)
     match=models.ManyToManyField(Matches)
     player1 = models.ForeignKey(Players, on_delete=models.DO_NOTHING,related_name='%(class)s_player1')
@@ -110,3 +105,14 @@ class Draws(models.Model):
     court=models.CharField(max_length=300)
     time=models.DateField()
     system_of_play=models.CharField(max_length=300)
+
+class Tournament_Managers(models.Model):
+    name=models.CharField(db_index=True,max_length=300)
+    tournaments=models.ManyToManyField(Tournaments)
+    def __str__(self):
+        return self.name
+
+class Coach(models.Model):
+    name = models.CharField(db_index=True, max_length=300)
+    player_list =models.ForeignKey(Players,on_delete=models.DO_NOTHING)
+
