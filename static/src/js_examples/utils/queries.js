@@ -1,1 +1,0 @@
-export const getAllWorkers = "select FirstName, LastName, EMail from tblWorkers where active=1";

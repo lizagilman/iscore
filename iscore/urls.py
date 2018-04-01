@@ -18,6 +18,6 @@ from django.contrib import admin
 from django.conf.urls import include, url
 
 urlpatterns = [
-    url('iscore_app/', include('iscore_app.urls')),
+    url('', include('iscore_app.urls')),
     url('admin/', admin.site.urls),
 ]

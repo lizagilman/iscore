@@ -238,6 +238,11 @@ node_modules
 jspm_packages
 npm-debug.log
 
+#other - examples and playground
+static/src/index_example.js
+static/src/js_examples
+static/src/js/components/test
+
 #webpack
 static/bundles
 webpack-stats.json
