@@ -1,8 +1,8 @@
 {
   parser: "babel-eslint",
   "rules": {
-    "prop-types": [2]
+    //"prop-types": [2]
   },
-  
+
   "extends": ["airbnb-base", "eslint:recommended", "plugin:react/recommended"]
 }
