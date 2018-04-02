@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'webpack_loader',
     'iscore_app',
+    'rest_framework',
+    'django_filters',
 ]
 
 WEBPACK_LOADER = {
