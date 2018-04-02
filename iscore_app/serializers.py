@@ -6,6 +6,7 @@ class CatagoriesSerializer(serializers.HyperlinkedModelSerializer):
         model= Catagories
         fields=['id','name']
 
+
 class PlayersSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model= Players
