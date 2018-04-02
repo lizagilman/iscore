@@ -3,5 +3,6 @@
   "rules": {
     "prop-types": [2]
   },
-  "extends": ["airbnb-base"]
+  
+  "extends": ["airbnb-base", "eslint:recommended", "plugin:react/recommended"]
 }
