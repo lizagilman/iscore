@@ -1,13 +1,17 @@
 {% load render_bundle from webpack_loader %}
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>React with Django </title>
-</head>
 
-<body style="background-color: #e0e0e0">
-<div id="react-app"></div>
-{% render_bundle 'main' %}
-</body>
+<!DOCTYPE html>
+    <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>iScore</title>
+
+        {% include 'stylesheets.html' %}
+        </head>
+
+    <body>
+        <div id="react-app"></div>
+
+        {% render_bundle 'main' %}
+    </body>
 </html>
