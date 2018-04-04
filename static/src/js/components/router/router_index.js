@@ -1,17 +1,22 @@
-import React from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import Home from '../home/home_index';
+import React from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import Tournament from "../tournament/tournament_index";
+import Header from "../header/header_index";
+import Tournaments from "../tournaments/tournaments_index";
 
-const AppRouter = () => (
-  <Router>
-    <div>
-      <Route path="/" component={Home} />
-      {/*
-            <Route path="/some-url" component={component1} />
-            <Route path="/url-with-param/:param" component={component2} />
-            */}
-    </div>
-  </Router>
-);
+class AppRouter extends React.Component {
+  render() {
+    return (
+      <Router>
+        <div>
+          <Header />
+          <Route exact path="/" component={Tournaments} />
+          <Route path="/tournaments" component={Tournaments} />
+          <Route path="/tournament/:id" component={Tournament} />
+        </div>
+      </Router>
+    );
+  }
+}
 
 export default AppRouter;

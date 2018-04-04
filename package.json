@@ -34,6 +34,7 @@
     "webpack-cli": "^2.0.13"
   },
   "dependencies": {
+    "bootstrap": "^4.0.0",
     "es6-promise": "^4.2.4",
     "history": "^4.7.2",
     "immutable": "^3.8.2",
@@ -41,10 +42,12 @@
     "material-ui": "^0.20.0",
     "mobx": "^4.1.0",
     "mobx-react": "^5.0.0",
+    "prop-types": "^15.6.1",
     "react": "^16.2.0",
     "react-dom": "^16.3.0",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "requests": "^0.2.2"
+    "requests": "^0.2.2",
+    "style-loader": "^0.20.3"
   }
 }
