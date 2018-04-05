@@ -11,7 +11,7 @@ export default class DatePickerExampleControlled extends React.Component {
     super(props);
 
     this.state = {
-      controlledDate: null,
+      controlledDate: "15/07/1857",
     };
   }
 
@@ -24,7 +24,7 @@ export default class DatePickerExampleControlled extends React.Component {
   render() {
     return (
       <DatePicker
-        hintText="Controlled Date Input"
+        hintText={this.props.hintText}
         value={this.state.controlledDate}
         onChange={this.handleChange}
       />

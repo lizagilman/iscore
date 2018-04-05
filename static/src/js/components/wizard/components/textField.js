@@ -8,7 +8,7 @@ export default class TextFieldExampleControlled extends React.Component {
     super(props);
 
     this.state = {
-      value: 'Property Value',
+      value: '',
     };
   }
 
@@ -26,6 +26,7 @@ export default class TextFieldExampleControlled extends React.Component {
           value={this.state.value}
           onChange={this.handleChange}
 
+          floatingLabelText={this.props.floatingLabelText}
         />
 
       </div>

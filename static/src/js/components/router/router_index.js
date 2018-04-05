@@ -6,7 +6,7 @@ import Wizard from "../wizard/wizard";
 const AppRouter = () => (
   <Router>
     <div>
-      <Route path="/" component={Home} />
+      <Route path="/" component= {Wizard}/>
       <Route exact path="/wizard" component={Wizard} />
       {/*
             <Route path="/some-url" component={component1} />
