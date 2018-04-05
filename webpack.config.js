@@ -36,11 +36,11 @@ module.exports = {
         test: /\.(jpe|jpg|woff|woff2|eot|ttf|svg|png|gif)(\?.*$|$)/,
         loader: "file-loader"
       },
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: ['eslint-loader']
-      }
+      // {
+      //   test: /\.js$/,
+      //   exclude: /node_modules/,
+      //   use: ['eslint-loader']
+      // }
     ]
   }
 };

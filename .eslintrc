@@ -1,8 +1,10 @@
 {
-  parser: "babel-eslint",
+  "parser": "babel-eslint",
   "rules": {
     //"prop-types": [2]
   },
-
+  "env": {
+    "browser": true
+  },
   "extends": ["airbnb-base", "eslint:recommended", "plugin:react/recommended"]
 }

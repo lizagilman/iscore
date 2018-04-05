@@ -26,7 +26,8 @@ export default class DatePickerExampleControlled extends React.Component {
       <DatePicker
         hintText={this.props.hintText}
         value={this.state.controlledDate}
-        onChange={this.handleChange}
+        //onChange={this.handleChange}
+        onChange={props.changed}
       />
     );
   }

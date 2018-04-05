@@ -24,8 +24,8 @@ export default class TextFieldExampleControlled extends React.Component {
         <TextField
           id="text-field-controlled"
           value={this.state.value}
-          onChange={this.handleChange}
-
+          //onChange={this.handleChange}
+          onChange={props.changed}
           floatingLabelText={this.props.floatingLabelText}
         />
 

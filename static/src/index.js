@@ -5,9 +5,9 @@ import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme";
 import getMuiTheme from "material-ui/styles/getMuiTheme";
 import { teal500, grey300 } from "material-ui/styles/colors";
 import AppRouter from "./js/components/router/router_index";
-import { Provider } from 'react-redux'
-import { createStore, combineReducers } from 'redux'
-import { reducer as formReducer } from 'redux-form'
+// import { Provider } from 'react-redux'
+// import { createStore, combineReducers } from 'redux'
+// import { reducer as formReducer } from 'redux-form'
 
 //const rootReducer = combineReducers({
   // ...your other reducers here
