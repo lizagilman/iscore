@@ -1,33 +1,31 @@
-import React, {Component} from 'react';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-
+import React, { Component } from "react";
+import SelectField from "material-ui/SelectField";
+import MenuItem from "material-ui/MenuItem";
 
 /**
  * The rendering of selected items can be customized by providing a `selectionRenderer`.
  */
 export default class SelectFieldExampleSelectionRenderer extends Component {
-
   state = {
     values: [],
-     persons: this.props.persons,
+    persons: this.props.persons
   };
 
-  handleChange = (event, index, values) => this.setState({values});
+  handleChange = (event, index, values) => this.setState({ values });
 
-  selectionRenderer = (values) => {
+  selectionRenderer = values => {
     switch (values.length) {
       case 0:
-        return '';
+        return "";
       case 1:
         return this.state.persons[values[0]].name;
       default:
         return `${values.length} names selected`;
     }
-  }
+  };
 
   menuItems(persons) {
-    return persons.map((person) => (
+    return persons.map(person => (
       <MenuItem
         key={person.value}
         insetChildren={true}

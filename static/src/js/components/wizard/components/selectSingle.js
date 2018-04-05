@@ -1,7 +1,5 @@
-import React, {Component} from 'react';
-import SelectField from 'material-ui/SelectField';
-import MenuItem from 'material-ui/MenuItem';
-
+import React, { Component } from "react";
+import SelectField from "material-ui/SelectField";
 
 
 /**
@@ -12,10 +10,10 @@ import MenuItem from 'material-ui/MenuItem';
 export default class SelectFieldExampleFloatingLabel extends Component {
   state = {
     value: null,
-      items:this.props.items
+    items: this.props.items
   };
 
-  handleChange = (event, index, value) => this.setState({value});
+  handleChange = (event, index, value) => this.setState({ value });
 
   render() {
     return (
@@ -27,7 +25,6 @@ export default class SelectFieldExampleFloatingLabel extends Component {
         >
           {this.state.items}
         </SelectField>
-
       </div>
     );
   }
