@@ -1,17 +1,18 @@
 {% load render_bundle from webpack_loader %}
 
 <!DOCTYPE html>
-    <html>
-        <head>
-            <meta charset="UTF-8">
-            <title>iScore</title>
+<html>
+<head>
+    {% include 'javascripts.html' %}
+    <meta charset="UTF-8">
+    <title>iScore</title>
 
-        {% include 'stylesheets.html' %}
-        </head>
+    {% include 'stylesheets.html' %}
+</head>
 
-    <body>
-        <div id="react-app"></div>
+<body>
+<div id="react-app"></div>
 
-        {% render_bundle 'main' %}
-    </body>
+{% render_bundle 'main' %}
+</body>
 </html>
