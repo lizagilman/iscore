@@ -1,8 +1,42 @@
 {
-  parser: "babel-eslint",
-  "rules": {
-    //"prop-types": [2]
+  "root": true,
+  "extends": "airbnb-base",
+  "plugins": [
+    "react"
+  ],
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true
   },
-
-  "extends": ["airbnb-base", "eslint:recommended", "plugin:react/recommended"]
+  "globals": {
+    "document": false,
+    "escape": false,
+    "navigator": false,
+    "unescape": false,
+    "window": false,
+    "$": true,
+  },
+  "parser": "babel-eslint",
+  "rules": {
+    "react/jsx-uses-vars": "error",
+    "react/jsx-uses-react": "error",
+    "no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "args": "none"
+      }
+    ],
+    "no-underscore-dangle": "off",
+    "no-use-before-define": "off",
+    "import/prefer-default-export": "off",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        // Allow importing devDependencies like @storybook
+        "devDependencies": true
+      }
+    ]
+  }
 }

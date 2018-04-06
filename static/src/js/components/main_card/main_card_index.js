@@ -1,19 +1,14 @@
-import React from "react";
+import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, CardTitle, CardText } from "material-ui/Card";
+import { Card, CardTitle, CardText } from 'material-ui/Card';
+
 
 class MainCard extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <div style={this.props.style}>
-        <Card style={{ backgroundColor: "#ffffff" }}>
-          <CardTitle
-            title={this.props.title}
-          />
+        <Card style={{ backgroundColor: '#ffffff' }}>
+          <CardTitle title={this.props.title} />
           <CardText>
             {this.props.content}
             <br />
