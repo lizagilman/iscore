@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   Table,
   TableBody,
@@ -9,10 +9,40 @@ import {
 } from 'material-ui/Table';
 import ModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import DeleteForever from 'material-ui/svg-icons/action/delete-forever';
+import { inject, observer } from 'mobx-react';
+import { Link } from 'react-router-dom';
 
-export default class TournamentsTable extends Component {
-  // eslint-disable-next-line
+@inject('stores')
+@observer
+export default class TournamentsTable extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      tournamentsData: [],
+    };
+  }
+
+  componentWillMount() {
+    this.setState({
+      tournamentsData: this.props.stores.TournamentsStore.allTournaments.toJS(),
+    });
+  }
+
   render() {
+    const createRow = (item, index) => (
+        <TableRow key={index}>
+          <TableRowColumn>{item.tournament_name}</TableRowColumn>
+          <TableRowColumn>{item.status}</TableRowColumn>
+          <TableRowColumn>{item.dates}</TableRowColumn>
+          <TableRowColumn>{item.isPublished ? 'yes' : 'no'}</TableRowColumn>
+          <TableRowColumn>
+            <ModeEdit />
+            <DeleteForever />
+          </TableRowColumn>
+        </TableRow>
+    );
+
     return (
       <Table style={{ backgroundColor: '#ffffff' }}>
         <TableHeader displaySelectAll={false}>
@@ -25,37 +55,10 @@ export default class TournamentsTable extends Component {
           </TableRow>
         </TableHeader>
         <TableBody displayRowCheckbox={false}>
-          <TableRow>
-            <TableRowColumn>Shenkar Open 2018</TableRowColumn>
-            <TableRowColumn>created</TableRowColumn>
-            <TableRowColumn>15-20 Apr 2018</TableRowColumn>
-            <TableRowColumn>no</TableRowColumn>
-            <TableRowColumn>
-              <ModeEdit />
-              <DeleteForever />
-            </TableRowColumn>
-          </TableRow>
-          <TableRow>
-            <TableRowColumn>Shenkar Open 2018</TableRowColumn>
-            <TableRowColumn>created</TableRowColumn>
-            <TableRowColumn>15-20 Apr 2018</TableRowColumn>
-            <TableRowColumn>no</TableRowColumn>
-            <TableRowColumn>actions</TableRowColumn>
-          </TableRow>
-          <TableRow>
-            <TableRowColumn>Shenkar Open 2018</TableRowColumn>
-            <TableRowColumn>created</TableRowColumn>
-            <TableRowColumn>15-20 Apr 2018</TableRowColumn>
-            <TableRowColumn>no</TableRowColumn>
-            <TableRowColumn>actions</TableRowColumn>
-          </TableRow>
-          <TableRow>
-            <TableRowColumn>Shenkar Open 2018</TableRowColumn>
-            <TableRowColumn>created</TableRowColumn>
-            <TableRowColumn>15-20 Apr 2018</TableRowColumn>
-            <TableRowColumn>no</TableRowColumn>
-            <TableRowColumn>actions</TableRowColumn>
-          </TableRow>
+          {this.state.tournamentsData
+            ? this.state.tournamentsData.map((tournament, index) =>
+                createRow(tournament, index))
+            : 'Loading...'}
         </TableBody>
       </Table>
     );

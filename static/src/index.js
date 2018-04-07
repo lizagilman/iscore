@@ -6,6 +6,8 @@ import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import { teal500, grey300 } from 'material-ui/styles/colors';
 import AppRouter from './js/components/router/router_index';
+import { Provider } from 'mobx-react';
+import * as Stores from "./js/stores";
 
 const themeOverrides = {
   palette: {
@@ -22,7 +24,9 @@ class App extends React.Component {
         <MuiThemeProvider
           muiTheme={getMuiTheme({ ...lightBaseTheme, ...themeOverrides })}
         >
-          <AppRouter />
+          <Provider stores={Stores}>
+            <AppRouter />
+          </Provider>
         </MuiThemeProvider>
       </div>
     );
