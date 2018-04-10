@@ -9,6 +9,8 @@ from .models import Catagories, Players, Money_Distribution_Methods, Points_Dist
 from .serializers import CatagoriesSerializer, PlayersSerializer, MoneyDistributionMethodsSerializer, PointsDistributionMethodsSerializer, GradesSerializer, RankingListsSerializer, RankingslistcatagoriesSerializer, OrganizationsSerializer, TournamentsSerializer, MatchesSerializer, DrawsSerializer, TournamentManagersSerializer, CoachSerializer, GradesReaderSerializer, TournamentManagersReaderSerializer
 
 
+
+
 class IndexView(TemplateView):
     template_name = 'index.html'
 
@@ -61,7 +63,6 @@ class GradesViewSet(viewsets.ModelViewSet):
     search_fields = [
         'name',
     ]
-
 
 class GradesReaderViewSet(viewsets.ModelViewSet):
 
@@ -136,7 +137,6 @@ class TournamentManagersViewSet(viewsets.ModelViewSet):
     serializer_class = TournamentManagersSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ['name', 'tournaments__name']
-
 
 class TournamentManagersReaderViewSet(viewsets.ModelViewSet):
 

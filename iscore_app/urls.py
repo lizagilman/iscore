@@ -10,8 +10,7 @@ router.register(r'MoneyDistributionMethods',
                 views.MoneyDistributionMethodsViewSet)
 router.register(r'PointsDistributionMethods',
                 views.PointsDistributionMethodsViewSet)
-router.register(
-    r'ModifyGrades', views.GradesViewSet, base_name='Modify grades')
+router.register(r'ModifyGrades', views.GradesViewSet,base_name='Modify grades')
 router.register(r'Grades', views.GradesReaderViewSet)
 router.register(r'RankingLists', views.RankingListsViewSet)
 router.register(r'Rankingslistcatagories', views.RankingslistcatagoriesViewSet)
@@ -27,7 +26,6 @@ router.register(
 router.register(r'Coachs', views.CoachsViewSet)
 urlpatterns = [
     url(r'^api', include(router.urls)),
-    url(r'^', include(router.urls)),
     url(r'^api-auth/',
         include('rest_framework.urls', namespace='rest_framework')),
     url(r'', IndexView.as_view(), name='index'),
