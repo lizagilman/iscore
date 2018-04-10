@@ -31,3 +31,4 @@ class PlayersViewSet(viewsets.ModelViewSet):
     serializer_class = PlayersSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ['name', 'age', 'nationality', 'gender']
+
