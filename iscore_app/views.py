@@ -35,6 +35,7 @@ class PlayersViewSet(viewsets.ModelViewSet):
     search_fields = ['name', 'age', 'nationality', 'gender']
 
 
+
 class MoneyDistributionMethodsViewSet(viewsets.ModelViewSet):
 
     queryset = Money_Distribution_Methods.objects.all()
@@ -175,3 +176,4 @@ class EntriesViewSet(viewsets.ModelViewSet):
     queryset = Entries.objects.all()
     serializer_class = EntriesSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
+
