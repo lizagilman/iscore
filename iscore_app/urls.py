@@ -10,7 +10,8 @@ router.register(r'MoneyDistributionMethods',
                 views.MoneyDistributionMethodsViewSet)
 router.register(r'PointsDistributionMethods',
                 views.PointsDistributionMethodsViewSet)
-router.register(r'ModifyGrades', views.GradesViewSet,base_name='Modify grades')
+router.register(
+    r'ModifyGrades', views.GradesViewSet, base_name='Modify grades')
 router.register(r'Grades', views.GradesReaderViewSet)
 router.register(r'RankingLists', views.RankingListsViewSet)
 router.register(r'Rankingslistcatagories', views.RankingslistcatagoriesViewSet)
@@ -18,7 +19,11 @@ router.register(r'Organizations', views.OrganizationsViewSet)
 router.register(r'Tournaments', views.TournamentsViewSet)
 router.register(r'Matches', views.MatchesViewSet)
 router.register(r'Draws', views.DrawsViewSet)
-router.register(r'TournamentManagers', views.TournamentManagersViewSet)
+router.register(r'TournamentManagers', views.TournamentManagersReaderViewSet)
+router.register(
+    r'ModifyTournamentManagers',
+    views.TournamentManagersViewSet,
+    base_name='Modify Tournament Managers')
 router.register(r'Coachs', views.CoachsViewSet)
 urlpatterns = [
     url(r'^api', include(router.urls)),

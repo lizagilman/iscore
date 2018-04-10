@@ -2,7 +2,6 @@ from iscore_app.models import Catagories, Players, Money_Distribution_Methods, P
 from rest_framework import serializers
 
 
-
 class CatagoriesSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Catagories
@@ -14,34 +13,37 @@ class PlayersSerializer(serializers.HyperlinkedModelSerializer):
         model = Players
         fields = ('name', 'age', 'gender', 'nationality')
 
+
 class MoneyDistributionMethodsSerializer(
         serializers.HyperlinkedModelSerializer):
 
-    distribution=serializers.ListField(child=serializers.IntegerField())
+    distribution = serializers.ListField(child=serializers.IntegerField())
+
     class Meta:
         model = Money_Distribution_Methods
         fields = ('name', 'distribution')
 
+
 class PointsDistributionMethodsSerializer(
         serializers.HyperlinkedModelSerializer):
     distribution = serializers.ListField(child=serializers.IntegerField())
+
     class Meta:
         model = Points_Distribution_Methods
         fields = ('name', 'distribution')
 
 
 class GradesSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Grades
         fields = ('name', 'points', 'money')
+
 
 class GradesReaderSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Grades
         fields = ('name', 'points', 'money')
-        depth=1
+        depth = 1
 
 
 class RankingListsSerializer(serializers.ModelSerializer):
@@ -87,6 +89,14 @@ class DrawsSerializer(serializers.ModelSerializer):
 class TournamentManagersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tournament_Managers
+        fields = '__all__'
+
+
+class TournamentManagersReaderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tournament_Managers
+        fields = '__all__'
+        depth = 1
 
 
 class CoachSerializer(serializers.ModelSerializer):

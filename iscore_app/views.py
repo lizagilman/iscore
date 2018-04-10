@@ -6,7 +6,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 
 from .models import Catagories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, Rankings_list_catagories, Organizations, Tournaments, Matches, Draws, Tournament_Managers, Coach
-from .serializers import CatagoriesSerializer, PlayersSerializer, MoneyDistributionMethodsSerializer, PointsDistributionMethodsSerializer, GradesSerializer, RankingListsSerializer, RankingslistcatagoriesSerializer, OrganizationsSerializer, TournamentsSerializer, MatchesSerializer, DrawsSerializer, TournamentManagersSerializer, CoachSerializer,GradesReaderSerializer
+from .serializers import CatagoriesSerializer, PlayersSerializer, MoneyDistributionMethodsSerializer, PointsDistributionMethodsSerializer, GradesSerializer, RankingListsSerializer, RankingslistcatagoriesSerializer, OrganizationsSerializer, TournamentsSerializer, MatchesSerializer, DrawsSerializer, TournamentManagersSerializer, CoachSerializer, GradesReaderSerializer, TournamentManagersReaderSerializer
 
 
 class IndexView(TemplateView):
@@ -61,6 +61,8 @@ class GradesViewSet(viewsets.ModelViewSet):
     search_fields = [
         'name',
     ]
+
+
 class GradesReaderViewSet(viewsets.ModelViewSet):
 
     queryset = Grades.objects.all()
@@ -69,6 +71,7 @@ class GradesReaderViewSet(viewsets.ModelViewSet):
     search_fields = [
         'name',
     ]
+
 
 class RankingListsViewSet(viewsets.ModelViewSet):
 
@@ -131,6 +134,14 @@ class TournamentManagersViewSet(viewsets.ModelViewSet):
 
     queryset = Tournament_Managers.objects.all()
     serializer_class = TournamentManagersSerializer
+    filter_backends = (DjangoFilterBackend, SearchFilter)
+    search_fields = ['name', 'tournaments__name']
+
+
+class TournamentManagersReaderViewSet(viewsets.ModelViewSet):
+
+    queryset = Tournament_Managers.objects.all()
+    serializer_class = TournamentManagersReaderSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ['name', 'tournaments__name']
 
