@@ -82,10 +82,11 @@ class Organizations(models.Model):
 class Tournaments(models.Model):
     name = models.CharField(db_index=True, max_length=300)
     field_of_sport = models.CharField(max_length=300)
-    organization = models.ForeignKey(
-        Organizations, on_delete=models.DO_NOTHING)
+    #organization = models.ForeignKey(
+    #    Organizations, on_delete=models.DO_NOTHING)
     is_ranked = models.IntegerField(default=0)
-    grade = models.ForeignKey(Grades, on_delete=models.DO_NOTHING)
+    is_published = models.BooleanField(default=False)
+    #grade = models.ForeignKey(Grades, on_delete=models.DO_NOTHING)
     start_date = models.DateField()
     end_date = models.DateField()
     registration_start_date = models.DateField()

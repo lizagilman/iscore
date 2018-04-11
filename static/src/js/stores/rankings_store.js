@@ -1,8 +1,7 @@
 import { observable } from 'mobx';
 
 class RankingsStore {
-	@observable allRankings = [{someKeyRanking: "someDataRanking"}];
-
+  @observable allRankings = [{ someKeyRanking: 'someDataRanking' }];
 }
 
 const rankingsStore = new RankingsStore();
