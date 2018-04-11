@@ -10,7 +10,8 @@ router.register(r'MoneyDistributionMethods',
                 views.MoneyDistributionMethodsViewSet)
 router.register(r'PointsDistributionMethods',
                 views.PointsDistributionMethodsViewSet)
-router.register(r'ModifyGrades', views.GradesViewSet,base_name='Modify grades')
+router.register(
+    r'ModifyGrades', views.GradesViewSet, base_name='Modify grades')
 router.register(r'Grades', views.GradesReaderViewSet)
 router.register(r'RankingLists', views.RankingListsViewSet)
 router.register(r'Rankingslistcatagories', views.RankingslistcatagoriesViewSet)
