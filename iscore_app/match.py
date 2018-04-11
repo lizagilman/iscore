@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 import json
+from iscore_app.models import Matches,Rankings_list_catagories,Catagories,Ranking_Lists
 
 def test1(request):
     tournament = match_generate()
@@ -7,19 +8,16 @@ def test1(request):
 
 
 class Player():
-    """A class that represents a player and have the
-    following properties:
 
-    Attributes:
-        name: Player's name.
-        rank: Player's rank.
-    """
-
-    def __init__(self, name, rank):
+    def __init__(self, name, rank, age, gender, nationality):
         """Return a Player object whose name is *name* and rank
          is *rank*."""
-        self.name = name
         self.rank = rank
+        self.name = name
+        self.age= age
+        self.gender=gender
+        self.nationality=nationality
+
     def __str__(self):
         return self.name, self.rank
 
@@ -34,16 +32,10 @@ class Match():
         return self.playerA, self.playerB
 
 def match_generate():
-    playerList = []
-    playerList.append(Player('alisa', 1))
-    playerList.append(Player('liza', 2))
-    playerList.append(Player('michael', 3))
-    playerList.append(Player('alon', 4))
-    playerList.append(Player('yosi', 5))
-    playerList.append(Player('miri', 6))
-    playerList.append(Player('moshe', 7))
-    playerList.append(Player('ana', 8))
 
+
+    playerList = []
+    playerList = Rankings_list_catagories.objects.order_by('points')
     tournament=Tournament(playerList)
     tournament.make_draws()
     return tournament
@@ -78,10 +70,33 @@ class Tournament():
                 print('place_index = '+str(place_index))
                 self.placesList[i-1]=self.playerList[place_index]
                 print(i,place_index )
-                print(json.dumps(self.placesList[i-1],default=lambda o: o.__dict__))
+               # print(json.dumps(self.placesList[i-1],default=lambda o: o.__dict__))
+
             for i in range(0, len(self.placesList),2):
                 match = Match(self.placesList[i], self.placesList[i + 1])
-                self.matchList.append(match  )
-                print ('created match '+json.dumps(match, default=lambda o: o.__dict__))
+                self.matchList.append(match)
+
+                matches_len = len(self.matchList)
+                if matches_len % 8 == 0:
+                    matches_to_add=self.addEmptyMatches(matches_len)
+
+                    for j in range(matches_to_add):
+                        match = Match('','')
+                        self.matchList.append(match)
+
+              #  print ('created match '+json.dumps(match, default=lambda o: o.__dict__))
         else:
             print('wrong input')
+
+    def addEmptyMatches(self,matches_len):
+
+        if matches_len == 1:
+            return 0
+
+        return matches_len/2 + self.addEmptyMatches(matches_len/2)
+
+ 
+
+
+
+
