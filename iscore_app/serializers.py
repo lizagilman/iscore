@@ -1,4 +1,6 @@
+
 from iscore_app.models import Catagories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, Rankings_list_catagories, Organizations, Tournaments, Matches, Draws, Tournament_Managers, Coach, Games, Sets, Entries
+
 from rest_framework import serializers
 
 
@@ -117,3 +119,4 @@ class EntriesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Entries
         fields = '__all__'
+

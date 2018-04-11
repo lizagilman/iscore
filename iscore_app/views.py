@@ -11,6 +11,7 @@ from .models import Catagories, Players, Money_Distribution_Methods, Points_Dist
 from .serializers import CatagoriesSerializer, PlayersSerializer, MoneyDistributionMethodsSerializer, PointsDistributionMethodsSerializer, GradesSerializer, RankingListsSerializer, RankingslistcatagoriesSerializer, OrganizationsSerializer, TournamentsSerializer, MatchesSerializer, DrawsSerializer, TournamentManagersSerializer, CoachSerializer, GradesReaderSerializer, TournamentManagersReaderSerializer, GamesSerializer, SetSerializer, EntriesSerializer
 
 
+
 class IndexView(TemplateView):
     template_name = 'index.html'
 
@@ -33,7 +34,6 @@ class PlayersViewSet(viewsets.ModelViewSet):
     serializer_class = PlayersSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ['name', 'age', 'nationality', 'gender']
-
 
 
 class MoneyDistributionMethodsViewSet(viewsets.ModelViewSet):
