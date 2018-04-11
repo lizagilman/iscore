@@ -23,19 +23,20 @@ class Player():
 
 class Match():
 
-    def __init__(self, player1, player2 ):
+    def __init__(self,num, player1, player2 ):
         """Return a Player object whose name is *name* and rank
          is *rank*."""
+        self.id = num
         self.playerA = player1
         self.playerB = player2
     def __str__(self):
-        return self.playerA, self.playerB
+        return self.num, self.playerA, self.playerB
 
 def match_generate():
 
 
     playerList = []
-    playerList = Rankings_list_catagories.objects.order_by('points')
+    playerList = Rankings_list_catagories.objects.filter(list__organization__name='ATP').filter(list__name='world ranking').filter(catagory__name='Girls Israel').order_by('points')
     tournament=Tournament(playerList)
     tournament.make_draws()
     return tournament
@@ -73,16 +74,22 @@ class Tournament():
                # print(json.dumps(self.placesList[i-1],default=lambda o: o.__dict__))
 
             for i in range(0, len(self.placesList),2):
-                match = Match(self.placesList[i], self.placesList[i + 1])
+                match = Match(i,self.placesList[i], self.placesList[i + 1])
                 self.matchList.append(match)
+                stage = self.find_stage(len(self.placesList)/2)
+                new_match = Matches(index=i,player1=match.playerA, player2 = match.playerB, winner ='',stage =stage ,time ='',draws ='')
+                new_match.save()
 
-                matches_len = len(self.matchList)
-                if matches_len % 8 == 0:
-                    matches_to_add=self.addEmptyMatches(matches_len)
+            matches_len = len(self.matchList)
+            if matches_len % 8 == 0:
+                matches_to_add=self.addEmptyMatches(matches_len)
 
-                    for j in range(matches_to_add):
-                        match = Match('','')
-                        self.matchList.append(match)
+                for j in range(matches_to_add):
+                    match = Match(j,'','')
+                    self.matchList.append(match)
+                    new_match = Matches(index=j, player1=match.playerA, player2=match.playerB, winner='', stage='',
+                                        time='', draws='')
+                    new_match.save()
 
               #  print ('created match '+json.dumps(match, default=lambda o: o.__dict__))
         else:
@@ -95,8 +102,16 @@ class Tournament():
 
         return matches_len/2 + self.addEmptyMatches(matches_len/2)
 
- 
 
+    def find_stage(self,match_len):
 
-
+        switcher = {
+            1: "F",
+            2: "SF",
+            4: "QF",
+            8: "R16",
+            16: "R32",
+            32: "R64",
+        }
+        return self.find_stage.get(match_len, "nothing")
 
