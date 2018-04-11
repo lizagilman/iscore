@@ -126,6 +126,7 @@ class Draws(models.Model):
 
 
 class Matches(models.Model):
+    index = models.IntegerField.IntegerField(default=0)
     player1 = models.ForeignKey(
         Players, on_delete=models.DO_NOTHING, related_name="%(class)s_player1")
     player2 = models.ForeignKey(
