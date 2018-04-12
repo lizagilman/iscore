@@ -9,8 +9,8 @@ const AppRouter = () => (
     <div>
       <Header />
       <Route exact path="/" component={Tournaments} />
-      <Route path="/tournaments" component={Tournaments} />
-      <Route path="/tournament/:id" component={Tournament} />
+      <Route exact path="/tournaments" component={Tournaments} />
+      <Route exact path="/tournament/:id" component={Tournament} />
     </div>
   </Router>
 );

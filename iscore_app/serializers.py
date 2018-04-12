@@ -13,17 +13,21 @@ class PlayersSerializer(serializers.HyperlinkedModelSerializer):
         model = Players
         fields = ('name', 'age', 'gender', 'nationality')
 
+
 class MoneyDistributionMethodsSerializer(
         serializers.HyperlinkedModelSerializer):
 
-    distribution=serializers.ListField(child=serializers.IntegerField())
+    distribution = serializers.ListField(child=serializers.IntegerField())
+
     class Meta:
         model = Money_Distribution_Methods
         fields = ('name', 'distribution')
 
+
 class PointsDistributionMethodsSerializer(
         serializers.HyperlinkedModelSerializer):
     distribution = serializers.ListField(child=serializers.IntegerField())
+
     class Meta:
         model = Points_Distribution_Methods
         fields = ('name', 'distribution')
@@ -34,12 +38,12 @@ class GradesSerializer(serializers.ModelSerializer):
         model = Grades
         fields = ('name', 'points', 'money')
 
-class GradesReaderSerializer(serializers.ModelSerializer):
 
+class GradesReaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Grades
         fields = ('name', 'points', 'money')
-        depth=1
+        depth = 1
 
 
 class RankingListsSerializer(serializers.ModelSerializer):
@@ -63,9 +67,9 @@ class OrganizationsSerializer(serializers.ModelSerializer):
 class TournamentsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tournaments
-        fields = ('name', 'field_of_sport', 'organization', 'is_ranked',
-                  'grade', 'start_date', 'end_date', 'registration_start_date',
-                  'registration_end_date', 'address', 'status')
+        fields = ('id', 'name', 'field_of_sport', 'is_ranked', 'start_date',
+                  'end_date', 'registration_start_date',
+                  'registration_end_date', 'address', 'status', 'is_published')
 
 
 class MatchesSerializer(serializers.ModelSerializer):

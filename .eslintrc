@@ -15,7 +15,7 @@
     "navigator": false,
     "unescape": false,
     "window": false,
-    "$": true,
+    "$": true
   },
   "parser": "babel-eslint",
   "rules": {
