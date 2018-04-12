@@ -14,6 +14,9 @@ import ModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import DeleteForever from 'material-ui/svg-icons/action/delete-forever';
 import { inject, observer } from 'mobx-react';
 import { Link } from 'react-router-dom';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import Wizard from './wizard/wizard_index';
 
 @inject('stores')
 @observer
@@ -69,7 +72,7 @@ export default class TournamentsTable extends React.Component {
       </TableRow>
     );
 
-    return (
+    const tournamentsTable = (
       <div>
         <Table style={{ backgroundColor: '#ffffff' }}>
           <TableHeader displaySelectAll={false}>
@@ -90,6 +93,34 @@ export default class TournamentsTable extends React.Component {
         <FloatingActionButton onClick={e => this.openModal()}>
           <ContentAdd />
         </FloatingActionButton>
+      </div>
+    );
+
+    const actions = [
+      <FlatButton label="Cancel" primary={true} onClick={this.closeModal} />,
+      <FlatButton
+        label="Submit"
+        primary={true}
+        disabled={true}
+        onClick={this.closeModal}
+      />,
+    ];
+
+    const modal = (
+      <Dialog
+        title="Dialog With Actions"
+        actions={actions}
+        modal={true}
+        open={this.state.displayModal}
+      >
+        <Wizard />
+      </Dialog>
+    );
+
+    return (
+      <div>
+        {tournamentsTable}
+        {modal}
       </div>
     );
   }
