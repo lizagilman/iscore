@@ -113,7 +113,11 @@ class Tournaments(models.Model):
 class Draws(models.Model):
     tournamet = models.ForeignKey(Tournaments, on_delete=models.CASCADE)
     category = models.CharField(max_length=300)
-    player_list = models.ManyToManyField(Players, null=True, blank=True)
+    player_list = models.ManyToManyField(
+        Players,
+        through='Entries',
+        through_fields=('draw_list', 'player'),
+    )
 
 
 class Matches(models.Model):
@@ -159,3 +163,13 @@ class Tournament_Managers(models.Model):
 class Coach(models.Model):
     name = models.CharField(db_index=True, max_length=300)
     player_list = models.ManyToManyField(Players, null=True, blank=True)
+
+
+class Entries(models.Model):
+
+    draw_list = models.ForeignKey(
+        Draws, on_delete=models.CASCADE, null=True, blank=True)
+    player = models.ForeignKey(
+        Players, on_delete=models.CASCADE, null=True, blank=True)
+    is_seeded = models.BooleanField(default=False)
+    rank = models.IntegerField(default=0)
