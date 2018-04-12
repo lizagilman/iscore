@@ -167,7 +167,6 @@ class Coach(models.Model):
 
 
 class Entries(models.Model):
-
     draw_list = models.ForeignKey(
         Draws, on_delete=models.CASCADE, null=True, blank=True)
     player = models.ForeignKey(
