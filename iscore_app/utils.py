@@ -58,8 +58,9 @@ class match_time:
         self.time = time
 
 
-def generate_tournament_schedule(tournament):
+def generate_category_schedule(tournament,category):
 
+    matches_list=Matches.objects.filter(draws__tournamet__name=tournament).filter(draws__category=category)
 
 
     print("test")
