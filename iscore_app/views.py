@@ -4,11 +4,11 @@ from django.views.generic import TemplateView
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
+from django.http import HttpResponse
+from django.views import View
 
 from .models import Catagories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, Rankings_list_catagories, Organizations, Tournaments, Matches, Draws, Tournament_Managers, Coach
 from .serializers import CatagoriesSerializer, PlayersSerializer, MoneyDistributionMethodsSerializer, PointsDistributionMethodsSerializer, GradesSerializer, RankingListsSerializer, RankingslistcatagoriesSerializer, OrganizationsSerializer, TournamentsSerializer, MatchesSerializer, DrawsSerializer, TournamentManagersSerializer, CoachSerializer, GradesReaderSerializer, TournamentManagersReaderSerializer
-
-
 
 
 class IndexView(TemplateView):
@@ -63,6 +63,7 @@ class GradesViewSet(viewsets.ModelViewSet):
     search_fields = [
         'name',
     ]
+
 
 class GradesReaderViewSet(viewsets.ModelViewSet):
 
@@ -137,6 +138,7 @@ class TournamentManagersViewSet(viewsets.ModelViewSet):
     serializer_class = TournamentManagersSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ['name', 'tournaments__name']
+
 
 class TournamentManagersReaderViewSet(viewsets.ModelViewSet):
 
