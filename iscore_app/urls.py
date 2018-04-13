@@ -19,6 +19,9 @@ router.register(r'Organizations', views.OrganizationsViewSet)
 router.register(r'Tournaments', views.TournamentsViewSet)
 router.register(r'Matches', views.MatchesViewSet)
 router.register(r'Draws', views.DrawsViewSet)
+router.register(r'Sets', views.SetsViewSet)
+router.register(r'Games', views.GamesViewSet)
+router.register(r'Entries', views.EntriesViewSet)
 router.register(r'TournamentManagers', views.TournamentManagersReaderViewSet)
 router.register(
     r'ModifyTournamentManagers',
