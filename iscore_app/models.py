@@ -133,7 +133,7 @@ class Matches(models.Model):
         blank=True)
     stage = models.CharField(max_length=300, blank=True)
     time = models.DateField(null=True, blank=True)
-    index= models.IntegerField(default=0)
+    index = models.IntegerField(default=0)
     draws = models.ForeignKey(Draws, on_delete=models.CASCADE)
 
     def __str__(self):
