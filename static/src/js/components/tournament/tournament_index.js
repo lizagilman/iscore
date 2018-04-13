@@ -9,7 +9,7 @@ class Tournament extends React.Component {
     this.mainContentSwitcher = this.mainContentSwitcher.bind(this);
 
     this.state = {
-      mainContent: <BasicInfo />,
+      mainContent: <BasicInfo isForm={true} />,
       title: 'Basic Info',
     };
   }
