@@ -6,9 +6,9 @@ import List from 'material-ui/svg-icons/action/list';
 import InfoOutline from 'material-ui/svg-icons/action/info-outline';
 import SuperVisorAccount from 'material-ui/svg-icons/action/supervisor-account';
 // eslint-disable-next-line
-import { default as ScheduleIcon } from 'material-ui/svg-icons/action/schedule';
+import { default as ScheduleIcon } from "material-ui/svg-icons/action/schedule";
 // eslint-disable-next-line
-import { default as SettingsIcon } from 'material-ui/svg-icons/action/settings';
+import { default as SettingsIcon } from "material-ui/svg-icons/action/settings";
 import PieChart from 'material-ui/svg-icons/editor/pie-chart';
 import BasicInfo from '../basic_info/basic_info_index';
 import EntriesAndSeeds from '../entries_and_seeds/entries_and_seeds_index';
@@ -41,7 +41,10 @@ class LeftMenu extends React.Component {
             <MenuItem
               primaryText="Basic Info"
               leftIcon={<InfoOutline />}
-              onClick={contentSwitcher(<BasicInfo />, 'Basic Info')}
+              onClick={contentSwitcher(
+                <BasicInfo isForm={true} />,
+                'Basic Info',
+              )}
             />
             <MenuItem
               primaryText="Entries and Seeds"
