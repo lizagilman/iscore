@@ -1,5 +1,5 @@
 import { observable, action } from 'mobx';
-import { getAllTournamentsApi } from '../api';
+import { getAllTournamentsApi, setTournamentApi } from '../api';
 
 class TournamentsStore {
   @observable allTournaments = [];
@@ -11,7 +11,14 @@ class TournamentsStore {
     });
   };
 
-  @action setTournament = () => {};
+  @action
+  updateTournament = (tournament) => {
+    setTournamentApi(tournament).then((response) => {
+      if (response.status >= 400) {
+        alert('Failed to save');
+      }
+    });
+  };
 }
 
 const tournamentsStore = new TournamentsStore();

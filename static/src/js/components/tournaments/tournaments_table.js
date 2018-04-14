@@ -18,6 +18,8 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Wizard from './wizard/wizard_index';
 
+const mobx = require('mobx');
+
 @inject('stores')
 @observer
 export default class TournamentsTable extends React.Component {
@@ -25,6 +27,7 @@ export default class TournamentsTable extends React.Component {
     super(props);
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.toggleHandler = this.toggleHandler.bind(this);
 
     this.state = {
       displayModal: false,
@@ -39,6 +42,18 @@ export default class TournamentsTable extends React.Component {
     this.setState({ displayModal: false });
   }
 
+  toggleHandler(e, tournament) {
+    e.preventDefault();
+
+    const { TournamentsStore } = this.props.stores;
+
+    const updatedTournament = Object.assign(tournament, {
+      is_published: !tournament.is_published,
+    });
+
+    TournamentsStore.updateTournament(updatedTournament);
+  }
+
   componentWillMount() {
     const { TournamentsStore } = this.props.stores;
 
@@ -48,28 +63,29 @@ export default class TournamentsTable extends React.Component {
   render() {
     const { TournamentsStore } = this.props.stores;
 
-    const storedData = TournamentsStore.allTournaments.toJS();
+    const storedData = TournamentsStore.allTournaments;
 
-    const data = storedData ? storedData[0] : null;
+    const data =
+      storedData && storedData.length > 0 ? mobx.toJS(storedData)[0] : false;
 
     const createRow = (item, index) => (
-      <TableRow key={index}>
-        <TableRowColumn>
-          <Link to={`tournament/${item.id}`}>{item.name} </Link>
-        </TableRowColumn>
-        <TableRowColumn>{item.status}</TableRowColumn>
-        <TableRowColumn>{item.start_date}</TableRowColumn>
-        <TableRowColumn>
-          <Toggle
-            defaultToggled={item.is_published}
-            onToggle={e => TournamentsStore.setTournament()}
-          />
-        </TableRowColumn>
-        <TableRowColumn>
-          <ModeEdit />
-          <DeleteForever />
-        </TableRowColumn>
-      </TableRow>
+        <TableRow key={index}>
+          <TableRowColumn>
+            <Link to={`tournament/${item.id}`}>{item.name} </Link>
+          </TableRowColumn>
+          <TableRowColumn>{item.status}</TableRowColumn>
+          <TableRowColumn>{item.start_date}</TableRowColumn>
+          <TableRowColumn>
+            <Toggle
+              defaultToggled={item.is_published}
+              onToggle={e => this.toggleHandler(e, item)}
+            />
+          </TableRowColumn>
+          <TableRowColumn>
+            <ModeEdit />
+            <DeleteForever />
+          </TableRowColumn>
+        </TableRow>
     );
 
     const tournamentsTable = (
