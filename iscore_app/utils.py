@@ -3,7 +3,8 @@ import datetime
 from iscore_app.models import Matches
 from django.http import HttpResponse
 import json
-from iscore_app.models import Matches,Rankings_list_catagories,Catagories,Ranking_Lists
+from iscore_app.models import Matches, Rankings_list_catagories, Catagories, Ranking_Lists
+
 
 def someFunction(a):
     print("a:", a)
@@ -24,7 +25,6 @@ def test1(request):
 
 
 class Player():
-
     def __init__(self, name, rank, age, gender, nationality):
         """Return a Player object whose name is *name* and rank
          is *rank*."""
@@ -37,27 +37,29 @@ class Player():
     def __str__(self):
         return self.name, self.rank
 
-class Match():
 
-    def __init__(self, player1, player2 ):
+class Match():
+    def __init__(self, player1, player2):
         """Return a Player object whose name is *name* and rank
          is *rank*."""
         self.playerA = player1
         self.playerB = player2
+
     def __str__(self):
         return self.playerA, self.playerB
 
 
 #"2018","4","10","17",
 #match_list,start_date,end_date,num_of_courts
-def schedule_generate(match_list, start_date,start_hour,finish_hour, num_of_courts, games_per_day):
+def schedule_generate(match_list, start_date, start_hour, finish_hour,
+                      num_of_courts, games_per_day):
 
     index = 0
     game_duration = 2
     schedule = []
     match_date = start_date
-    beginning_hour=9
-    finish_hour=finish_hour
+    beginning_hour = 9
+    finish_hour = finish_hour
 
     while (index < len(match_list)):
         limit = 0

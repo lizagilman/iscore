@@ -1,57 +1,86 @@
 from django.http import HttpResponse
 import json
-from iscore_app.models import Matches,Rankings_list_catagories,Catagories,Ranking_Lists
+from iscore_app.models import Matches, Rankings_list_catagories, Catagories, Ranking_Lists, Draws, Entries, Tournaments
+from django.core import serializers
 
-def test1(request):
-    tournament = match_generate()
-    return HttpResponse(json.dumps(tournament.matchList,default=lambda o: o.__dict__))
+
+def handle_generate_draws(request):
+    # match_generate()
+    tournament_id = request.GET['tournament_id']
+    print(tournament_id)
+    Generate_Draws(tournament_id)
+    draws = Matches.objects.filter(
+        draws__tournamet=int(tournament_id)).order_by('-stage',
+                                                      'draws__category')
+    send_data = serializers.serialize('json', draws)
+    return HttpResponse(send_data)
 
 
 class Player():
-
     def __init__(self, name, rank, age, gender, nationality):
         """Return a Player object whose name is *name* and rank
          is *rank*."""
         self.rank = rank
         self.name = name
-        self.age= age
-        self.gender=gender
-        self.nationality=nationality
+        self.age = age
+        self.gender = gender
+        self.nationality = nationality
 
     def __str__(self):
         return self.name, self.rank
 
-class Match():
 
-    def __init__(self,num, player1, player2 ):
+class Match():
+    def __init__(self, player1, player2):
         """Return a Player object whose name is *name* and rank
          is *rank*."""
-        self.id = num
+
         self.playerA = player1
         self.playerB = player2
+
     def __str__(self):
-        return self.num, self.playerA, self.playerB
-
-def match_generate():
+        return self.playerA, self.playerB
 
 
-    playerList = []
-    playerList = Rankings_list_catagories.objects.filter(list__organization__name='ATP').filter(list__name='world ranking').filter(catagory__name='Girls Israel').order_by('points')
-    tournament=Tournament(playerList)
-    tournament.make_draws()
+def match_generate(tournament, category_draw):
+    #list of ranked players in the ranking list
+    rankedPlayers = Rankings_list_catagories.objects.filter(
+        list__organization=tournament.organization).filter(
+            list__name=tournament.ranking_list).filter(
+                category__name=category_draw.category).order_by('points')
+    #playuers registered without any order
+    # category_draw = Draws.objects.filter(tournamet=tournament).filter(
+    #    category='Girls Israel')
+    registered_players = Entries.objects.filter(draw_list=category_draw)
+    for player in rankedPlayers:
+        for registered in registered_players:
+            if registered.player.name == player.player.name:
+                registered.rank = player.rank
+                registered.save()
+
+    ranked_registered_players = Entries.objects.filter(
+        draw_list=category_draw).order_by('rank')
+
+    player_list = []
+    for player_in_list in ranked_registered_players:
+        player_list.append(player_in_list.player)
+        print('player :' + player_in_list.player.name)
+    tournament = Tournament(player_list)
+
+    tournament.make_draws(category_draw)
     return tournament
 
-class Tournament():
 
-    playerList = []
-    matchList = []
-    placesList = []
-    def __init__(self , playerList):
+class Tournament():
+    def __init__(self, playerList):
         print('Tournament::__init__')
         self.playerList = playerList
-        self.placesList=[None] * len(self.playerList)
+        for j in self.playerList:
+            print(j)
+        self.placesList = [None] * len(self.playerList)
+        self.matchList = []
 
-    def seedPlayer(self,rank, part_size):
+    def seedPlayer(self, rank, part_size):
 
         if rank <= 1:
             return 0
@@ -59,59 +88,90 @@ class Tournament():
         if rank % 2 == 0:
             return part_size // 2 + self.seedPlayer(rank // 2, part_size // 2)
 
-        return self.seedPlayer(rank // 2 + 1, part_size // 2);
+        return self.seedPlayer(rank // 2 + 1, part_size // 2)
 
-    def make_draws(self):
-        print('kuki',len(self.placesList))
+    def make_draws(self, draw_table):
+        print('playerList size:', len(self.playerList))
         part_size = len(self.playerList)
         if part_size % 8 == 0:
 
-            for i in range(1, part_size+1):
-                place_index=self.seedPlayer(i, part_size)
-                print('place_index = '+str(place_index))
-                self.placesList[i-1]=self.playerList[place_index]
-                print(i,place_index )
-               # print(json.dumps(self.placesList[i-1],default=lambda o: o.__dict__))
+            for i in range(1, part_size + 1):
+                place_index = self.seedPlayer(i, part_size)
+                print('place_index = ' + str(place_index))
+                self.placesList[i - 1] = self.playerList[place_index]
+                print(i, place_index)
+            # print(json.dumps(self.placesList[i-1],default=lambda o: o.__dict__))
 
-            for i in range(0, len(self.placesList),2):
-                match = Match(i,self.placesList[i], self.placesList[i + 1])
+            for i in range(0, len(self.placesList), 2):
+                print('self.placesList[i]' + str(self.placesList[i]) +
+                      '  self.placesList[i + 1]' + str(self.placesList[i + 1]))
+                match = Match(self.placesList[i], self.placesList[i + 1])
                 self.matchList.append(match)
-                stage = self.find_stage(len(self.placesList)/2)
-                new_match = Matches(index=i,player1=match.playerA, player2 = match.playerB, winner ='',stage =stage ,time ='',draws ='')
+                stage = self.find_stage(len(self.placesList) / 2)
+                new_match = Matches(
+                    index=i,
+                    player1=match.playerA,
+                    player2=match.playerB,
+                    winner=None,
+                    stage=stage,
+                    time=None,
+                    draws=draw_table)
+                print('new_match' + str(new_match))
                 new_match.save()
 
             matches_len = len(self.matchList)
-            if matches_len % 8 == 0:
-                matches_to_add=self.addEmptyMatches(matches_len)
+            print('matches_value:' + str(self.matchList))
+            print('matches_len:' + str(matches_len))
+            if matches_len % 4 == 0:
+                arrayM = []
 
-                for j in range(matches_to_add):
-                    match = Match(j,'','')
-                    self.matchList.append(match)
-                    new_match = Matches(index=j, player1=match.playerA, player2=match.playerB, winner='', stage='',
-                                        time='', draws='')
-                    new_match.save()
-
-              #  print ('created match '+json.dumps(match, default=lambda o: o.__dict__))
+                self.addEmptyMatches(matches_len // 2, arrayM)
+                fill = 0
+                for k in arrayM:
+                    stage = self.find_stage(k)
+                    for j in range(int(k)):
+                        match = Match(None, None)
+                        self.matchList.append(match)
+                        new_match = Matches(
+                            index=matches_len + fill,
+                            player1=match.playerA,
+                            player2=match.playerB,
+                            winner=None,
+                            stage=stage,
+                            time=None,
+                            draws=draw_table)
+                        new_match.save()
+                        fill += 1
+                #  print ('created match '+json.dumps(match, default=lambda o: o.__dict__))
         else:
             print('wrong input')
 
-    def addEmptyMatches(self,matches_len):
+    def addEmptyMatches(self, matches_len, arrayM):
 
         if matches_len == 1:
+            arrayM.append(matches_len)
+            print(matches_len)
             return 0
 
-        return matches_len/2 + self.addEmptyMatches(matches_len/2)
+        arrayM.append(matches_len)
+        print(matches_len)
+        return self.addEmptyMatches(matches_len / 2, arrayM)
 
+    def find_stage(self, match_len):
 
-    def find_stage(self,match_len):
-
-        switcher = {
+        return {
             1: "F",
             2: "SF",
             4: "QF",
             8: "R16",
             16: "R32",
             32: "R64",
-        }
-        return self.find_stage.get(match_len, "nothing")
+        }[match_len]
 
+
+def Generate_Draws(tournamnet):
+
+    tournamnt_info = Tournaments.objects.get(pk=tournamnet)
+    draw_list = Draws.objects.filter(tournamet=tournamnt_info)
+    for category in draw_list:
+        match_generate(tournamnt_info, category)
