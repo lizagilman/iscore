@@ -1,6 +1,7 @@
 *.pyc
 
 # settings - db only
+/iscore_app/settings.py
 iscore_app/settings.py
 /iscore_app/settings.py
 iscore/iscore_app/settings.py
