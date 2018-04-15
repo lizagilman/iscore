@@ -6,6 +6,9 @@ export const getAllTournamentsApi = () =>
 export const getAllMatchesApi = () =>
   fetch('/apiMatches/').then(response => response.json());
 
+export const getAllEntriesApi = () =>
+  fetch('/apiEntries/').then(response => response.json());
+
 export const setTournamentApi = tournament => fetch(`/apiTournaments/${tournament.id}/`, {
   method: 'PUT',
   headers: {

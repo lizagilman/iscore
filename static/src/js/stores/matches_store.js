@@ -1,8 +1,7 @@
 import { observable, action } from 'mobx';
-import {getAllMatchesApi} from '../api';
+import { getAllMatchesApi } from '../api';
 
 class MatchesStore {
-
   @observable allMatches = [];
 
   @action
@@ -11,7 +10,6 @@ class MatchesStore {
       this.allMatches = [matchesJson];
     });
   };
-
 }
 
 const matchesStore = new MatchesStore();

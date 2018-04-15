@@ -5,3 +5,10 @@ body {
 .formField {
     margin-top: 10px;
 }
+.tableSchedule{
+    margin-left: 77px !important;
+}
+
+.test {
+    color: #FF0000;
+}
