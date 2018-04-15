@@ -7,3 +7,4 @@ class RankingsStore {
 const rankingsStore = new RankingsStore();
 
 export default rankingsStore;
+

@@ -1,109 +1,83 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { Link } from 'react-router-dom';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-//import Wizard from './wizard/wizard_index';
+import {
+  Table,
+  TableBody,
+  TableHeader,
+  TableHeaderColumn,
+  TableRow,
+  TableRowColumn,
+} from 'material-ui/Table';
+
+
+
+const mobx = require('mobx')
 
 @inject('stores')
 @observer
 export default class Schedule extends React.Component {
-  constructor(props) {
-    super(props);
-    this.openModal = this.openModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+    constructor(props) {
+        super(props);
 
-    this.state = {
-      displayModal: false,
-    };
-  }
+        this.state = {
 
-  openModal() {
-    this.setState({ displayModal: true });
-  }
+        };
+    }
 
-  closeModal() {
-    this.setState({ displayModal: false });
-  }
+    componentWillMount() {
+        console.log('will mount');
+        const { MatchesStore } = this.props.stores;
+        MatchesStore.fetchAllMatchs();
+    }
 
-  componentWillMount() {
-    console.log('will mount');
-    const { MatchesStore } = this.props.stores;
+    render() {
+        console.log('will render');
+        const { MatchesStore } = this.props.stores;
 
-    MatchesStore.fetchAllMatchs();
-  }
+        const storedMatches = MatchesStore.allMatches.toJS();
 
-  render() {
+        const data = storedMatches ? storedMatches[0] : null;
+
+        const createRow = (item, index) => {
+            console.log('will create row');
+            return (
+                <TableRow
+                    key={index}>
+                    <TableRowColumn>{item.stage}</TableRowColumn>
+                    <TableRowColumn>{item.plarer1}</TableRowColumn>
+                    <TableRowColumn>{item.player2}</TableRowColumn>
+                    <TableRowColumn>{item.time}</TableRowColumn>
+                </TableRow>
+            )
+        };
+
+        const scheduleTable = (
+            <div>
+                <Table style={{ backgroundColor: '#ffffff' }}>
+                    <TableHeader displaySelectAll={false}>
+                        <TableRow>
+                            <TableHeaderColumn>Stage</TableHeaderColumn>
+                            <TableHeaderColumn>Player</TableHeaderColumn>
+                            <TableHeaderColumn>Player</TableHeaderColumn>
+                            <TableHeaderColumn>Time</TableHeaderColumn>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody displayRowCheckbox={false}>
+                        {console.log('schedule table')}
+                        {data
+                            ? data.map((Match, index) => createRow(Match, index))
+                            : 'Loading...'}
+                    </TableBody>
+                </Table>
+
+            </div>
+        );
 
 
-    const { MatchesStore } = this.props.stores;
-
-
-    const storedMatches = MatchesStore.allTournaments.toJS();
-
-    const data = storedMatches ? storedMatches[0] : null;
-
-    const createRow = (item, index) => (
-      <TableRow key={index}>
-        <TableRowColumn>
-          <Link to={`match/${item.id}`}>{item.stage} </Link>
-        </TableRowColumn>
-        <TableRowColumn>{item.player1}</TableRowColumn>
-        <TableRowColumn>{item.player2}</TableRowColumn>
-          <TableRowColumn>{item.time}</TableRowColumn>
-
-      </TableRow>
-    );
-
-    const scheduleTable = (
-      <div>
-        <Table style={{ backgroundColor: '#ffffff' }}>
-          <TableHeader displaySelectAll={false}>
-            <TableRow>
-              <TableHeaderColumn>Stage</TableHeaderColumn>
-              <TableHeaderColumn>Player</TableHeaderColumn>
-              <TableHeaderColumn>Player</TableHeaderColumn>
-              <TableHeaderColumn>Time</TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody displayRowCheckbox={false}>
-            {data
-              ? data.map((Match, index) => createRow(Match, index))
-              : 'Loading...'}
-          </TableBody>
-        </Table>
-        <FloatingActionButton onClick={e => this.openModal()}>
-          <ContentAdd />
-        </FloatingActionButton>
-      </div>
-    );
-
-    const actions = [
-      <FlatButton label="Cancel" primary={true} onClick={this.closeModal} />,
-      <FlatButton
-        label="Submit"
-        primary={true}
-        disabled={true}
-        onClick={this.closeModal}
-      />,
-    ];
-
-    // const modal = (
-    //   <Dialog
-    //     title="Dialog With Actions"
-    //     actions={actions}
-    //     modal={true}
-    //     open={this.state.displayModal}
-    //   >
-    //     <Wizard />
-    //   </Dialog>
-    // );
-
-    return (
-      <div>
-        {scheduleTable}
-        {/*{modal}*/}
-      </div>
-    );
-  }
+        return (
+            <div>
+                {scheduleTable}
+            </div>
+        );
+    }
 }
