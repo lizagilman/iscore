@@ -7,7 +7,7 @@ class TournamentsStore {
   @action
   fetchAllTournaments = () => {
     getAllTournamentsApi().then((tournamentsJson) => {
-      this.allTournaments = [tournamentsJson];
+      this.allTournaments = tournamentsJson;
     });
   };
 

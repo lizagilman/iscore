@@ -65,27 +65,26 @@ export default class TournamentsTable extends React.Component {
 
     const storedData = TournamentsStore.allTournaments;
 
-    const data =
-      storedData && storedData.length > 0 ? mobx.toJS(storedData)[0] : false;
+    const data = storedData ? mobx.toJS(storedData) : false;
 
     const createRow = (item, index) => (
-        <TableRow key={index}>
-          <TableRowColumn>
-            <Link to={`tournament/${item.id}`}>{item.name} </Link>
-          </TableRowColumn>
-          <TableRowColumn>{item.status}</TableRowColumn>
-          <TableRowColumn>{item.start_date}</TableRowColumn>
-          <TableRowColumn>
-            <Toggle
-              defaultToggled={item.is_published}
-              onToggle={e => this.toggleHandler(e, item)}
-            />
-          </TableRowColumn>
-          <TableRowColumn>
-            <ModeEdit />
-            <DeleteForever />
-          </TableRowColumn>
-        </TableRow>
+      <TableRow key={index}>
+        <TableRowColumn>
+          <Link to={`tournament/${item.id}`}>{item.name} </Link>
+        </TableRowColumn>
+        <TableRowColumn>{item.status}</TableRowColumn>
+        <TableRowColumn>{item.start_date}</TableRowColumn>
+        <TableRowColumn>
+          <Toggle
+            defaultToggled={item.is_published}
+            onToggle={e => this.toggleHandler(e, item)}
+          />
+        </TableRowColumn>
+        <TableRowColumn>
+          <ModeEdit />
+          <DeleteForever />
+        </TableRowColumn>
+      </TableRow>
     );
 
     const tournamentsTable = (

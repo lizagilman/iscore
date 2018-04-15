@@ -1,9 +1,9 @@
 import fetch from 'isomorphic-fetch';
 
 export const getAllTournamentsApi = () =>
-  fetch('/apiTournaments/').then(response => response.json());
+  fetch('/api/Tournaments/').then(response => response.json());
 
-export const setTournamentApi = tournament => fetch(`/apiTournaments/${tournament.id}/`, {
+export const setTournamentApi = tournament => fetch(`/api/Tournaments/${tournament.id}/`, {
   method: 'PUT',
   headers: {
     Accept: 'application/json',
