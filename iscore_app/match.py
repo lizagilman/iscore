@@ -63,7 +63,7 @@ def match_generate(tournament, category_draw):
 
 class Tournament():
     def __init__(self, playerList):
-        self.playerList = playerListad
+        self.playerList = playerList
         self.placesList = [None] * len(self.playerList)
         self.matchList = []
 
