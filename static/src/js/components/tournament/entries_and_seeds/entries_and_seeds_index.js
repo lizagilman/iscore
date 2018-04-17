@@ -1,18 +1,29 @@
 /* eslint-disable */
-import React from 'react';
-import { inject, observer } from 'mobx-react';
+import React from "react";
+import { inject, observer } from "mobx-react";
 import {
   Table,
   TableBody,
   TableHeader,
   TableHeaderColumn,
   TableRow,
-  TableRowColumn,
-} from 'material-ui/Table';
+  TableRowColumn
+} from "material-ui/Table";
 
-const mobx = require('mobx');
-
-@inject('stores')
+const mobx = require("mobx");
+const entries_table_style_player = {
+  paddingLeft: "77px"
+};
+const entries_table_style_rank = {
+  paddingLeft: "60px"
+};
+const entries_table_style_seed = {
+  paddingLeft: "50px"
+};
+const entries_table = {
+  backgroundColor: "white"
+};
+@inject("stores")
 @observer
 export default class EntriesAndSeeds extends React.Component {
   constructor(props) {
@@ -22,47 +33,51 @@ export default class EntriesAndSeeds extends React.Component {
   }
 
   componentWillMount() {
-    console.log('will mount');
-    const { EntriesStore } = this.props.stores;
-    EntriesStore.fetchAllEntries();
+    console.log("will mount");
+    //const { EntriesStore } = this.props.stores;
+    // EntriesStore.fetchAllEntries();
   }
 
   render() {
-    console.log('will render');
+    console.log("will render");
     const { EntriesStore } = this.props.stores;
 
     const storedEntries = EntriesStore.allEntries;
 
-    const data = storedEntries && storedEntries.length > 0 ? mobx.toJS(storedEntries)[0] : false;
-
+    //const data = storedEntries && storedEntries.length > 0 ? mobx.toJS(storedEntries)[0] : false;
     const createRow = (item, index) => {
-      console.log('will create row');
+      console.log("will create row");
 
       return (
         <TableRow key={index}>
-          <TableRowColumn className={'tableSchedule'}>{item.player}</TableRowColumn>
-          <TableRowColumn >{item.rank}</TableRowColumn>
-          <TableRowColumn>{item.is_seeded}</TableRowColumn>
-
+          <TableRowColumn style={entries_table_style_player}>
+            {item.player}
+          </TableRowColumn>
+          <TableRowColumn style={entries_table_style_rank}>
+            {item.rank}
+          </TableRowColumn>
+          <TableRowColumn style={entries_table_style_seed}>
+            {item.seed}
+          </TableRowColumn>
         </TableRow>
       );
     };
 
     const entriesTable = (
       <div>
-        <Table >
+        <Table style={entries_table}>
           <TableHeader displaySelectAll={false}>
             <TableRow>
-              <TableHeaderColumn >Player</TableHeaderColumn>
+              <TableHeaderColumn>Player</TableHeaderColumn>
               <TableHeaderColumn>Rank</TableHeaderColumn>
-              <TableHeaderColumn>Is Seeded</TableHeaderColumn>
+              <TableHeaderColumn>Seed</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody displayRowCheckbox={false}>
-            {console.log('schedule table')}
-            {data
-              ? data.map((Entrie, index) => createRow(Entrie, index))
-              : 'Loading...'}
+            {console.log("schedule table")}
+            {storedEntries
+              ? storedEntries.map((Entrie, index) => createRow(Entrie, index))
+              : "Loading..."}
           </TableBody>
         </Table>
       </div>
