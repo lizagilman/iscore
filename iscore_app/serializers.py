@@ -76,6 +76,18 @@ class MatchesSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class MatchesReaderSerializer(serializers.ModelSerializer):
+
+    player1 = PlayersSerializer(read_only=True)
+    player2 = PlayersSerializer(read_only=True)
+    winner = PlayersSerializer(read_only=True)
+
+    class Meta:
+        model = Matches
+        fields = ('player1', 'player2', 'winner', 'stage', 'time', 'index',
+                  'draws', 'court')
+
+
 class DrawsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Draws

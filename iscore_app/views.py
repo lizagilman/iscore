@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from django.views import View
 
 from .models import Catagories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, Rankings_list_catagories, Organizations, Tournaments, Matches, Draws, Tournament_Managers, Coach, Games, Sets, Entries
-from .serializers import CatagoriesSerializer, PlayersSerializer, MoneyDistributionMethodsSerializer, PointsDistributionMethodsSerializer, GradesSerializer, RankingListsSerializer, RankingslistcatagoriesSerializer, OrganizationsSerializer, TournamentsSerializer, MatchesSerializer, DrawsSerializer, TournamentManagersSerializer, CoachSerializer, GradesReaderSerializer, TournamentManagersReaderSerializer, GamesSerializer, SetSerializer, EntriesSerializer
+from .serializers import CatagoriesSerializer, PlayersSerializer, MoneyDistributionMethodsSerializer, PointsDistributionMethodsSerializer, GradesSerializer, RankingListsSerializer, RankingslistcatagoriesSerializer, OrganizationsSerializer, TournamentsSerializer, MatchesSerializer, DrawsSerializer, TournamentManagersSerializer, CoachSerializer, GradesReaderSerializer, TournamentManagersReaderSerializer, GamesSerializer, SetSerializer, EntriesSerializer, MatchesReaderSerializer
 
 
 class IndexView(TemplateView):
@@ -122,6 +122,14 @@ class MatchesViewSet(viewsets.ModelViewSet):
     search_fields = ['match_num', 'player1__name', 'player2__name']
 
 
+class MatchesReaderViewSet(viewsets.ModelViewSet):
+
+    queryset = Matches.objects.all()
+    serializer_class = MatchesSerializer
+    filter_backends = (DjangoFilterBackend, SearchFilter)
+    search_fields = ['match_num', 'player1__name', 'player2__name']
+
+
 class DrawsViewSet(viewsets.ModelViewSet):
 
     queryset = Draws.objects.all()
@@ -174,4 +182,11 @@ class EntriesViewSet(viewsets.ModelViewSet):
 
     queryset = Entries.objects.all()
     serializer_class = EntriesSerializer
+    filter_backends = (DjangoFilterBackend, SearchFilter)
+
+
+class MatchesReaderViewSet(viewsets.ModelViewSet):
+
+    queryset = Matches.objects.all()
+    serializer_class = MatchesReaderSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
