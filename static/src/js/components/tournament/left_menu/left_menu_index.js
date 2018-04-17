@@ -22,6 +22,7 @@ const style = {
     display: 'inline-block',
     float: 'left',
     boxShadow: 0,
+    width: '10%',
   },
   rightIcon: {
     textAlign: 'center',
@@ -35,7 +36,7 @@ class LeftMenu extends React.Component {
       this.props.mainContentSwitcher(e, content, title);
 
     return (
-      <div style={{ margin: '1vw 0vw 0vw 2vw' }}>
+      <div>
         <Paper style={style.paper}>
           <Menu style={{ border: 'none' }}>
             <MenuItem

@@ -6,7 +6,7 @@ import FlatButton from 'material-ui/FlatButton';
 class MainCard extends React.Component {
   render() {
     return (
-      <div style={this.props.style}>
+      <div style={this.props.style} id={'mainCard'}>
         <Card style={{ backgroundColor: '#ffffff' }}>
           <CardTitle title={this.props.title} />
           <CardText>{this.props.content}</CardText>

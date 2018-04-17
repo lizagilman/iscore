@@ -25,12 +25,12 @@ class Tournament extends React.Component {
 
   render() {
     return (
-      <div>
+      <div id={'tindex'}>
         <LeftMenu zDepth={0} mainContentSwitcher={this.mainContentSwitcher} />
         <MainCard
           title={this.state.title}
           content={this.state.mainContent}
-          style={{ flex: 1, margin: '1vw 2vw 0 15vw' }}
+          style={{ margin: '2% 0px 0px 15%', width: '80%' }}
         />
       </div>
     );
