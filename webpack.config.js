@@ -15,7 +15,11 @@ module.exports = {
 
   //mode: 'development',
 
-  plugins: [new BundleTracker({ filename: "./webpack-stats.json" })],
+  plugins: [
+    new BundleTracker({ filename: "./webpack-stats.json", debug: true })
+  ],
+
+  devtool: "#eval-source-map",
 
   module: {
     rules: [
@@ -35,7 +39,7 @@ module.exports = {
       {
         test: /\.(jpe|jpg|woff|woff2|eot|ttf|svg|png|gif)(\?.*$|$)/,
         loader: "file-loader"
-      },
+      }
     ]
   }
 };
