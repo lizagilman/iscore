@@ -11,6 +11,24 @@ import {
 
 const mobx = require('mobx');
 
+const schedule_table_style_digit = {
+  paddingLeft:'77px',
+};
+const schedule_table_style_word = {
+  paddingLeft:'60px',
+};
+const schedule_table = {
+  backgroundColor:'white',
+};
+const schedule_table_style_court = {
+  paddingLeft:'55px',
+};
+const schedule_table_style_category = {
+  paddingLeft:'40px',
+};
+const schedule_table_style_winner= {
+  paddingLeft:'40px',
+};
 @inject('stores')
 @observer
 export default class Schedule extends React.Component {
@@ -39,14 +57,14 @@ export default class Schedule extends React.Component {
 
       return (
         <TableRow key={index}>
-            <TableRowColumn >{item.index}</TableRowColumn>
-          <TableRowColumn className={'tableSchedule'}>{item.stage}</TableRowColumn>
-          <TableRowColumn >{item.player1}</TableRowColumn>
-          <TableRowColumn>{item.player2}</TableRowColumn>
+            <TableRowColumn style={schedule_table_style_digit} >{item.index}</TableRowColumn>
+          <TableRowColumn style={schedule_table_style_digit}>{item.stage}</TableRowColumn>
+          <TableRowColumn style={schedule_table_style_word} >{item.player1}</TableRowColumn>
+          <TableRowColumn style={schedule_table_style_word}>{item.player2}</TableRowColumn>
           <TableRowColumn>{item.time}</TableRowColumn>
-            <TableRowColumn>{item.court}</TableRowColumn>
-            <TableRowColumn>{item.draws}</TableRowColumn>
-            <TableRowColumn>{item.winner}</TableRowColumn>
+            <TableRowColumn style={schedule_table_style_court}>{item.court}</TableRowColumn>
+            <TableRowColumn style={schedule_table_style_category}>{item.draws}</TableRowColumn>
+            <TableRowColumn style={schedule_table_style_winner}>{item.winner}</TableRowColumn>
         </TableRow>
 
       );
@@ -54,7 +72,7 @@ export default class Schedule extends React.Component {
 
     const scheduleTable = (
       <div>
-        <Table >
+        <Table style={schedule_table} >
           <TableHeader displaySelectAll={false}>
             <TableRow>
                 <TableHeaderColumn >Index</TableHeaderColumn>
