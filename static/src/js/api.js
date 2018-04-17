@@ -3,7 +3,13 @@ import fetch from 'isomorphic-fetch';
 export const getAllTournamentsApi = () =>
   fetch('/api/Tournaments/').then(response => response.json());
 
-export const setTournamentApi = tournament => fetch(`/api/Tournaments/${tournament.id}/`, {
+export const getAllMatchesApi = () =>
+  fetch('/api/Matches/').then(response => response.json());
+
+export const getAllEntriesApi = () =>
+  fetch('/api/Entries/').then(response => response.json());
+
+export const setTournamentApi = tournament => fetch(`/apiTournaments/${tournament.id}/`, {
   method: 'PUT',
   headers: {
     Accept: 'application/json',
