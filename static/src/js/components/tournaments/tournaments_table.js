@@ -84,7 +84,7 @@ export default class TournamentsTable extends React.Component {
     const createRow = (item, index) => (
       <TableRow key={index}>
         <TableRowColumn>
-          <Link to={`tournament/${item.id}`}>
+          <Link to={`/tournament/${item.id}`}>
             <div onClick={this.onLinkClick(item)}>{item.name}</div>
           </Link>
         </TableRowColumn>
