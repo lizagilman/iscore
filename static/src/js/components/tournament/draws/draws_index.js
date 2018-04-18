@@ -1,11 +1,11 @@
 import React from 'react';
+import * as mobx from 'mobx';
 import Paper from 'material-ui/Paper';
 import ArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
 import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import { inject, observer } from 'mobx-react/index';
 import * as drawStyles from './draws_styles';
 
-const mobx = require('mobx');
 
 @inject('stores')
 @observer
@@ -74,7 +74,7 @@ export default class Draws extends React.Component {
       </div>
     );
 
-    const match = (num1, num2) => (
+    const match = (playerA, playerB) => (
       <Paper zDepth={1} style={drawStyles.flexContainerMatch}>
         <div
           style={{
@@ -83,7 +83,7 @@ export default class Draws extends React.Component {
             ...drawStyles.matchStyle,
           }}
         >
-          {num1}
+          {playerA}
         </div>
         <div
           style={{
@@ -92,36 +92,43 @@ export default class Draws extends React.Component {
             ...drawStyles.matchStyle,
           }}
         >
-          {num2}
+          {playerB}
         </div>
       </Paper>
     );
 
-    const nextMatch = (num1, num2) => (
-      <Paper
-        zDepth={1}
-        style={{
-          ...drawStyles.flexContainerMatch,
-          ...drawStyles.flexContainerNextMatch,
-        }}
-      >
-        <div
-          style={{
-            ...drawStyles.basicBlockStyle,
-            ...drawStyles.nextMatchStyle,
-          }}
+    const nextMatch = (playerA, playerB) => (
+        <Paper
+          zDepth={1}
+          style={
+            this.state.nextStage === 'F'
+              ? {
+                  ...drawStyles.flexContainerMatch,
+                  ...drawStyles.flexContainerNextMatchFinal,
+                }
+              : {
+                  ...drawStyles.flexContainerMatch,
+                  ...drawStyles.flexContainerNextMatch,
+                }
+          }
         >
-          {num1}
-        </div>
-        <div
-          style={{
-            ...drawStyles.basicBlockStyle,
-            ...drawStyles.nextMatchStyle,
-          }}
-        >
-          {num2}
-        </div>
-      </Paper>
+          <div
+            style={{
+              ...drawStyles.basicBlockStyle,
+              ...drawStyles.nextMatchStyle,
+            }}
+          >
+            {playerA}
+          </div>
+          <div
+            style={{
+              ...drawStyles.basicBlockStyle,
+              ...drawStyles.nextMatchStyle,
+            }}
+          >
+            {playerB}
+          </div>
+        </Paper>
     );
 
     let matches = [];
