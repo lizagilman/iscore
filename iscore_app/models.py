@@ -102,10 +102,10 @@ class Tournaments(models.Model):
     is_published = models.BooleanField(default=False)
     grade = models.ForeignKey(
         Grades, on_delete=models.DO_NOTHING, null=True, blank=True)
-    start_date = models.DateField(null=True, blank=True)
-    end_date = models.DateField(null=True, blank=True)
-    registration_start_date = models.DateField(null=True, blank=True)
-    registration_end_date = models.DateField(null=True, blank=True)
+    start_date = models.DateTimeField(null=True, blank=True)
+    end_date = models.DateTimeField(null=True, blank=True)
+    registration_start_date = models.DateTimeField(null=True, blank=True)
+    registration_end_date = models.DateTimeField(null=True, blank=True)
     address = models.CharField(max_length=300, null=True, blank=True)
     status = models.CharField(max_length=300, null=True, blank=True)
     manager = models.ForeignKey(
@@ -123,7 +123,6 @@ class Draws(models.Model):
         through='Entries',
         through_fields=('draw_list', 'player'),
     )
-
     def __str__(self):
         return self.category
 
@@ -180,7 +179,6 @@ class Tournament_Managers(models.Model):
 class Coach(models.Model):
     name = models.CharField(db_index=True, max_length=300)
     player_list = models.ManyToManyField(Players, null=True, blank=True)
-
 
 class Entries(models.Model):
     draw_list = models.ForeignKey(

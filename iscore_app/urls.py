@@ -41,5 +41,8 @@ urlpatterns = [
     url(r'^generate_draws/',
         match.handle_generate_draws,
         name='generate_draws'),
+    url(r'^generate_schedule/',
+       utils.handle_generate_schedule,
+        name='generate_schedule'),
     url(r'', IndexView.as_view(), name='index'),
 ]
