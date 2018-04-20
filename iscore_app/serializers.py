@@ -78,9 +78,10 @@ class MatchesSerializer(serializers.ModelSerializer):
 
 class MatchesReaderSerializer(serializers.ModelSerializer):
 
-    player1 = PlayersSerializer(read_only=True)
-    player2 = PlayersSerializer(read_only=True)
-    winner = PlayersSerializer(read_only=True)
+    player1 = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    player2 = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    winner = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    draws = serializers.SlugRelatedField(read_only=True, slug_field='category')
 
     class Meta:
         model = Matches
@@ -129,3 +130,13 @@ class EntriesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Entries
         fields = '__all__'
+
+
+class EntriesReaderSerializer(serializers.ModelSerializer):
+    draw_list = serializers.SlugRelatedField(
+        read_only=True, slug_field='category')
+    player = serializers.SlugRelatedField(read_only=True, slug_field='name')
+
+    class Meta:
+        model = Entries
+        fields = ['draw_list', 'player', 'is_seeded', 'rank']

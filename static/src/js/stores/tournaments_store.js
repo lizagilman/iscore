@@ -1,5 +1,5 @@
 import { observable, action } from 'mobx';
-import { getAllTournamentsApi, setTournamentApi } from '../api';
+import { getAllTournamentsApi, editTournamentApi } from '../api';
 
 class TournamentsStore {
   @observable allTournaments = [];
@@ -13,7 +13,7 @@ class TournamentsStore {
 
   @action
   updateTournament = (tournament) => {
-    setTournamentApi(tournament).then((response) => {
+    editTournamentApi(tournament).then((response) => {
       if (response.status >= 400) {
         alert('Failed to save');
       }

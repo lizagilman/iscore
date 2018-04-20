@@ -62,6 +62,7 @@ class Organizations(models.Model):
         Points_Distribution_Methods, null=True, blank=True)
     money_list = models.ManyToManyField(
         Money_Distribution_Methods, null=True, blank=True)
+    field_of_sports = models.CharField(max_length=300)
 
     def __str__(self):
         return self.name
@@ -107,6 +108,8 @@ class Tournaments(models.Model):
     registration_end_date = models.DateField(null=True, blank=True)
     address = models.CharField(max_length=300, null=True, blank=True)
     status = models.CharField(max_length=300, null=True, blank=True)
+    manager = models.ForeignKey(
+        'Tournament_Managers', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -169,7 +172,6 @@ class Games(models.Model):
 
 class Tournament_Managers(models.Model):
     name = models.CharField(db_index=True, max_length=300)
-    tournaments = models.ManyToManyField(Tournaments, null=True, blank=True)
 
     def __str__(self):
         return self.name

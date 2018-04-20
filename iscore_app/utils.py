@@ -4,14 +4,13 @@ from iscore_app.models import Matches, Draws, Entries
 from django.core import serializers
 
 
-
 def handle_generate_schedule(request):
 
-    tournament =int(request.GET['tournament_id'])
-    t=request.GET['start_date']
-    start_date = datetime.datetime.strptime(t,"%d/%m/%Y %H:%M")
-    t=request.GET['end_date']
-    end_date = datetime.datetime.strptime(t,"%d/%m/%Y %H:%M")
+    tournament = int(request.GET['tournament_id'])
+    t = request.GET['start_date']
+    start_date = datetime.datetime.strptime(t, "%d/%m/%Y %H:%M")
+    t = request.GET['end_date']
+    end_date = datetime.datetime.strptime(t, "%d/%m/%Y %H:%M")
     num_of_courts = int(request.GET['num_of_courts'])
     start_hour = int(request.GET['start_hour'])
     finish_hour = int(request.GET['finish_hour'])
@@ -19,14 +18,14 @@ def handle_generate_schedule(request):
     data = generate_schedule(tournament, start_date, end_date, num_of_courts,
                              start_hour, finish_hour, game_duration)
 
-    if (data=="could not compute, too few matches per day"):return HttpResponse(data)
+    if (data == "could not compute, too few matches per day"):
+        return HttpResponse(data)
     send_data = serializers.serialize('json', data)
     return HttpResponse(send_data)
 
 
 def generate_category_schedule(match_list, start_date, start_hour, finish_hour,
                                num_of_courts, games_per_day, game_duration):
-
 
     game_duration = game_duration
     match_date = start_date
