@@ -1,8 +1,7 @@
 from django.conf.urls import url, include
 from rest_framework import routers
 from iscore_app.views import IndexView
-from iscore_app import views,match,utils
-
+from iscore_app import views, match, utils
 
 router = routers.DefaultRouter()
 router.register(r'catagories', views.CatagoriesViewSet)
@@ -18,12 +17,15 @@ router.register(r'RankingLists', views.RankingListsViewSet)
 router.register(r'Rankingslistcatagories', views.RankingslistcatagoriesViewSet)
 router.register(r'Organizations', views.OrganizationsViewSet)
 router.register(r'Tournaments', views.TournamentsViewSet)
-router.register(r'ModifyMatches', views.MatchesViewSet)
+router.register(
+    r'ModifyMatches', views.MatchesViewSet, base_name='Modify matches')
 router.register(r'Matches', views.MatchesReaderViewSet)
 router.register(r'Draws', views.DrawsViewSet)
 router.register(r'Sets', views.SetsViewSet)
 router.register(r'Games', views.GamesViewSet)
-router.register(r'Entries', views.EntriesViewSet)
+router.register(r'Entries', views.EntriesReaderViewSet)
+router.register(
+    r'ModifyEntries', views.EntriesViewSet, base_name='Modify entries')
 router.register(r'TournamentManagers', views.TournamentManagersReaderViewSet)
 router.register(
     r'ModifyTournamentManagers',
@@ -40,4 +42,3 @@ urlpatterns = [
         name='generate_draws'),
     url(r'', IndexView.as_view(), name='index'),
 ]
-
