@@ -6,10 +6,17 @@ import DatePicker from 'material-ui/DatePicker';
 import Paper from 'material-ui/Paper';
 import Backup from 'material-ui/svg-icons/action/backup';
 import Toggle from 'material-ui/Toggle';
+import { inject, observer } from 'mobx-react/index';
 
+const mobx = require('mobx');
+
+@inject('stores')
+@observer
 export default class BasicInfo extends React.Component {
   // eslint-disable-next-line
   render() {
+    const tournament = mobx.toJS(this.props.stores.TournamentStore.tournament);
+
     const paperStyle = {
       height: 100,
       width: 100,
@@ -21,7 +28,7 @@ export default class BasicInfo extends React.Component {
     return (
       <div>
         <TextField
-          defaultValue="TLV Open 2018"
+          defaultValue={tournament ? tournament.name : ''}
           floatingLabelText="Tournament Name"
           fullWidth={true}
         />

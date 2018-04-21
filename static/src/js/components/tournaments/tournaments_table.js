@@ -28,6 +28,7 @@ export default class TournamentsTable extends React.Component {
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
     this.toggleHandler = this.toggleHandler.bind(this);
+    this.onLinkClick = this.onLinkClick.bind(this);
 
     this.state = {
       displayModal: false,
@@ -54,6 +55,11 @@ export default class TournamentsTable extends React.Component {
     TournamentsStore.updateTournament(updatedTournament);
   }
 
+  onLinkClick(tournament) {
+    const { TournamentStore } = this.props.stores;
+    TournamentStore.setCurrentTournament(tournament);
+  }
+
   componentWillMount() {
     const { TournamentsStore } = this.props.stores;
 
@@ -70,7 +76,9 @@ export default class TournamentsTable extends React.Component {
     const createRow = (item, index) => (
       <TableRow key={index}>
         <TableRowColumn>
-          <Link to={`tournament/${item.id}`}>{item.name} </Link>
+          <Link to={`tournament/${item.id}`}>
+            <div onClick={this.onLinkClick(item)}>{item.name}</div>
+          </Link>
         </TableRowColumn>
         <TableRowColumn>{item.status}</TableRowColumn>
         <TableRowColumn>{item.start_date}</TableRowColumn>
