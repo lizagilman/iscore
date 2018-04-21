@@ -1,35 +1,67 @@
-import React from 'react';
-import { inject, observer } from 'mobx-react';
+import React from "react";
+import { inject, observer } from "mobx-react";
 import {
   Table,
   TableBody,
   TableHeader,
   TableHeaderColumn,
   TableRow,
-  TableRowColumn,
-} from 'material-ui/Table';
+  TableRowColumn
+} from "material-ui/Table";
 
-const mobx = require('mobx');
+const mobx = require("mobx");
 
-const schedule_table_style_digit = {
-  paddingLeft:'77px',
+const scheduleTableStylePlayer1 = {
+  display: "inline-block",
+  paddingLeft: "44px",
+  paddingRight: "0px",
+  width: "14%"
 };
-const schedule_table_style_word = {
-  paddingLeft:'60px',
+const scheduleTableHeader = {
+  paddingLeft: "0px",
+  paddingRight: "0px"
 };
-const schedule_table = {
-  backgroundColor:'white',
+const scheduleTableStylePlayer2 = {
+  display: "inline-block",
+  paddingLeft: "40px",
+  paddingRight: "0px",
+  width: "14%"
 };
-const schedule_table_style_court = {
-  paddingLeft:'55px',
+
+const scheduleTableStyleStage = {
+  display: "inline-block",
+  paddingLeft: "74px",
+  paddingRight: "0px",
+  width: "14%"
 };
-const schedule_table_style_category = {
-  paddingLeft:'40px',
+const scheduleTableStyleTime = {
+  display: "inline-block",
+  paddingLeft: "27px",
+  paddingRight: "0px",
+  width: "14%"
 };
-const schedule_table_style_winner= {
-  paddingLeft:'40px',
+const scheduleTableStyle = {
+  backgroundColor: "white"
 };
-@inject('stores')
+const scheduleTableStyleCourt = {
+  display: "inline-block",
+  paddingLeft: "47px",
+  paddingRight: "0px",
+  width: "14%"
+};
+const scheduleTableStyleCategory = {
+  display: "inline-block",
+  paddingLeft: "60px",
+  paddingRight: "0px",
+  width: "14%"
+};
+const scheduleTableStyleWinner = {
+  display: "inline-block",
+  paddingLeft: "38px",
+  paddingRight: "0px",
+  width: "14%"
+};
+@inject("stores")
 @observer
 export default class Schedule extends React.Component {
   constructor(props) {
@@ -38,58 +70,64 @@ export default class Schedule extends React.Component {
     this.state = {};
   }
 
-  componentWillMount() {
-    console.log('will mount');
-  //  const { MatchesStore } = this.props.stores;
-   // MatchesStore.fetchAllMatchs();
-  }
-
   render() {
-    console.log('will render');
-    const { MatchesStore } = this.props.stores;
+    const tournament = mobx.toJS(this.props.stores.TournamentStore.tournament)
+      ? mobx.toJS(this.props.stores.TournamentStore.tournament)
+      : " ";
 
-    const storedMatches = MatchesStore.allMatches;
+    const createRow = item => (
+      <TableRow>
+        <TableRowColumn style={scheduleTableStyleStage}>
+          {item.stage ? item.stage : ""}
+        </TableRowColumn>
+        <TableRowColumn style={scheduleTableStylePlayer1}>
+          {item.player1 ? item.player1.name : ""}
+        </TableRowColumn>
+        <TableRowColumn style={scheduleTableStylePlayer2}>
+          {item.player2 ? item.player2.name : ""}
+        </TableRowColumn>
+        <TableRowColumn style={scheduleTableStyleTime}>
+          {item.time ? item.time : ""}
+        </TableRowColumn>
+        <TableRowColumn style={scheduleTableStyleCourt}>
+          {item.court ? item.court : ""}
+        </TableRowColumn>
 
-    //const data = storedMatches && storedMatches.length > 0 ? mobx.toJS(storedMatches)[0] : false;
-
-    const createRow = (item, index) => {
-      console.log('will create row');
-
-      return (
-        <TableRow key={index}>
-            <TableRowColumn style={schedule_table_style_digit} >{item.index}</TableRowColumn>
-          <TableRowColumn style={schedule_table_style_digit} >{item.stage}</TableRowColumn>
-          <TableRowColumn style={schedule_table_style_word}  >{item.player1}</TableRowColumn>
-          <TableRowColumn style={schedule_table_style_word} >{item.player2}</TableRowColumn>
-          <TableRowColumn>{item.time}</TableRowColumn>
-            <TableRowColumn style={schedule_table_style_court} >{item.court}</TableRowColumn>
-            <TableRowColumn style={schedule_table_style_category} >{item.draws}</TableRowColumn>
-            <TableRowColumn style={schedule_table_style_winner} >{item.winner}</TableRowColumn>
-        </TableRow>
-
-      );
-    };
+        <TableRowColumn style={scheduleTableStyleCategory}>
+          {item.draws ? item.draws : ""}
+        </TableRowColumn>
+        <TableRowColumn style={scheduleTableStyleWinner}>
+          {item.winner ? item.winner : ""}
+        </TableRowColumn>
+      </TableRow>
+    );
 
     const scheduleTable = (
       <div>
-        <Table style={schedule_table} >
+        <Table style={scheduleTableStyle}>
           <TableHeader displaySelectAll={false}>
             <TableRow>
-                <TableHeaderColumn >Index</TableHeaderColumn>
-              <TableHeaderColumn >Stage</TableHeaderColumn>
-              <TableHeaderColumn>Player</TableHeaderColumn>
-              <TableHeaderColumn>Player</TableHeaderColumn>
-              <TableHeaderColumn>Time</TableHeaderColumn>
-                <TableHeaderColumn>Court</TableHeaderColumn>
-                <TableHeaderColumn>Category</TableHeaderColumn>
-                <TableHeaderColumn>Winner</TableHeaderColumn>
+              <TableHeaderColumn>Stage</TableHeaderColumn>
+              <TableHeaderColumn style={scheduleTableHeader}>
+                Player
+              </TableHeaderColumn>
+              <TableHeaderColumn style={scheduleTableHeader}>
+                Player
+              </TableHeaderColumn>
+              <TableHeaderColumn style={scheduleTableHeader}>
+                Time
+              </TableHeaderColumn>
+              <TableHeaderColumn style={scheduleTableHeader}>
+                Court
+              </TableHeaderColumn>
+              <TableHeaderColumn style={scheduleTableHeader}>
+                Category
+              </TableHeaderColumn>
+              <TableHeaderColumn>Winner</TableHeaderColumn>
             </TableRow>
           </TableHeader>
-          <TableBody displayRowCheckbox={false} >
-            {console.log('schedule table')}
-            {storedMatches
-              ? storedMatches.map((Match, index) => createRow(Match, index))
-              : 'Loading...'}
+          <TableBody displayRowCheckbox={false}>
+            {tournament ? createRow(tournament) : "Loading..."}
           </TableBody>
         </Table>
       </div>

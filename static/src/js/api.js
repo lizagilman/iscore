@@ -3,7 +3,6 @@ import fetch from 'isomorphic-fetch';
 export const getAllTournamentsApi = () =>
   fetch('/api/Tournaments/').then(response => response.json());
 
-
 export const editTournamentApi = tournament =>
   fetch(`/api/Tournaments/${tournament.id}/`, {
     method: 'PUT',
@@ -38,9 +37,7 @@ export const getAllTournamentsByManagerApi = data =>
   fetch(`/api/Tournaments/?manager=${data.manager_id}`).then(response =>
     response.json());
 
-export const getTournamentByIDApi = id =>
-  fetch(`/api/Tournaments/${id}/`).then(response =>
-    response.json());
+export const getTournamentByIDApi = id => fetch(`/api/Tournaments/${id}/`).then(response => response);
 
 export const getEntriesByDrawListIDApi = data =>
   fetch(`/api/Entries/?draw_list=${data.draw_list_id}`).then(response =>
@@ -63,8 +60,8 @@ export const getRankingListByOrganization = data =>
   fetch(`/api/RankingLists/?organization=${data.organization}`).then(response =>
     response.json());
 
-export const getCategoriesByRankingList = data =>
-  fetch(`/api/catagories/?rankings_list_catagories__list=${data.ranking_list}`).then(response => response.json());
+export const getCategoriesByRankingList = rankingList =>
+  fetch(`/api/catagories/?rankings_list_catagories__list=${rankingList}`).then(response => response.json());
 
 // get all grades by ranking list (or organization)??
 
@@ -86,12 +83,15 @@ export const getAllMatchesApi = () =>
 export const getAllEntriesApi = () =>
   fetch('/api/Entries/').then(response => response.json());
 
-export const setTournamentApi = tournament => fetch(`/apiTournaments/${tournament.id}/`, {
-  method: 'PUT',
-  headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(tournament),
-}).then(response => response.json());
+export const getAllDrawsApi = () =>
+  fetch('/api/Entries/').then(response => response.json());
 
+export const setTournamentApi = tournament =>
+  fetch(`/apiTournaments/${tournament.id}/`, {
+    method: 'PUT',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(tournament),
+  }).then(response => response.json());
