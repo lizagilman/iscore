@@ -11,11 +11,11 @@ import { default as ScheduleIcon } from "material-ui/svg-icons/action/schedule";
 import { default as SettingsIcon } from "material-ui/svg-icons/action/settings";
 import PieChart from 'material-ui/svg-icons/editor/pie-chart';
 import BasicInfo from '../basic_info/basic_info_index';
-import EntriesAndSeeds from '../entries_and_seeds/entries_and_seeds_index';
 import Draws from '../draws/draws_index';
 import Schedule from '../schedule/schedule_index';
 import Settings from '../settings/settings_index';
 import Statistics from '../statistics/statistics_index';
+import TabsExampleSimple from '../entries_and_seeds/entries_by_categorie';
 
 const style = {
   paper: {
@@ -51,7 +51,7 @@ class LeftMenu extends React.Component {
               primaryText="Entries and Seeds"
               leftIcon={<SuperVisorAccount />}
               onClick={contentSwitcher(
-                <EntriesAndSeeds />,
+                <TabsExampleSimple />,
                 'Entries and Seeds',
               )}
             />

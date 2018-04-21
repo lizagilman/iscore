@@ -9,6 +9,9 @@ export const getAllMatchesApi = () =>
 export const getAllEntriesApi = () =>
   fetch('/api/Entries/').then(response => response.json());
 
+export const getAllDrawsApi = () =>
+  fetch('/api/Entries/').then(response => response.json());
+
 export const setTournamentApi = tournament => fetch(`/apiTournaments/${tournament.id}/`, {
   method: 'PUT',
   headers: {

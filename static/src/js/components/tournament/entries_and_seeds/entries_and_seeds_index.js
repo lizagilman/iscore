@@ -24,6 +24,20 @@ const entries_table_style_seed = {
 const entries_table = {
   backgroundColor: "white"
 };
+const sortArrOfObjectsByParam = (arrToSort, paramToSortBy, sortAscending) => {
+  if (sortAscending == undefined) sortAscending = true;
+
+  if (sortAscending) {
+    return [].slice.call(arrToSort).sort(function(a, b) {
+      return a[paramToSortBy] > b[paramToSortBy];
+    });
+  } else {
+    return [].slice.call(arrToSort).sort(function(a, b) {
+      return a[paramToSortBy] < b[paramToSortBy];
+    });
+  }
+};
+
 @inject("stores")
 @observer
 export default class EntriesAndSeeds extends React.Component {
@@ -35,17 +49,23 @@ export default class EntriesAndSeeds extends React.Component {
 
   componentWillMount() {
     console.log("will mount");
-    //const { EntriesStore } = this.props.stores;
-    // EntriesStore.fetchAllEntries();
+    const { EntriesStore } = this.props.stores;
+    EntriesStore.fetchAllEntries();
   }
 
   render() {
     console.log("will render");
     const { EntriesStore } = this.props.stores;
-debugger
+
     const storedEntries = EntriesStore.allEntries;
 
-    //const data = storedEntries && storedEntries.length > 0 ? mobx.toJS(storedEntries)[0] : false;
+    const data =
+      storedEntries && storedEntries.length > 0
+        ? mobx.toJS(storedEntries)[0]
+        : false;
+
+    sortArrOfObjectsByParam(data, "rank");
+
     const createRow = (item, index) => {
       console.log("will create row");
 
@@ -57,9 +77,13 @@ debugger
           <TableRowColumn style={entries_table_style_rank}>
             {item.rank}
           </TableRowColumn>
-          <TableRowColumn style={entries_table_style_seed}>
-            {item.seed}
-          </TableRowColumn>
+          {item.is_seeded ? (
+            <TableRowColumn style={entries_table_style_seed}>
+              Seeded
+            </TableRowColumn>
+          ) : (
+            <TableRowColumn style={entries_table_style_seed} />
+          )}
         </TableRow>
       );
     };
@@ -76,8 +100,8 @@ debugger
           </TableHeader>
           <TableBody displayRowCheckbox={false}>
             {console.log("schedule table")}
-            {storedEntries
-              ? storedEntries.map((Entrie, index) => createRow(Entrie, index))
+            {data
+              ? data.map((Entrie, index) => createRow(Entrie, index))
               : "Loading..."}
           </TableBody>
         </Table>
