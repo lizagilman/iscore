@@ -37,8 +37,8 @@ export const getAllTournamentsByManagerApi = data =>
   fetch(`/api/Tournaments/?manager=${data.manager_id}`).then(response =>
     response.json());
 
-export const getTournamentsByIDApi = data =>
-  fetch(`/api/Tournaments/${data.tournament_id}/`).then(response =>
+export const getTournamentByIDApi = id =>
+  fetch(`/api/Tournaments/${id}/`).then(response =>
     response.json());
 
 export const getEntriesByDrawListIDApi = data =>
