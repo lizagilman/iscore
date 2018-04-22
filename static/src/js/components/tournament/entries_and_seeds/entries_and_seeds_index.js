@@ -1,5 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+
 import {
   Table,
   TableBody,
@@ -11,25 +12,29 @@ import {
 
 const mobx = require('mobx');
 
-const entries_table_style_player = {
+const EntriesTableStylePlayer = {
   paddingLeft: '77px',
 };
-const entries_table_style_rank = {
+const entriesTableStyleRank = {
   paddingLeft: '60px',
 };
-const entries_table_style_seed = {
+const entriesTableStyleSeed = {
   paddingLeft: '50px',
 };
-const entries_table = {
+const entriesTableStyle = {
   backgroundColor: 'white',
 };
 const sortArrOfObjectsByParam = (arrToSort, paramToSortBy, sortAscending) => {
-  if (sortAscending == undefined) sortAscending = true;
+  if (sortAscending === undefined) sortAscending = true;
 
   if (sortAscending) {
-    return [].slice.call(arrToSort).sort((a, b) => a[paramToSortBy] > b[paramToSortBy]);
+    return [].slice
+      .call(arrToSort)
+      .sort((a, b) => a[paramToSortBy] > b[paramToSortBy]);
   }
-  return [].slice.call(arrToSort).sort((a, b) => a[paramToSortBy] < b[paramToSortBy]);
+  return [].slice
+    .call(arrToSort)
+    .sort((a, b) => a[paramToSortBy] < b[paramToSortBy]);
 };
 
 @inject('stores')
@@ -58,31 +63,27 @@ export default class EntriesAndSeeds extends React.Component {
 
     sortArrOfObjectsByParam(data, 'rank');
 
-    const createRow = (item, index) => {
-      console.log('will create row');
-
-      return (
+    const createRow = (item, index) => (
         <TableRow key={index}>
-          <TableRowColumn style={entries_table_style_player}>
+          <TableRowColumn style={EntriesTableStylePlayer}>
             {item.player}
           </TableRowColumn>
-          <TableRowColumn style={entries_table_style_rank}>
+          <TableRowColumn style={entriesTableStyleRank}>
             {item.rank}
           </TableRowColumn>
           {item.is_seeded ? (
-            <TableRowColumn style={entries_table_style_seed}>
+            <TableRowColumn style={entriesTableStyleSeed}>
               Seeded
             </TableRowColumn>
           ) : (
-            <TableRowColumn style={entries_table_style_seed} />
+            <TableRowColumn style={entriesTableStyleSeed} />
           )}
         </TableRow>
-      );
-    };
+    );
 
     const entriesTable = (
       <div>
-        <Table style={entries_table}>
+        <Table style={entriesTableStyle}>
           <TableHeader displaySelectAll={false}>
             <TableRow>
               <TableHeaderColumn>Player</TableHeaderColumn>

@@ -70,21 +70,31 @@ export default class Schedule extends React.Component {
     this.state = {};
   }
 
-  render() {
-    const tournament = mobx.toJS(this.props.stores.TournamentStore.tournament)
-      ? mobx.toJS(this.props.stores.TournamentStore.tournament)
-      : ' ';
+  componentWillMount() {
+    const { MatchesStore } = this.props.stores;
+    MatchesStore.fetchAllMatchs();
+  }
 
-    const createRow = item => (
-      <TableRow>
+  render() {
+    const { MatchesStore } = this.props.stores;
+
+    const storedMatches = MatchesStore.allMatches;
+
+    const data =
+      storedMatches && storedMatches.length > 0
+        ? mobx.toJS(storedMatches)[0]
+        : false;
+
+    const createRow = (item, index) => (
+      <TableRow key={index}>
         <TableRowColumn style={scheduleTableStyleStage}>
           {item.stage ? item.stage : ''}
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStylePlayer1}>
-          {item.player1 ? item.player1.name : ''}
+          {item.player1 ? item.player1 : ''}
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStylePlayer2}>
-          {item.player2 ? item.player2.name : ''}
+          {item.player2 ? item.player2 : ''}
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStyleTime}>
           {item.time ? item.time : ''}
@@ -127,7 +137,11 @@ export default class Schedule extends React.Component {
             </TableRow>
           </TableHeader>
           <TableBody displayRowCheckbox={false}>
-            {tournament ? createRow(tournament) : 'Loading...'}
+
+            {data
+              ? data.map((Match, index) => createRow(Match, index))
+              : 'Loading...'}
+
           </TableBody>
         </Table>
       </div>

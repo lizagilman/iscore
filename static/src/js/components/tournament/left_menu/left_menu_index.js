@@ -15,7 +15,8 @@ import Draws from '../draws/draws_index';
 import Schedule from '../schedule/schedule_index';
 import Settings from '../settings/settings_index';
 import Statistics from '../statistics/statistics_index';
-import TabsExampleSimple from '../entries_and_seeds/entries_by_categorie';
+
+import EntriesAndSeeds from '../entries_and_seeds/entries_and_seeds_index';
 
 const style = {
   paper: {
@@ -51,7 +52,7 @@ class LeftMenu extends React.Component {
               primaryText="Entries and Seeds"
               leftIcon={<SuperVisorAccount />}
               onClick={contentSwitcher(
-                <TabsExampleSimple />,
+                <EntriesAndSeeds />,
                 'Entries and Seeds',
               )}
             />

@@ -1,13 +1,20 @@
 import { observable, action } from 'mobx';
-import { getAllEntriesApi } from '../api';
+import { getAllEntriesApi, getEntriesByTournamentCategoryIDApi } from '../api';
 
 class EntriesStore {
   @observable allEntries = [];
+  @observable entriesByTournament = [];
 
   @action
   fetchAllEntries = () => {
     getAllEntriesApi().then((entriesJson) => {
       this.allEntries = [entriesJson];
+    });
+  };
+  @action
+  getEntries = (id) => {
+    getEntriesByTournamentCategoryIDApi(id).then((entriesJson) => {
+      this.entriesByTournament = [entriesJson];
     });
   };
   // allEntries = [

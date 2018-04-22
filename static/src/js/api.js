@@ -141,7 +141,6 @@ export const generate_draws = tournamentid =>
     response.json()
   );
 
-// alisa test functions
 
 export const getAllMatchesApi = () =>
   fetch("/api/Matches/").then(response => response.json());
