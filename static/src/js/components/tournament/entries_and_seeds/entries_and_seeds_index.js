@@ -1,44 +1,38 @@
-/* eslint-disable */
-import React from "react";
-import { inject, observer } from "mobx-react";
+import React from 'react';
+import { inject, observer } from 'mobx-react';
 import {
   Table,
   TableBody,
   TableHeader,
   TableHeaderColumn,
   TableRow,
-  TableRowColumn
-} from "material-ui/Table";
+  TableRowColumn,
+} from 'material-ui/Table';
 
-const mobx = require("mobx");
+const mobx = require('mobx');
 
 const entries_table_style_player = {
-  paddingLeft: "77px"
+  paddingLeft: '77px',
 };
 const entries_table_style_rank = {
-  paddingLeft: "60px"
+  paddingLeft: '60px',
 };
 const entries_table_style_seed = {
-  paddingLeft: "50px"
+  paddingLeft: '50px',
 };
 const entries_table = {
-  backgroundColor: "white"
+  backgroundColor: 'white',
 };
 const sortArrOfObjectsByParam = (arrToSort, paramToSortBy, sortAscending) => {
   if (sortAscending == undefined) sortAscending = true;
 
   if (sortAscending) {
-    return [].slice.call(arrToSort).sort(function(a, b) {
-      return a[paramToSortBy] > b[paramToSortBy];
-    });
-  } else {
-    return [].slice.call(arrToSort).sort(function(a, b) {
-      return a[paramToSortBy] < b[paramToSortBy];
-    });
+    return [].slice.call(arrToSort).sort((a, b) => a[paramToSortBy] > b[paramToSortBy]);
   }
+  return [].slice.call(arrToSort).sort((a, b) => a[paramToSortBy] < b[paramToSortBy]);
 };
 
-@inject("stores")
+@inject('stores')
 @observer
 export default class EntriesAndSeeds extends React.Component {
   constructor(props) {
@@ -48,13 +42,11 @@ export default class EntriesAndSeeds extends React.Component {
   }
 
   componentWillMount() {
-
     const { EntriesStore } = this.props.stores;
     EntriesStore.fetchAllEntries();
   }
 
   render() {
-
     const { EntriesStore } = this.props.stores;
 
     const storedEntries = EntriesStore.allEntries;
@@ -64,10 +56,10 @@ export default class EntriesAndSeeds extends React.Component {
         ? mobx.toJS(storedEntries)[0]
         : false;
 
-    sortArrOfObjectsByParam(data, "rank");
+    sortArrOfObjectsByParam(data, 'rank');
 
     const createRow = (item, index) => {
-      console.log("will create row");
+      console.log('will create row');
 
       return (
         <TableRow key={index}>
@@ -101,7 +93,7 @@ export default class EntriesAndSeeds extends React.Component {
           <TableBody displayRowCheckbox={false}>
             {data
               ? data.map((Entrie, index) => createRow(Entrie, index))
-              : "Loading..."}
+              : 'Loading...'}
           </TableBody>
         </Table>
       </div>
