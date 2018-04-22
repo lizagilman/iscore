@@ -10,7 +10,6 @@ import {
 import Toggle from 'material-ui/Toggle';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-import ModeEdit from 'material-ui/svg-icons/editor/mode-edit';
 import DeleteForever from 'material-ui/svg-icons/action/delete-forever';
 import { inject, observer } from 'mobx-react';
 import { Link } from 'react-router-dom';
@@ -29,6 +28,7 @@ export default class TournamentsTable extends React.Component {
     this.closeModal = this.closeModal.bind(this);
     this.toggleHandler = this.toggleHandler.bind(this);
     this.onLinkClick = this.onLinkClick.bind(this);
+    this.deleteTournament = this.deleteTournament.bind(this);
 
     this.state = {
       displayModal: false,
@@ -60,6 +60,14 @@ export default class TournamentsTable extends React.Component {
     TournamentStore.setCurrentTournament(tournament);
   }
 
+  deleteTournament(e, id) {
+    e.preventDefault();
+    const { TournamentStore } = this.props.stores;
+    if (TournamentStore) {
+      TournamentStore.deleteTournament(id);
+    }
+  }
+
   componentWillMount() {
     const { TournamentsStore } = this.props.stores;
 
@@ -89,8 +97,9 @@ export default class TournamentsTable extends React.Component {
           />
         </TableRowColumn>
         <TableRowColumn>
-          <ModeEdit />
-          <DeleteForever />
+          <a href={'#'} onClick={e => this.deleteTournament(e, item.id)}>
+            <DeleteForever />
+          </a>
         </TableRowColumn>
       </TableRow>
     );
