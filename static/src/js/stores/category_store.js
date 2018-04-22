@@ -5,7 +5,7 @@ class CategoryStore {
   @observable categoriesByTournament = [];
 
   @action
-  CategoriesByTournament = (id) => {
+  ReturnCategoriesByTournament = (id) => {
     getTournamentCategoriesByTournament(id).then((categoryJson) => {
       this.categoriesByTournament = categoryJson;
     });

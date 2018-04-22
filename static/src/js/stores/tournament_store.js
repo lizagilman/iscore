@@ -3,6 +3,7 @@ import {
   getTournamentByIDApi,
   editTournamentApi,
   deleteTournamentApi,
+    createTournamentApi
 } from '../api';
 
 class TournamentStore {
@@ -23,6 +24,16 @@ class TournamentStore {
   @action
   updateTournament = (tournament) => {
     editTournamentApi(tournament).then((response) => {
+      if (response.status >= 400) {
+        alert('Failed to save');
+      }
+    });
+  };
+
+    @action
+  createTournament = (tournament) => {
+    debugger
+    createTournamentApi(tournament).then((response) => {
       if (response.status >= 400) {
         alert('Failed to save');
       }

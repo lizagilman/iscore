@@ -87,8 +87,8 @@ WSGI_APPLICATION = 'iscore.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'iscore3',
-        'USER': 'admin3',
+        'NAME': 'iscore2',
+        'USER': 'admin2',
         'PASSWORD': '123456',
         'HOST': 'localhost',
         'PORT': ''

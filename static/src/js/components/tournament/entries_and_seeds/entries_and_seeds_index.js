@@ -32,10 +32,27 @@ const sortArrOfObjectsByParam = (arrToSort, paramToSortBy, sortAscending) => {
       .call(arrToSort)
       .sort((a, b) => a[paramToSortBy] > b[paramToSortBy]);
   }
+
   return [].slice
     .call(arrToSort)
     .sort((a, b) => a[paramToSortBy] < b[paramToSortBy]);
 };
+
+// const sortArrOfObjectsByParam = (arrToSort, paramToSortBy, sortAscending) => {
+//   if (sortAscending == undefined) sortAscending = true;
+//
+//   if (sortAscending) {
+//     return [].slice.call(arrToSort).sort(function(a, b) {
+//       return a[paramToSortBy] > b[paramToSortBy];
+//     });
+//     debugger
+//   } else {
+//     return [].slice.call(arrToSort).sort(function(a, b) {
+//       return a[paramToSortBy] < b[paramToSortBy];
+//     });
+//
+//   }
+// };
 
 @inject('stores')
 @observer
@@ -56,12 +73,13 @@ export default class EntriesAndSeeds extends React.Component {
 
     const storedEntries = EntriesStore.allEntries;
 
-    const data =
+    let data =
       storedEntries && storedEntries.length > 0
         ? mobx.toJS(storedEntries)[0]
         : false;
 
-    sortArrOfObjectsByParam(data, 'rank');
+    sortArrOfObjectsByParam(data, "rank");
+
 
     const createRow = (item, index) => (
         <TableRow key={index}>
@@ -92,6 +110,7 @@ export default class EntriesAndSeeds extends React.Component {
             </TableRow>
           </TableHeader>
           <TableBody displayRowCheckbox={false}>
+
             {data
               ? data.map((Entrie, index) => createRow(Entrie, index))
               : 'Loading...'}

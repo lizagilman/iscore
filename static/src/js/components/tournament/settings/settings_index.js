@@ -29,7 +29,8 @@ export default class Settings extends React.Component {
       : false;
 
     tournament && CategoryStore
-      ? CategoryStore.CategoriesByTournament(tournament.id)
+      ? CategoryStore.ReturnCategoriesByTournament(tournament.id)
+
       : false;
   }
   render() {
