@@ -42,7 +42,7 @@ class GradesSerializer(serializers.ModelSerializer):
 class GradesReaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Grades
-        fields = '__all__'
+        fields = ['name','points','money']
         depth = 1
 
 
@@ -90,6 +90,7 @@ class MatchesReaderSerializer(serializers.ModelSerializer):
 
 
 class DrawsSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Draws
         fields = '__all__'

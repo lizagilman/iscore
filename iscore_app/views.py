@@ -6,7 +6,6 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from django.http import HttpResponse
 from django.views import View
-
 from .models import Catagories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, Rankings_list_catagories, Organizations, Tournaments, Matches, Draws, Tournament_Managers, Coach, Games, Sets, Entries
 from iscore_app import serializers
 
@@ -40,22 +39,18 @@ class PlayersViewSet(viewsets.ModelViewSet):
 
 class MoneyDistributionMethodsViewSet(viewsets.ModelViewSet):
 
-    queryset = Money_Distribution_Methods.objects.all()
+    queryset = Money_Distribution_Methods.objects.all().distinct()
     serializer_class = serializers.MoneyDistributionMethodsSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
-    search_fields = [
-        'name',
-    ]
+    filter_fields = ('name','grades__ranking_lists__organization')
 
 
 class PointsDistributionMethodsViewSet(viewsets.ModelViewSet):
 
-    queryset = Points_Distribution_Methods.objects.all()
+    queryset = Points_Distribution_Methods.objects.all().distinct()
     serializer_class = serializers.PointsDistributionMethodsSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
-    search_fields = [
-        'name',
-    ]
+    filter_fields = ('name', 'grades__ranking_lists__organization')
 
 
 class GradesViewSet(viewsets.ModelViewSet):
@@ -63,19 +58,14 @@ class GradesViewSet(viewsets.ModelViewSet):
     queryset = Grades.objects.all()
     serializer_class = serializers.GradesSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
-    search_fields = [
-        'name',
-    ]
 
 
 class GradesReaderViewSet(viewsets.ModelViewSet):
 
-    queryset = Grades.objects.all()
+    queryset = Grades.objects.all().distinct()
     serializer_class = serializers.GradesReaderSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
-    search_fields = [
-        'name',
-    ]
+    filter_fields = ('name','ranking_lists','ranking_lists__organization')
 
 
 class RankingListsViewSet(viewsets.ModelViewSet):
@@ -133,10 +123,7 @@ class DrawsViewSet(viewsets.ModelViewSet):
     queryset = Draws.objects.all()
     serializer_class = serializers.DrawsSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
-    search_fields = [
-        'tournament__name', 'player1__name', 'player2__name', 'catagory'
-    ]
-
+    filter_fields = ('tournamet','category','player_list__name' )
 
 class TournamentManagersViewSet(viewsets.ModelViewSet):
 
