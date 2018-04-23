@@ -7,6 +7,7 @@ import Subheader from 'material-ui/Subheader';
 import FlatButton from 'material-ui/FlatButton';
 import { inject, observer } from 'mobx-react/index';
 
+
 const styles = {
   block: {
     maxWidth: 250,
@@ -20,45 +21,61 @@ const mobx = require('mobx');
 @inject('stores')
 @observer
 export default class Settings extends React.Component {
+  componentWillMount() {
+    const { TournamentStore, CategoryStore } = this.props.stores;
+
+    const tournament = TournamentStore.tournament
+      ? mobx.toJS(TournamentStore.tournament)
+      : false;
+
+    tournament && CategoryStore
+      ? CategoryStore.CategoriesByTournament(tournament.id)
+      : false;
+  }
   render() {
-    const tournament = mobx.toJS(this.props.stores.TournamentStore.tournament)
-      ? mobx.toJS(this.props.stores.TournamentStore.tournament)
-      : ' ';
-    const { CategoryStore } = this.props.stores;
+    const { TournamentStore, CategoryStore } = this.props.stores;
+    const tournament = TournamentStore.tournament
+      ? mobx.toJS(TournamentStore.tournament)
+      : false;
 
-    const categories = tournament.ranking_list
-      ? CategoryStore.getCategories(tournament.ranking_list.id)
-      : '';
+    const categories = CategoryStore
+      ? mobx.toJS(CategoryStore.categoriesByTournament)
+      : false;
 
-    const createCategoryCheckbox = (category, index) => (
-      <Checkbox
-        defaultValue={category ? category.name : ''}
-        style={styles.checkbox}
-      />
+    const CreateCategoryCheckbox = (category, index) => (
+      <li>
+
+        <Checkbox
+          label={category ? category.category : ''}
+          style={styles.checkbox}
+        />
+      </li>
     );
-
     return (
       <div>
         <TextField
-          defaultValue={tournament.organization ? tournament.organization : ''}
+          defaultValue={tournament ? tournament.organization : ''}
           floatingLabelText="Organization"
           fullWidth={true}
         />
         <TextField
-          defaultValue={tournament.ranking_list ? tournament.ranking_list : ''}
+          defaultValue={tournament ? tournament.ranking_list : ''}
           floatingLabelText="Ranking List"
           fullWidth={true}
         />
         <Subheader>Categories</Subheader>
         <div style={{ display: 'inline-block' }}>
-          {categories
-            ? categories.map((category, index) =>
-                createCategoryCheckbox(category, index))
-            : ''}
+          <ul>
+
+            {categories
+              ? categories.map((category, index) =>
+                  CreateCategoryCheckbox(category, index))
+              : ''}
+          </ul>
         </div>
 
         <TextField
-          defaultValue=""
+          defaultValue={tournament ? tournament.grade : ''}
           floatingLabelText="Grade"
           fullWidth={true}
         />

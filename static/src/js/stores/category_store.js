@@ -1,13 +1,13 @@
 import { observable, action } from 'mobx';
-import { getCategoriesByRankingList } from '../api';
+import { getTournamentCategoriesByTournament } from '../api';
 
 class CategoryStore {
-  @observable categories = {};
+  @observable categoriesByTournament = [];
 
   @action
-  getCategories = (id) => {
-    getCategoriesByRankingList(id).then((categoryJson) => {
-      this.categories = categoryJson;
+  CategoriesByTournament = (id) => {
+    getTournamentCategoriesByTournament(id).then((categoryJson) => {
+      this.categoriesByTournament = categoryJson;
     });
   };
 }

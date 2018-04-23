@@ -85,8 +85,8 @@ class MatchesReaderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Matches
-        fields = ('player1', 'player2', 'winner', 'stage', 'time', 'index',
-                  'draws', 'court')
+        fields = ['player1', 'player2', 'winner', 'stage', 'time', 'index',
+                  'draws', 'court']
 
 
 class DrawsSerializer(serializers.ModelSerializer):
