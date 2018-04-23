@@ -1,3 +1,4 @@
 release: python manage.py migrate
-npm run webpack
-python manage.py runserver
+web:npm run webpack
+web:python manage.py runserver
+
