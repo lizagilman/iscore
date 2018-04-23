@@ -1,13 +1,34 @@
+/* eslint-disable */
 import { observable, action } from 'mobx';
-import { getEntriesByDrawListIDApi } from '../api';
+import { getAllMatchesApi } from '../api';
 
 class DrawsStore {
-  @observable drawsByTournament = [];
+  @observable draw = [];
+  @observable matchesR16 = [];
+  @observable matchesQF = [];
+  @observable matchesSF = [];
+  @observable matchesF = [];
 
   @action
-  getDraws = (id) => {
-    getEntriesByDrawListIDApi(id).then((drawsJson) => {
-      this.entriesByTournament = [drawsJson];
+  getDraw = () => {
+    getAllMatchesApi().then((drawJson) => {
+      this.draw = drawJson;
+
+      drawJson.map((match) => {
+        switch (match.stage) {
+          case 'R16':
+            this.matchesR16.push(match);
+            break;
+          case 'QF':
+            this.matchesQF.push(match);
+            break;
+          case 'SF':
+            this.matchesSF.push(match);
+            break;
+          case 'F':
+            this.matchesF.push(match);
+        }
+      });
     });
   };
 }
