@@ -1,4 +1,4 @@
+release: python manage.py makemigrations iscore_app
 release: python manage.py migrate
 npm run webpack
-python manage.py runserver
-
+web: gunicorn iscore.wsgi
