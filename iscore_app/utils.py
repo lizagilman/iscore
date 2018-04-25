@@ -1,13 +1,13 @@
 from django.http import HttpResponse
 import datetime
-from iscore_app.models import Matches, Draws, Entries,Tournaments
+from iscore_app.models import Matches, TournamentCategories, Entries, Tournaments
 from django.core import serializers
 
 
 def handle_generate_schedule(request):
 
     tournament = int(request.GET['tournament_id'])
-    info=Tournaments.objects.get(pk=tournament)
+    info = Tournaments.objects.get(pk=tournament)
     start_date = info.start_date
     end_date = info.end_date
     num_of_courts = int(request.GET['num_of_courts'])
@@ -66,7 +66,7 @@ class match_time:
 def generate_schedule(tournament, start_date, end_date, num_of_courts,
                       start_hour, finish_hour, game_duration):
 
-    categories = Draws.objects.filter(pk=tournament)
+    categories = TournamentCategories.objects.filter(pk=tournament)
     tournament_duration = end_date - start_date
     tournament_duration = tournament_duration.total_seconds() / 86400
 

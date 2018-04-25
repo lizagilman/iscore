@@ -5,7 +5,7 @@ from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
 
-class Catagories(models.Model):
+class RankingListCategories(models.Model):
     name = models.CharField(db_index=True, max_length=300)
 
     def __str__(self):
@@ -79,9 +79,10 @@ class Ranking_Lists(models.Model):
         return self.name
 
 
-class Rankings_list_catagories(models.Model):
+class RankedPlayers(models.Model):
     list = models.ForeignKey(Ranking_Lists, on_delete=models.CASCADE)
-    category = models.ForeignKey(Catagories, on_delete=models.DO_NOTHING)
+    category = models.ForeignKey(
+        RankingListCategories, on_delete=models.DO_NOTHING)
     player = models.ForeignKey(
         Players, on_delete=models.DO_NOTHING, null=True, blank=True)
     points = models.IntegerField(default=0)
@@ -115,14 +116,16 @@ class Tournaments(models.Model):
         return self.name
 
 
-class Draws(models.Model):
+class TournamentCategories(models.Model):
     tournamet = models.ForeignKey(Tournaments, on_delete=models.CASCADE)
     category = models.CharField(max_length=300)
     player_list = models.ManyToManyField(
         Players,
         through='Entries',
-        through_fields=('draw_list', 'player'),
+        through_fields=('tournament_category', 'player'),
     )
+    max_players = models.IntegerField(default=0)
+
     def __str__(self):
         return self.category
 
@@ -148,22 +151,27 @@ class Matches(models.Model):
         blank=True)
     stage = models.CharField(max_length=300, blank=True)
     time = models.DateTimeField(null=True, blank=True)
-    index = models.IntegerField(default=0)
-    draws = models.ForeignKey(Draws, on_delete=models.CASCADE)
+    match_index = models.IntegerField(default=0)
+    next_match = models.ForeignKey(
+        'Matches', on_delete=models.DO_NOTHING, null=True, blank=True)
+    category = models.ForeignKey(
+        TournamentCategories, on_delete=models.CASCADE)
     court = models.IntegerField(default=0)
 
     def __str__(self):
         return 'matach: p1: %s , p2: %s , stage:%s  ,category : %s' % (
-            self.player1, self.player2, self.stage, self.draws)
+            self.player1, self.player2, self.stage, self.category)
 
 
 class Sets(models.Model):
+    set_num = models.IntegerField(default=1)
     player1_score = models.IntegerField(db_index=True, default=0)
     player2_score = models.IntegerField(default=0)
     matches = models.ForeignKey(Matches, on_delete=models.CASCADE)
 
 
 class Games(models.Model):
+    game_num = models.IntegerField(default=1)
     player1_score = models.IntegerField(db_index=True, default=0)
     player2_score = models.IntegerField(default=0)
     set = models.ForeignKey(Sets, on_delete=models.CASCADE)
@@ -180,9 +188,10 @@ class Coach(models.Model):
     name = models.CharField(db_index=True, max_length=300)
     player_list = models.ManyToManyField(Players, null=True, blank=True)
 
+
 class Entries(models.Model):
-    draw_list = models.ForeignKey(
-        Draws, on_delete=models.CASCADE, null=True, blank=True)
+    tournament_category = models.ForeignKey(
+        TournamentCategories, on_delete=models.CASCADE, null=True, blank=True)
     player = models.ForeignKey(
         Players, on_delete=models.CASCADE, null=True, blank=True)
     is_seeded = models.BooleanField(default=False)

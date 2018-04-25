@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 import json
-from iscore_app.models import Matches, Rankings_list_catagories, Catagories, Ranking_Lists, Draws, Entries, Tournaments
+from iscore_app.models import Matches, RankedPlayers, RankingListCategories, Ranking_Lists, TournamentCategories, Entries, Tournaments
 from django.core import serializers
 
 
@@ -38,7 +38,7 @@ class Match():
 
 
 def match_generate(tournament, category_draw):
-    rankedPlayers = Rankings_list_catagories.objects.filter(
+    rankedPlayers = RankedPlayers.objects.filter(
         list__organization=tournament.organization).filter(
             list__name=tournament.ranking_list).filter(
                 category__name=category_draw.category).order_by('points')
@@ -147,6 +147,6 @@ class Tournament():
 def Generate_Draws(tournamnet):
 
     tournamnt_info = Tournaments.objects.get(pk=tournamnet)
-    draw_list = Draws.objects.filter(tournamet=tournamnt_info)
+    draw_list = TournamentCategories.objects.filter(tournamet=tournamnt_info)
     for category in draw_list:
         match_generate(tournamnt_info, category)
