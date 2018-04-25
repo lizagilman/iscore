@@ -1,4 +1,5 @@
 import React from 'react';
+import * as mobx from 'mobx';
 import {
   Table,
   TableBody,
@@ -16,8 +17,6 @@ import { Link } from 'react-router-dom';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Wizard from './wizard/wizard_index';
-
-const mobx = require('mobx');
 
 @inject('stores')
 @observer

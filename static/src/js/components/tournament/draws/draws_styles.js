@@ -39,7 +39,11 @@ export const flexContainerMatch = {
 };
 
 export const flexContainerNextMatch = {
-  height: '50%',
+  height: '25%',
+};
+
+export const flexContainerNextMatchFinal = {
+  height: '100%',
 };
 
 export const treeContainerStyle = {
