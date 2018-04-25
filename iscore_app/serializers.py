@@ -1,10 +1,10 @@
-from iscore_app.models import Catagories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, Rankings_list_catagories, Organizations, Tournaments, Matches, Draws, Tournament_Managers, Coach, Games, Sets, Entries
+from iscore_app.models import RankingListCategories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, RankedPlayers, Organizations, Tournaments, Matches, TournamentCategories, Tournament_Managers, Coach, Games, Sets, Entries
 from rest_framework import serializers
 
 
 class CatagoriesSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = Catagories
+        model = RankingListCategories
         fields = '__all__'
 
 
@@ -42,7 +42,7 @@ class GradesSerializer(serializers.ModelSerializer):
 class GradesReaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Grades
-        fields = ['name','points','money']
+        fields = ['name', 'points', 'money']
         depth = 1
 
 
@@ -52,9 +52,29 @@ class RankingListsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class RankingslistcatagoriesSerializer(serializers.ModelSerializer):
+class RankingListsReaderSerializer(serializers.ModelSerializer):
+    organization = serializers.SlugRelatedField(
+        read_only=True, slug_field='name')
+    grades = serializers.SlugRelatedField(read_only=True, slug_field='name')
+
     class Meta:
-        model = Rankings_list_catagories
+        model = Ranking_Lists
+        fields = '__all__'
+
+
+class RankedPlayersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RankedPlayers
+        fields = '__all__'
+
+
+class RankedPlayersReaderSerializer(serializers.ModelSerializer):
+    list = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    category = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    player = serializers.SlugRelatedField(read_only=True, slug_field='name')
+
+    class Meta:
+        model = RankedPlayers
         fields = '__all__'
 
 
@@ -64,7 +84,27 @@ class OrganizationsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class OrganizationsReaderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Organizations
+        fields = '__all__'
+        depth = 1
+
+
 class TournamentsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tournaments
+        fields = '__all__'
+
+
+class TournamentsReaderSerializer(serializers.ModelSerializer):
+    organization = serializers.SlugRelatedField(
+        read_only=True, slug_field='name')
+    ranking_list = serializers.SlugRelatedField(
+        read_only=True, slug_field='name')
+    grade = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    manager = serializers.SlugRelatedField(read_only=True, slug_field='name')
+
     class Meta:
         model = Tournaments
         fields = '__all__'
@@ -81,18 +121,25 @@ class MatchesReaderSerializer(serializers.ModelSerializer):
     player1 = serializers.SlugRelatedField(read_only=True, slug_field='name')
     player2 = serializers.SlugRelatedField(read_only=True, slug_field='name')
     winner = serializers.SlugRelatedField(read_only=True, slug_field='name')
-    draws = serializers.SlugRelatedField(read_only=True, slug_field='category')
+    category = serializers.SlugRelatedField(read_only=True, slug_field='category')
 
     class Meta:
         model = Matches
-        fields = ['player1', 'player2', 'winner', 'stage', 'time', 'index',
-                  'draws', 'court']
+        fields = '__all__'
 
 
-class DrawsSerializer(serializers.ModelSerializer):
+class TournamentCategoriesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TournamentCategories
+        fields = '__all__'
+
+
+class TournamentCategoriesReaderSerializer(serializers.ModelSerializer):
+    player_list = serializers.SlugRelatedField(
+        many=True, read_only=True, slug_field='name')
 
     class Meta:
-        model = Draws
+        model = TournamentCategories
         fields = '__all__'
 
 
@@ -115,6 +162,16 @@ class CoachSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CoachReaderSerializer(serializers.ModelSerializer):
+    #    player_list = serializers.SlugRelatedField(
+    #        many=True, read_only=True, slug_field='name')
+
+    class Meta:
+        model = Coach
+        fields = '__all__'
+        depth = 1
+
+
 class GamesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Games
@@ -134,10 +191,10 @@ class EntriesSerializer(serializers.ModelSerializer):
 
 
 class EntriesReaderSerializer(serializers.ModelSerializer):
-    draw_list = serializers.SlugRelatedField(
+    tournament_category = serializers.SlugRelatedField(
         read_only=True, slug_field='category')
     player = serializers.SlugRelatedField(read_only=True, slug_field='name')
 
     class Meta:
         model = Entries
-        fields = ['draw_list', 'player', 'is_seeded', 'rank']
+        fields = ['tournament_category', 'player', 'is_seeded', 'rank']
