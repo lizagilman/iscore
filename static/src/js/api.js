@@ -6,7 +6,7 @@ export function getAllTournamentsApi() {
 }
 
 export function editTournamentApi(tournament) {
-  return fetch(`/api/Tournaments/${tournament.id}/`, {
+  return fetch(`/api/ModifyTournaments/${tournament.id}/`, {
     method: "PUT",
     headers: {
       Accept: "application/json",
@@ -17,13 +17,24 @@ export function editTournamentApi(tournament) {
 }
 
 export function createTournamentApi(tournament) {
-  return fetch("/api/Tournaments/", {
+  return fetch("/api/ModifyTournaments/", {
     method: "POST",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json"
     },
     body: JSON.stringify(tournament)
+  }).then(response => response);
+}
+
+export function setTournamentCategories(tournamentCategory) {
+  return fetch("/api/ModifyTournamentCategories/", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(tournamentCategory)
   }).then(response => response);
 }
 
@@ -66,15 +77,17 @@ export const getMatchesByTournamentCategoryIDAndStageApi = (
     response => response.json()
   );
 
-export const getOrganizationBySports = fieldOfSports =>
-  fetch(`/api/Organizations/?field_of_sports=${fieldOfSports}`).then(response =>
-    response.json()
+export function getOrganizationBySports(fieldOfSports) {
+  return fetch(`/api/Organizations/?field_of_sports=${fieldOfSports}`).then(
+    response => response.json()
   );
+}
 
-export const getRankingListByOrganization = organizationId =>
-  fetch(`/api/RankingLists/?organization=${organizationId}`).then(response =>
-    response.json()
+export function getRankingListByOrganization(organizationId) {
+  return fetch(`/api/RankingLists/?organization=${organizationId}`).then(
+    response => response.json()
   );
+}
 
 export function getCategoriesByRankingList(rankingListId) {
   return fetch(
@@ -140,7 +153,6 @@ export const generate_draws = tournamentid =>
   fetch(`/generate_draws/?tournament_id=${tournamentid}`).then(response =>
     response.json()
   );
-
 
 export const getAllMatchesApi = () =>
   fetch("/api/Matches/").then(response => response.json());

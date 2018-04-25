@@ -28,6 +28,7 @@ export default class TournamentsTable extends React.Component {
     this.toggleHandler = this.toggleHandler.bind(this);
     this.onLinkClick = this.onLinkClick.bind(this);
     this.deleteTournament = this.deleteTournament.bind(this);
+    this.saveNewTournament = this.saveNewTournament.bind(this);
 
     this.state = {
       displayModal: false,
@@ -42,15 +43,21 @@ export default class TournamentsTable extends React.Component {
     this.setState({ displayModal: false });
   }
 
+  saveNewTournament() {
+    const { WizardStore } = this.props.stores;
+    WizardStore.createNewTournament();
+  }
+
   toggleHandler(e, tournament) {
     e.preventDefault();
-
     const { TournamentsStore } = this.props.stores;
 
-    const updatedTournament = Object.assign(tournament, {
-      is_published: !tournament.is_published,
-    });
-
+    const updatedTournament = (({ id, name, field_of_sport }) => ({
+      id,
+      name,
+      field_of_sport,
+    }))(tournament);
+    updatedTournament.is_published = !tournament.is_published;
     TournamentsStore.updateTournament(updatedTournament);
   }
 
@@ -132,14 +139,13 @@ export default class TournamentsTable extends React.Component {
       <FlatButton
         label="Submit"
         primary={true}
-        disabled={true}
-        onClick={this.closeModal}
+        onClick={this.saveNewTournament}
       />,
     ];
 
     const modal = (
       <Dialog
-        title="Dialog With Actions"
+        title="Create Tournament"
         actions={actions}
         modal={true}
         open={this.state.displayModal}
