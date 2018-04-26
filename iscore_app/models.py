@@ -74,7 +74,7 @@ class Ranking_Lists(models.Model):
     grades = models.ManyToManyField(
         Grades, null=True, blank=True
     )  # also creates the joining table between Ranking_List and Grade(Rules Table)
-
+    categories=models.ManyToManyField(RankingListCategories, null=True, blank=True)
     def __str__(self):
         return self.name
 

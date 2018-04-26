@@ -56,6 +56,7 @@ class RankingListsReaderSerializer(serializers.ModelSerializer):
     organization = serializers.SlugRelatedField(
         read_only=True, slug_field='name')
     grades = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    categories=serializers.SlugRelatedField(read_only=True, slug_field='name')
 
     class Meta:
         model = Ranking_Lists
