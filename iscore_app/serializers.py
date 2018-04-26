@@ -55,8 +55,10 @@ class RankingListsSerializer(serializers.ModelSerializer):
 class RankingListsReaderSerializer(serializers.ModelSerializer):
     organization = serializers.SlugRelatedField(
         read_only=True, slug_field='name')
-    grades = serializers.SlugRelatedField(read_only=True, slug_field='name')
-    categories=serializers.SlugRelatedField(read_only=True, slug_field='name')
+    grades = serializers.SlugRelatedField(
+        read_only=True, slug_field='name', many=True)
+    categories = serializers.SlugRelatedField(
+        read_only=True, slug_field='name', many=True)
 
     class Meta:
         model = Ranking_Lists
@@ -122,7 +124,8 @@ class MatchesReaderSerializer(serializers.ModelSerializer):
     player1 = serializers.SlugRelatedField(read_only=True, slug_field='name')
     player2 = serializers.SlugRelatedField(read_only=True, slug_field='name')
     winner = serializers.SlugRelatedField(read_only=True, slug_field='name')
-    category = serializers.SlugRelatedField(read_only=True, slug_field='category')
+    category = serializers.SlugRelatedField(
+        read_only=True, slug_field='category')
 
     class Meta:
         model = Matches
