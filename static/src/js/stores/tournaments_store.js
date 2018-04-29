@@ -13,7 +13,9 @@ class TournamentsStore {
 
   @action
   updateTournament = (tournament) => {
-    editTournamentApi(tournament).then((response) => {
+    const newTournament = tournament;
+    newTournament.manager = 1;
+    editTournamentApi(newTournament).then((response) => {
       if (response.status >= 400) {
         alert('Failed to save');
       }
