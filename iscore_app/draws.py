@@ -42,7 +42,7 @@ def match_generate(tournament, category_draw):
         list__organization=tournament.organization).filter(
             list__name=tournament.ranking_list).filter(
                 category__name=category_draw.category).order_by('points')
-    registered_players = Entries.objects.filter(draw_list=category_draw)
+    registered_players = Entries.objects.filter(tournament_category=category_draw)
     for player in rankedPlayers:
         for registered in registered_players:
             if registered.player.name == player.player.name:
@@ -50,7 +50,7 @@ def match_generate(tournament, category_draw):
                 registered.save()
 
     ranked_registered_players = Entries.objects.filter(
-        draw_list=category_draw).order_by('rank')
+        tournament_category=category_draw).order_by('rank')
 
     player_list = []
     for player_in_list in ranked_registered_players:

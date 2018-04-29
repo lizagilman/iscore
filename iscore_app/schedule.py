@@ -72,14 +72,14 @@ def generate_schedule(tournament, start_date, end_date, num_of_courts,
 
     #calculate if time needed doesnt excel tournament duration
     number_of_all_matches = len(
-        Matches.objects.filter(draws__tournamet=tournament))
+        Matches.objects.filter(category__tournamet=tournament))
     avg_games_per_day = ((
         finish_hour - start_hour) / game_duration) * num_of_courts
     max_players_in_category = 0
     for category in categories:
         max_players_in_category = max(
             max_players_in_category,
-            len(Entries.objects.filter(draw_list=category)))
+            len(Entries.objects.filter(tournament_category=category)))
 
     if ((number_of_all_matches / avg_games_per_day) *
             find_num_stages(max_players_in_category) > tournament_duration):
@@ -89,15 +89,15 @@ def generate_schedule(tournament, start_date, end_date, num_of_courts,
     time = start_date
     for category in categories:
 
-        matches = Matches.objects.filter(draws__tournamet=tournament).filter(
-            draws=category).order_by('pk')
+        matches = Matches.objects.filter(category__tournamet=tournament).filter(
+            category=category).order_by('pk')
         games_per_day = days_for_category / len(matches)
         time = generate_category_schedule(matches, time, start_hour,
                                           finish_hour, num_of_courts,
                                           games_per_day, game_duration)
 
-    return Matches.objects.filter(draws__tournamet=tournament).order_by(
-        'draws__category', 'stage')
+    return Matches.objects.filter(category__tournamet=tournament).order_by(
+        'category__category', 'stage')
 
 
 def find_num_stages(match_len):
