@@ -9,7 +9,7 @@ def handle_generate_draws(request):
     Generate_Draws(tournament_id)
     draws = Matches.objects.filter(
         draws__tournamet=int(tournament_id)).order_by('-stage',
-                                                      'draws__category')
+                                                      'category__category')
     send_data = serializers.serialize('json', draws)
     return HttpResponse(send_data)
 
@@ -96,7 +96,7 @@ class Tournament():
                     winner=None,
                     stage=stage,
                     time=None,
-                    draws=draw_table)
+                    category=draw_table)
                 new_match.save()
 
             matches_len = len(self.matchList)
@@ -117,7 +117,7 @@ class Tournament():
                             winner=None,
                             stage=stage,
                             time=None,
-                            draws=draw_table)
+                            category=draw_table)
                         new_match.save()
                         fill += 1
         else:
