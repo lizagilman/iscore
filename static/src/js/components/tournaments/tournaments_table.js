@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import Wizard from './wizard/wizard_index';
+import Spinner from '../spinner/spinner';
 
 @inject('stores')
 @observer
@@ -52,6 +53,7 @@ export default class TournamentsTable extends React.Component {
     e.preventDefault();
     const { TournamentsStore } = this.props.stores;
 
+    // eslint-disable-next-line
     const updatedTournament = (({ id, name, field_of_sport }) => ({
       id,
       name,
@@ -61,9 +63,11 @@ export default class TournamentsTable extends React.Component {
     TournamentsStore.updateTournament(updatedTournament);
   }
 
-  onLinkClick(tournament) {
-    const { TournamentStore } = this.props.stores;
-    TournamentStore.setCurrentTournament(tournament);
+  onLinkClick(id) {
+    const { TournamentsStore, TournamentStore } = this.props.stores;
+
+    const selectedTournament = TournamentsStore.getSingleTournament(id);
+    TournamentStore.setCurrentTournament(selectedTournament);
   }
 
   deleteTournament(e, id) {
@@ -91,7 +95,7 @@ export default class TournamentsTable extends React.Component {
       <TableRow key={index}>
         <TableRowColumn>
           <Link to={`/tournament/${item.id}`}>
-            <div onClick={this.onLinkClick(item)}>{item.name}</div>
+            <div onClick={() => this.onLinkClick(item.id)}>{item.name}</div>
           </Link>
         </TableRowColumn>
         <TableRowColumn>{item.status}</TableRowColumn>
@@ -123,9 +127,11 @@ export default class TournamentsTable extends React.Component {
             </TableRow>
           </TableHeader>
           <TableBody displayRowCheckbox={false}>
-            {data
-              ? data.map((tournament, index) => createRow(tournament, index))
-              : 'Loading...'}
+            {data.length ? (
+              data.map((tournament, index) => createRow(tournament, index))
+            ) : (
+              <div>{Spinner(70)}</div>
+            )}
           </TableBody>
         </Table>
         <FloatingActionButton onClick={e => this.openModal()}>

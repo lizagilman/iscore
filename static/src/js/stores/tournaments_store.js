@@ -21,6 +21,12 @@ class TournamentsStore {
       }
     });
   };
+
+  @action
+  getSingleTournament = (id) => {
+    const singleTournament = this.allTournaments.filter(tournament => tournament.id === id);
+    return singleTournament.length ? singleTournament[0] : false;
+  };
 }
 
 const tournamentsStore = new TournamentsStore();
