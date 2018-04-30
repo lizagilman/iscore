@@ -1,8 +1,8 @@
+import { inject, observer } from 'mobx-react';
 import React from 'react';
 import MainCard from '../main_card/main_card_index';
 import LeftMenu from './left_menu/left_menu_index';
 import BasicInfo from '../tournament/basic_info/basic_info_index';
-import { inject, observer } from 'mobx-react';
 
 @inject('stores')
 @observer

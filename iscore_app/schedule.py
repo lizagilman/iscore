@@ -118,4 +118,5 @@ def delete_schedule(request):
         match.time = None
         match.save()
 
-    return HttpResponse("schedule were deleted")
+    return HttpResponse(status=200)
+

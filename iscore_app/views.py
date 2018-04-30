@@ -150,7 +150,7 @@ class MatchesReaderViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MatchesSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ['match_num', 'player1__name', 'player2__name']
-
+    filter_fields = ('category', 'category__tournamet')
 
 class TournamentCategoriesViewSet(viewsets.ModelViewSet):
 
