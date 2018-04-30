@@ -55,32 +55,28 @@ export default class BasicInfo extends React.Component {
 
         <DatePicker
           floatingLabelText="Start Date"
-
-          defaultDate={tournament ? new Date(tournament.start_date) : new Date()}
+          // defaultDate={tournament ? new Date(tournament.start_date) : new Date()}
           container="inline"
           className={'formField'}
         />
 
         <DatePicker
           floatingLabelText="End Date"
-
-          defaultDate={tournament ? new Date(tournament.end_date) : new Date()}
+          // defaultDate={tournament ? new Date(tournament.end_date) : new Date()}
 
           container="inline"
           className={'formField'}
         />
         <DatePicker
           floatingLabelText="Registration Begin Date"
-
-          defaultDate={tournament ? new Date(tournament.registration_start_date) : new Date()}
+          // defaultDate={tournament ? new Date(tournament.registration_start_date) : new Date()}
 
           container="inline"
           className={'formField'}
         />
         <DatePicker
           floatingLabelText="Registration Deadline"
-
-          defaultDate={tournament ? new Date(tournament.registration_end_date) : new Date()}
+          // defaultDate={tournament ? new Date(tournament.registration_end_date) : new Date()}
 
           container="inline"
           className={'formField'}
