@@ -84,5 +84,9 @@ urlpatterns = [
     url(r'^delete_draws/',
         draws.Delete_Draws,
         name='delete_draws'),
+    url(r'^delete_schedule/',
+        schedule.delete_schedule,
+        name='delete_schedule'),
     url(r'', IndexView.as_view(), name='index'),
+
 ]
