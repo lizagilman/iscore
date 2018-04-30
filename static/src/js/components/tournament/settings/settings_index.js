@@ -42,14 +42,13 @@ export default class Settings extends React.Component {
 
     this.setState({ tournament });
 
-    tournament && CategoryStore
-      ? CategoryStore.CategoriesByTournament(tournament.id).then((CategoryStore) => {
+    if (tournament && CategoryStore) {
+      CategoryStore.CategoriesByTournament(tournament.id).then((CategoryStore) => {
         self.setState({ categories: mobx.toJS(CategoryStore) });
-      })
-      : false;
+      });
+    }
   }
   render() {
-    const { TournamentStore, CategoryStore } = this.props.stores;
     const tournament = this.state.tournament;
 
     const categories = this.state.categories;
