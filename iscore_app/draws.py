@@ -8,8 +8,8 @@ def handle_generate_draws(request):
     tournament_id = request.GET['tournament_id']
     Generate_Draws(tournament_id)
     draws = Matches.objects.filter(
-        category__tournamet=int(tournament_id)).order_by('-stage',
-                                                      'category__category')
+        category__tournamet=int(tournament_id)).order_by(
+            '-stage', 'category__category')
     send_data = serializers.serialize('json', draws)
     return HttpResponse(send_data)
 
@@ -42,7 +42,8 @@ def match_generate(tournament, category_draw):
         list__organization=tournament.organization).filter(
             list__name=tournament.ranking_list).filter(
                 category__name=category_draw.category).order_by('points')
-    registered_players = Entries.objects.filter(tournament_category=category_draw)
+    registered_players = Entries.objects.filter(
+        tournament_category=category_draw)
     for player in rankedPlayers:
         for registered in registered_players:
             if registered.player.name == player.player.name:

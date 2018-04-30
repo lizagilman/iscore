@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 from rest_framework import routers
 from iscore_app.views import IndexView
-from iscore_app import views, draws, schedule
+from iscore_app import views, draws, schedule, tournament
 
 router = routers.DefaultRouter()
 router.register(r'RankingListCategories', views.CatagoriesViewSet)
@@ -78,5 +78,8 @@ urlpatterns = [
     url(r'^generate_schedule/',
         schedule.handle_generate_schedule,
         name='generate_schedule'),
+    url(r'CreateTournament',
+        tournament.create_Tournament,
+        name='Create-Tournament'),
     url(r'', IndexView.as_view(), name='index'),
 ]

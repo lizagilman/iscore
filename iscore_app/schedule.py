@@ -89,8 +89,9 @@ def generate_schedule(tournament, start_date, end_date, num_of_courts,
     time = start_date
     for category in categories:
 
-        matches = Matches.objects.filter(category__tournamet=tournament).filter(
-            category=category).order_by('pk')
+        matches = Matches.objects.filter(
+            category__tournamet=tournament).filter(
+                category=category).order_by('pk')
         games_per_day = days_for_category / len(matches)
         time = generate_category_schedule(matches, time, start_hour,
                                           finish_hour, num_of_courts,
