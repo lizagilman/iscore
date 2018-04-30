@@ -111,3 +111,12 @@ def find_num_stages(match_len):
         16: 5,
         32: 6,
     }[match_len]
+
+def delete_schedule(request):
+    tournament_id = request.GET['tournament_id']
+    draw = Matches.objects.filter(category__tournamet=tournament_id)
+    for match in draw:
+        match.time=None
+        match.save()
+
+    return HttpResponse("schedule were deleted")

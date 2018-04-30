@@ -98,6 +98,7 @@ export default class TournamentsTable extends React.Component {
             <div onClick={() => this.onLinkClick(item.id)}>{item.name}</div>
           </Link>
         </TableRowColumn>
+         <TableRowColumn>{item.field_of_sport}</TableRowColumn>
         <TableRowColumn>{item.status}</TableRowColumn>
         <TableRowColumn>{item.start_date}</TableRowColumn>
         <TableRowColumn>
@@ -120,6 +121,7 @@ export default class TournamentsTable extends React.Component {
           <TableHeader displaySelectAll={false}>
             <TableRow>
               <TableHeaderColumn>Name</TableHeaderColumn>
+              <TableHeaderColumn>Field Of Sport</TableHeaderColumn>
               <TableHeaderColumn>Status</TableHeaderColumn>
               <TableHeaderColumn>Dates</TableHeaderColumn>
               <TableHeaderColumn>Published</TableHeaderColumn>

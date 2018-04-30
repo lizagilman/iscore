@@ -144,16 +144,21 @@ export const generate_schedule = (
     `/generate_schedule/?tournament_id=${tournamentId}&num_of_courts=${numOfCourts}&start_hour=${startHour}&finish_hour=${finishHour}&game_duration=${gameduration} `
   ).then(response => response.json());
 
+export const deleteSchedule = (tournament_id) => {
+    return fetch(`/delete_schedule/?tournament_id=${tournament_id}`).then(response =>
+        response.json()
+    );
+}
 export const generate_draws = (tournamentid,categoryid) =>
   fetch(`/generate_draws/?tournament_id=${tournamentid}&category_id=${categoryid}`).then(response =>
     response.json()
   );
 
-export const delete_draws = (categoryid) =>
-  fetch(`/delete_draws/?category_id=${categoryid}`).then(response =>
-    response.json()
-  );
-
+export const deleteDraws = (categoryid) => {
+    return fetch(`/delete_draws/?category_id=${categoryid}`).then(response =>
+        response.json()
+    );
+}
 export function registerCoachPlayerToTournament(entry) {
   return fetch("/api/ModifyEntries/", {
     method: "POST",
@@ -186,3 +191,24 @@ export const setTournamentApi = tournament =>
     },
     body: JSON.stringify(tournament)
   }).then(response => response.json());
+
+//match object must contain category id
+export function editMatchesApi(match) {
+  return fetch(`/api/ModifyMatches/${match.id}/`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(match)
+  }).then(response => response);
+}
+export function DeleteMatchesApi(id) {
+  return fetch(`/api/ModifyMatches/${id}/`, {
+    method: "DELETE",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+  }).then(response => response);
+}
