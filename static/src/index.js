@@ -8,6 +8,8 @@ import { teal500, grey300 } from "material-ui/styles/colors";
 import AppRouter from "./js/components/router/router_index";
 import { Provider } from "mobx-react";
 import * as Stores from "./js/stores";
+import rrui from 'react-responsive-ui/style.css'
+
 
 const themeOverrides = {
   palette: {

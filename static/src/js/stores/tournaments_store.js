@@ -5,11 +5,10 @@ class TournamentsStore {
   @observable allTournaments = [];
 
   @action
-  fetchAllTournaments = () => {
-    getAllTournamentsApi().then((tournamentsJson) => {
-      this.allTournaments = tournamentsJson;
-    });
-  };
+  fetchAllTournaments = () => getAllTournamentsApi().then((tournamentsJson) => {
+    this.allTournaments = tournamentsJson;
+    return this.allTournaments;
+  });
 
   @action
   updateTournament = (tournament) => {

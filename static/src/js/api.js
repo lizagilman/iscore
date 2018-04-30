@@ -6,7 +6,7 @@ export function getAllTournamentsApi() {
 }
 
 export function editTournamentApi(tournament) {
-  return fetch(`/api/ModifyTournaments/${tournament.id}/`, {
+  return fetch(`/api/Tournaments/${tournament.id}/`, {
     method: "PUT",
     headers: {
       Accept: "application/json",
@@ -17,24 +17,13 @@ export function editTournamentApi(tournament) {
 }
 
 export function createTournamentApi(tournament) {
-  return fetch("/api/ModifyTournaments/", {
+  return fetch("/api/Tournaments/", {
     method: "POST",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json"
     },
     body: JSON.stringify(tournament)
-  }).then(response => response);
-}
-
-export function setTournamentCategories(tournamentCategory) {
-  return fetch("/api/ModifyTournamentCategories/", {
-    method: "POST",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(tournamentCategory)
   }).then(response => response);
 }
 
@@ -46,6 +35,12 @@ export function deleteTournamentApi(id) {
       "Content-Type": "application/json"
     }
   }).then(response => response);
+}
+
+export function getEntriesApi(catName, tourId) {
+  return fetch(
+    `/api/Entries/?tournament_category__category=${catName}&tournament_category__tournament=${tourId}`
+  ).then(response => response.json());
 }
 
 export function getAllTournamentsByManagerApi(managerId) {
@@ -60,10 +55,12 @@ export function getTournamentByIDApi(tournamentId) {
   );
 }
 
-export const getEntriesByTournamentCategoryIDApi = tournamentCategoryId =>
-  fetch(`/api/Entries/?draw_list=${tournamentCategoryId}`).then(response =>
-    response.json()
-  );
+export function getEntriesByTournamentCategoryIDApi(tournamentCategoryId) {
+  return fetch(
+    `/api/Entries/?tournament_category=${tournamentCategoryId}`
+  ).then(response => response.json());
+}
+
 export const getMatchesByTournamentCategoryIDApi = tournamentCategoryId =>
   fetch(`/api/Matches/?draws=${tournamentCategoryId}`).then(response =>
     response.json()
@@ -77,17 +74,15 @@ export const getMatchesByTournamentCategoryIDAndStageApi = (
     response => response.json()
   );
 
-export function getOrganizationBySports(fieldOfSports) {
-  return fetch(`/api/Organizations/?field_of_sports=${fieldOfSports}`).then(
-    response => response.json()
+export const getOrganizationBySports = fieldOfSports =>
+  fetch(`/api/Organizations/?field_of_sports=${fieldOfSports}`).then(response =>
+    response.json()
   );
-}
 
-export function getRankingListByOrganization(organizationId) {
-  return fetch(`/api/RankingLists/?organization=${organizationId}`).then(
-    response => response.json()
+export const getRankingListByOrganization = organizationId =>
+  fetch(`/api/RankingLists/?organization=${organizationId}`).then(response =>
+    response.json()
   );
-}
 
 export function getCategoriesByRankingList(rankingListId) {
   return fetch(
@@ -116,7 +111,7 @@ export const getMoneyMethodsByOrganization = organizationId =>
   ).then(response => response.json());
 
 export const getTournamentCategoriesByTournament = tournamentId =>
-  fetch(`/api/Draws/?tournamet=${tournamentId}`).then(response =>
+  fetch(`/api/TournamentCategories/?tournamet=${tournamentId}`).then(response =>
     response.json()
   );
 
@@ -154,6 +149,20 @@ export const generate_draws = tournamentid =>
     response.json()
   );
 
+export function registerCoachPlayerToTournament(entry) {
+  return fetch("/api/ModifyEntries/", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(entry)
+  }).then(response => response);
+}
+
+export function getAllCoachPlayersApi(name) {
+  return fetch(`/api/Coachs/?name=${name}`).then(response => response.json());
+}
 export const getAllMatchesApi = () =>
   fetch("/api/Matches/").then(response => response.json());
 

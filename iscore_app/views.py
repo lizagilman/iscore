@@ -189,7 +189,7 @@ class CoachsViewSet(viewsets.ModelViewSet):
     queryset = Coach.objects.all()
     serializer_class = serializers.CoachSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
-    filter_fields = ('name', )
+
 
 
 class CoachsReaderViewSet(viewsets.ModelViewSet):
@@ -214,13 +214,13 @@ class SetsViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend, SearchFilter)
 
 
+
 class EntriesReaderViewSet(viewsets.ModelViewSet):
 
     queryset = Entries.objects.all()
     serializer_class = serializers.EntriesReaderSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
-    filter_fields = ('player', 'tournament_category')
-
+    filter_fields = ('player', 'tournament_category', 'tournament_category__tournamet', 'tournament_category__category')
 
 class EntriesViewSet(viewsets.ModelViewSet):
 
