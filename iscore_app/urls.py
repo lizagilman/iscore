@@ -81,5 +81,8 @@ urlpatterns = [
     url(r'CreateTournament',
         tournament.create_Tournament,
         name='Create-Tournament'),
+    url(r'^delete_draws/',
+        draws.Delete_Draws,
+        name='delete_draws'),
     url(r'', IndexView.as_view(), name='index'),
 ]

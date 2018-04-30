@@ -6,10 +6,10 @@ from django.core import serializers
 
 def handle_generate_draws(request):
     tournament_id = request.GET['tournament_id']
-    Generate_Draws(tournament_id)
-    draws = Matches.objects.filter(
-        category__tournamet=int(tournament_id)).order_by(
-            '-stage', 'category__category')
+    category_id = request.GET['category_id']
+    Generate_Draws(tournament_id, category_id)
+    draws = Matches.objects.filter(category=int(category_id)).order_by(
+        '-stage', )
     send_data = serializers.serialize('json', draws)
     return HttpResponse(send_data)
 
@@ -145,9 +145,18 @@ class Tournament():
         }[match_len]
 
 
-def Generate_Draws(tournamnet):
+def Generate_Draws(tournamnet, category):
 
     tournamnt_info = Tournaments.objects.get(pk=tournamnet)
-    draw_list = TournamentCategories.objects.filter(tournamet=tournamnt_info)
-    for category in draw_list:
-        match_generate(tournamnt_info, category)
+    category = TournamentCategories.objects.get(pk=category)
+    match_generate(tournamnt_info, category)
+
+
+def Delete_Draws(request):
+
+    tournamnet = request.GET['category_id']
+    draw = Matches.objects.filter(category=tournamnet)
+    for match in draw:
+        match.delete()
+
+    return HttpResponse("draws were deleted")

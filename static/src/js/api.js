@@ -144,8 +144,13 @@ export const generate_schedule = (
     `/generate_schedule/?tournament_id=${tournamentId}&num_of_courts=${numOfCourts}&start_hour=${startHour}&finish_hour=${finishHour}&game_duration=${gameduration} `
   ).then(response => response.json());
 
-export const generate_draws = tournamentid =>
-  fetch(`/generate_draws/?tournament_id=${tournamentid}`).then(response =>
+export const generate_draws = (tournamentid,categoryid) =>
+  fetch(`/generate_draws/?tournament_id=${tournamentid}&category_id=${categoryid}`).then(response =>
+    response.json()
+  );
+
+export const delete_draws = (categoryid) =>
+  fetch(`/delete_draws/?category_id=${categoryid}`).then(response =>
     response.json()
   );
 
