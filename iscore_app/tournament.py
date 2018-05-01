@@ -1,5 +1,11 @@
 from rest_framework.response import Response
+<<<<<<< origin/master
 from iscore_app.models import TournamentCategories
+=======
+import json
+from iscore_app.models import Organizations, Tournament_Managers, Grades, Ranking_Lists, TournamentCategories, Entries, Tournaments
+from django.core import serializers
+>>>>>>> HEAD~1
 from rest_framework.decorators import api_view
 from iscore_app.serializers import TournamentsSerializer
 
