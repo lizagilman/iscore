@@ -61,15 +61,23 @@ const scheduleTableStyleWinner = {
   paddingRight: '0px',
   width: '14%',
 };
+
+const dateFormat = require("dateformat");
+
 @inject('stores')
 @observer
 export default class Schedule extends React.Component {
   constructor(props) {
     super(props);
+    this.setDateTime = this.setDateTime.bind(this);
 
     this.state = {};
   }
-
+  setDateTime(itemDate) {
+    let date = new Date(itemDate);
+    let formateDate = dateFormat(date);
+    return formateDate;
+  }
   componentWillMount() {
     const { MatchesStore } = this.props.stores;
     MatchesStore.fetchAllMatchs();
@@ -97,7 +105,8 @@ export default class Schedule extends React.Component {
           {item.player2 ? item.player2 : ''}
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStyleTime}>
-          {item.time ? item.time : ''}
+          {item ? this.setDateTime(item.time): ''}
+
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStyleCourt}>
           {item.court ? item.court : ''}
