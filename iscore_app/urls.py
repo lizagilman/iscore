@@ -78,7 +78,7 @@ urlpatterns = [
     url(r'^generate_schedule/',
         schedule.handle_generate_schedule,
         name='generate_schedule'),
-    url(r'CreateTournament',
+    url(r'^CreateTournament',
         tournament.create_Tournament,
         name='Create-Tournament'),
     url(r'^delete_draws/',

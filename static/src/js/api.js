@@ -6,7 +6,7 @@ export function getAllTournamentsApi() {
 }
 
 export function editTournamentApi(tournament) {
-  return fetch(`/api/Tournaments/${tournament.id}/`, {
+  return fetch(`/api/ModifyTournaments/${tournament.id}/`, {
     method: "PUT",
     headers: {
       Accept: "application/json",
@@ -18,6 +18,8 @@ export function editTournamentApi(tournament) {
 
 export function createTournamentApi(tournament) {
   return fetch("/api/ModifyTournaments/", {
+    // return fetch("/api/CreateTournament/", {
+
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -55,11 +57,10 @@ export function getTournamentByIDApi(tournamentId) {
   );
 }
 
-export const getEntriesByTournamentCategoryIDApi=tournamentCategoryId =>
-   fetch(`/api/Entries/?tournament_category=${tournamentCategoryId}`).then(response =>
-      response.json()
+export const getEntriesByTournamentCategoryIDApi = tournamentCategoryId =>
+  fetch(`/api/Entries/?tournament_category=${tournamentCategoryId}`).then(
+    response => response.json()
   );
-
 
 export const getMatchesByTournamentCategoryIDApi = tournamentCategoryId =>
   fetch(`/api/Matches/?draws=${tournamentCategoryId}`).then(response =>
@@ -183,7 +184,7 @@ export const getAllDrawsApi = () =>
   fetch("/api/Entries/").then(response => response.json());
 
 export const setTournamentApi = tournament =>
-  fetch(`/apiTournaments/${tournament.id}/`, {
+  fetch(`/api/ModifyTournaments/${tournament.id}/`, {
     method: "PUT",
     headers: {
       Accept: "application/json",
@@ -213,7 +214,6 @@ export function DeleteMatchesApi(id) {
     }
   }).then(response => response);
 }
-
 
 export function getMatchToWriteByMatchId(id) {
   return fetch(`/api/ModifyMatches/${id}/`, {
