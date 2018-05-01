@@ -1,31 +1,31 @@
-import React from "react";
-import * as mobx from "mobx";
+import React from 'react';
+import * as mobx from 'mobx';
 import {
   Table,
   TableBody,
   TableHeader,
   TableHeaderColumn,
   TableRow,
-  TableRowColumn
-} from "material-ui/Table";
-import Toggle from "material-ui/Toggle";
-import FloatingActionButton from "material-ui/FloatingActionButton";
-import ContentAdd from "material-ui/svg-icons/content/add";
-import DeleteForever from "material-ui/svg-icons/action/delete-forever";
-import { inject, observer } from "mobx-react";
-import { Link } from "react-router-dom";
-import Dialog from "material-ui/Dialog";
-import FlatButton from "material-ui/FlatButton";
-import Wizard from "./wizard/wizard_index";
-import Spinner from "../spinner/spinner";
+  TableRowColumn,
+} from 'material-ui/Table';
+import Toggle from 'material-ui/Toggle';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import DeleteForever from 'material-ui/svg-icons/action/delete-forever';
+import { inject, observer } from 'mobx-react';
+import { Link } from 'react-router-dom';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import Wizard from './wizard/wizard_index';
+import Spinner from '../spinner/spinner';
 
 const nameStyle = {
-  paddingRight: "100px"
+  paddingRight: '100px',
 };
 
-const dateFormat = require("dateformat");
+const dateFormat = require('dateformat');
 
-@inject("stores")
+@inject('stores')
 @observer
 export default class TournamentsTable extends React.Component {
   constructor(props) {
@@ -39,12 +39,12 @@ export default class TournamentsTable extends React.Component {
     this.setDateTime = this.setDateTime.bind(this);
 
     this.state = {
-      displayModal: false
+      displayModal: false,
     };
   }
   setDateTime(itemDate) {
-    let date = new Date(itemDate);
-    let formateDate = dateFormat(date);
+    const date = new Date(itemDate);
+    const formateDate = dateFormat(date);
     return formateDate;
   }
   openModal() {
@@ -68,7 +68,7 @@ export default class TournamentsTable extends React.Component {
     const updatedTournament = (({ id, name, field_of_sport }) => ({
       id,
       name,
-      field_of_sport
+      field_of_sport,
     }))(tournament);
     updatedTournament.is_published = !tournament.is_published;
     TournamentsStore.updateTournament(updatedTournament);
@@ -121,7 +121,7 @@ export default class TournamentsTable extends React.Component {
           />
         </TableRowColumn>
         <TableRowColumn>
-          <a href={"#"} onClick={e => this.deleteTournament(e, item.id)}>
+          <a href={'#'} onClick={e => this.deleteTournament(e, item.id)}>
             <DeleteForever />
           </a>
         </TableRowColumn>
@@ -130,7 +130,7 @@ export default class TournamentsTable extends React.Component {
 
     const tournamentsTable = (
       <div>
-        <Table style={{ backgroundColor: "#ffffff" }}>
+        <Table style={{ backgroundColor: '#ffffff' }}>
           <TableHeader displaySelectAll={false}>
             <TableRow>
               <TableHeaderColumn>Name</TableHeaderColumn>
@@ -161,7 +161,7 @@ export default class TournamentsTable extends React.Component {
         label="Submit"
         primary={true}
         onClick={this.saveNewTournament}
-      />
+      />,
     ];
 
     const modal = (

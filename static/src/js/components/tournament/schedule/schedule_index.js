@@ -8,6 +8,8 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
+import ModeEdit from 'material-ui/svg-icons/editor/mode-edit';
+import categoryStore from '../../../stores/category_store';
 
 const mobx = require('mobx');
 
@@ -62,7 +64,7 @@ const scheduleTableStyleWinner = {
   width: '14%',
 };
 
-const dateFormat = require("dateformat");
+const dateFormat = require('dateformat');
 
 @inject('stores')
 @observer
@@ -72,15 +74,25 @@ export default class Schedule extends React.Component {
     this.setDateTime = this.setDateTime.bind(this);
 
     this.state = {};
+
+    this.updateMatch = this.updateMatch.bind(this);
   }
+
   setDateTime(itemDate) {
-    let date = new Date(itemDate);
-    let formateDate = dateFormat(date);
+    const date = new Date(itemDate);
+    const formateDate = dateFormat(date);
     return formateDate;
   }
   componentWillMount() {
     const { MatchesStore } = this.props.stores;
     MatchesStore.fetchAllMatchs();
+  }
+
+  updateMatch(e, match) {
+    e.preventDefault();
+    const { MatchesStore } = this.props.stores;
+
+    MatchesStore.updateMatch(match.id);
   }
 
   render() {
@@ -96,7 +108,10 @@ export default class Schedule extends React.Component {
     const createRow = (item, index) => (
       <TableRow key={index}>
         <TableRowColumn style={scheduleTableStyleStage}>
-          {item.stage ? item.stage : ''}
+          <a href={'#'} onClick={e => this.updateMatch(e, item)}>
+            {' '}
+            {item.stage ? item.stage : ''}{' '}
+          </a>
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStylePlayer1}>
           {item.player1 ? item.player1 : ''}
@@ -105,13 +120,11 @@ export default class Schedule extends React.Component {
           {item.player2 ? item.player2 : ''}
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStyleTime}>
-          {item ? this.setDateTime(item.time): ''}
-
+          {item ? this.setDateTime(item.time) : ''}
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStyleCourt}>
           {item.court ? item.court : ''}
         </TableRowColumn>
-
         <TableRowColumn style={scheduleTableStyleCategory}>
           {item.draws ? item.draws : ''}
         </TableRowColumn>
@@ -143,14 +156,13 @@ export default class Schedule extends React.Component {
                 Category
               </TableHeaderColumn>
               <TableHeaderColumn>Winner</TableHeaderColumn>
+              <TableHeaderColumn>Actions</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody displayRowCheckbox={false}>
-
             {data
               ? data.map((Match, index) => createRow(Match, index))
               : 'Loading...'}
-
           </TableBody>
         </Table>
       </div>

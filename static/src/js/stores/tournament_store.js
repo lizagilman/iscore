@@ -3,10 +3,12 @@ import {
   getTournamentByIDApi,
   editTournamentApi,
   deleteTournamentApi,
+  getTournamentCategoriesByTournament,
 } from '../api';
 
 class TournamentStore {
   @observable tournament = {};
+  @observable tournamentCategories = [];
 
   @action
   getTournament = (id) => {
@@ -37,6 +39,18 @@ class TournamentStore {
       }
     });
   };
+
+  @action
+  getCategories = () => {
+    if (this.tournament.id && !this.tournamentCategories.length) {
+      getTournamentCategoriesByTournament(this.tournament.id).then((response) => {
+        this.tournamentCategories = response;
+      });
+    }
+  };
+
+  @action
+  getTournamentId = () => this.tournament.id;
 }
 
 const tournamentStore = new TournamentStore();
