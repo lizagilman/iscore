@@ -190,7 +190,7 @@ export default class EntriesAndSeeds extends React.Component {
           <div>
             {this.state.categories &&
             this.state.entries &&
-            this.state.slideIndex === 0 ? (
+            this.state.slideIndex == 0 ? (
               entriesTable(this.state.slideIndex)
             ) : (
               <h4>loading entries</h4>
@@ -199,7 +199,7 @@ export default class EntriesAndSeeds extends React.Component {
           <div>
             {this.state.categories &&
             this.state.entries &&
-            this.state.slideIndex === 1 ? (
+            this.state.slideIndex == 1 ? (
               entriesTable(this.state.slideIndex)
             ) : (
               <h4>loading entries</h4>
