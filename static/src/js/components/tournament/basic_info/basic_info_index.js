@@ -10,9 +10,12 @@ import { inject, observer } from 'mobx-react/index';
 
 const mobx = require('mobx');
 
+
 @inject('stores')
 @observer
 export default class BasicInfo extends React.Component {
+
+
   render() {
     const tournament = mobx.toJS(this.props.stores.TournamentStore.tournament)
       ? mobx.toJS(this.props.stores.TournamentStore.tournament)
@@ -55,28 +58,29 @@ export default class BasicInfo extends React.Component {
 
         <DatePicker
           floatingLabelText="Start Date"
-          // defaultDate={tournament ? new Date(tournament.start_date) : new Date()}
+        //  defaultDate={tournament ? this.setDateTime(tournament.start_date): ''}
           container="inline"
           className={'formField'}
         />
 
         <DatePicker
           floatingLabelText="End Date"
-          // defaultDate={tournament ? new Date(tournament.end_date) : new Date()}
+         // defaultDate={tournament ? this.setDateTime(tournament.end_date) : ''}
 
           container="inline"
           className={'formField'}
         />
         <DatePicker
+            formatDate
           floatingLabelText="Registration Begin Date"
-          // defaultDate={tournament ? new Date(tournament.registration_start_date) : new Date()}
+           //defaultDate={tournament ? tournament.registration_start_date : ''}
 
           container="inline"
           className={'formField'}
         />
         <DatePicker
           floatingLabelText="Registration Deadline"
-          // defaultDate={tournament ? new Date(tournament.registration_end_date) : new Date()}
+          // defaultDate={tournament ? this.setDateTime(tournament.registration_end_date) : ''}
 
           container="inline"
           className={'formField'}
