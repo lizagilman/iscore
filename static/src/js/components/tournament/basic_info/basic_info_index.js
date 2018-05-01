@@ -14,8 +14,6 @@ const mobx = require('mobx');
 @inject('stores')
 @observer
 export default class BasicInfo extends React.Component {
-
-
   render() {
     const tournament = mobx.toJS(this.props.stores.TournamentStore.tournament)
       ? mobx.toJS(this.props.stores.TournamentStore.tournament)
@@ -73,7 +71,7 @@ export default class BasicInfo extends React.Component {
         <DatePicker
             formatDate
           floatingLabelText="Registration Begin Date"
-           //defaultDate={tournament ? tournament.registration_start_date : ''}
+           // defaultDate={tournament ? tournament.registration_start_date : ''}
 
           container="inline"
           className={'formField'}
