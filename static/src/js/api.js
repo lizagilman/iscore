@@ -55,11 +55,11 @@ export function getTournamentByIDApi(tournamentId) {
   );
 }
 
-export function getEntriesByTournamentCategoryIDApi(tournamentCategoryId) {
-  return fetch(
-    `/api/Entries/?tournament_category=${tournamentCategoryId}`
-  ).then(response => response.json());
-}
+export const getEntriesByTournamentCategoryIDApi=tournamentCategoryId =>
+   fetch(`/api/Entries/?tournament_category=${tournamentCategoryId}`).then(response =>
+      response.json()
+  );
+
 
 export const getMatchesByTournamentCategoryIDApi = tournamentCategoryId =>
   fetch(`/api/Matches/?draws=${tournamentCategoryId}`).then(response =>

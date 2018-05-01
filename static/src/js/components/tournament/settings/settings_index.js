@@ -7,7 +7,6 @@ import Subheader from 'material-ui/Subheader';
 import FlatButton from 'material-ui/FlatButton';
 import { inject, observer } from 'mobx-react/index';
 
-
 const styles = {
   block: {
     maxWidth: 250,
@@ -15,36 +14,47 @@ const styles = {
   checkbox: {
     marginBottom: 16,
   },
+  list: {
+    listStyleType: 'none',
+  },
 };
 const mobx = require('mobx');
 
 @inject('stores')
 @observer
 export default class Settings extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      tournament: null,
+      categories: null,
+    };
+  }
+
   componentWillMount() {
+    const self = this;
     const { TournamentStore, CategoryStore } = this.props.stores;
 
     const tournament = TournamentStore.tournament
       ? mobx.toJS(TournamentStore.tournament)
       : false;
 
-    tournament && CategoryStore
-      ? CategoryStore.CategoriesByTournament(tournament.id)
-      : false;
+    this.setState({ tournament });
+
+    if (tournament && CategoryStore) {
+      CategoryStore.CategoriesByTournament(tournament.id).then((CategoryStore) => {
+        self.setState({ categories: mobx.toJS(CategoryStore) });
+      });
+    }
   }
   render() {
-    const { TournamentStore, CategoryStore } = this.props.stores;
-    const tournament = TournamentStore.tournament
-      ? mobx.toJS(TournamentStore.tournament)
-      : false;
+    const tournament = this.state.tournament;
 
-    const categories = CategoryStore
-      ? mobx.toJS(CategoryStore.categoriesByTournament)
-      : false;
+    const categories = this.state.categories;
 
     const CreateCategoryCheckbox = (category, index) => (
       <li>
-
         <Checkbox
           label={category ? category.category : ''}
           style={styles.checkbox}
@@ -65,8 +75,7 @@ export default class Settings extends React.Component {
         />
         <Subheader>Categories</Subheader>
         <div style={{ display: 'inline-block' }}>
-          <ul>
-
+          <ul style={styles.list}>
             {categories
               ? categories.map((category, index) =>
                   CreateCategoryCheckbox(category, index))

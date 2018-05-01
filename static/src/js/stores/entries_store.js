@@ -1,39 +1,23 @@
 import { observable, action } from 'mobx';
-import { getAllEntriesApi, getEntriesByTournamentCategoryIDApi } from '../api';
+import { getEntriesByTournamentCategoryIDApi, getEntriesApi } from '../api';
 
 class EntriesStore {
-  @observable allEntries = [];
+ @observable returnedEntries=[];
   @observable entriesByTournament = [];
 
+
   @action
-  fetchAllEntries = () => {
-    getAllEntriesApi().then((entriesJson) => {
-      this.allEntries = [entriesJson];
-    });
-  };
+  fetchEntriesByCategory = id => getEntriesByTournamentCategoryIDApi(id).then((entriesJson) => {
+    this.returnedEntries = entriesJson;
+
+    return this.returnedEntries;
+  });
+
   @action
-  getEntries = (id) => {
-    getEntriesByTournamentCategoryIDApi(id).then((entriesJson) => {
-      this.entriesByTournament = [entriesJson];
-    });
-  };
-  // allEntries = [
-  //   {
-  //     player: 'Michael',
-  //     rank: '20',
-  //     seed: '2',
-  //   },
-  //   {
-  //     player: 'Liza',
-  //     rank: '10',
-  //     seed: '1',
-  //   },
-  //   {
-  //     player: 'Alisa',
-  //     rank: '30',
-  //     seed: '3',
-  //   },
-  // ];
+  getEntries = (name, id) => getEntriesApi(name, id).then((enJson) => {
+    this.entriesByTournament = [enJson];
+    return this.entriesByTournament;
+  });
 }
 
 const entriesStore = new EntriesStore();
