@@ -66,7 +66,7 @@ class match_time:
 def generate_schedule(tournament, start_date, end_date, num_of_courts,
                       start_hour, finish_hour, game_duration):
 
-    categories = TournamentCategories.objects.filter(pk=tournament)
+    categories = TournamentCategories.objects.filter(tournamet=tournament)
     tournament_duration = end_date - start_date
     tournament_duration = tournament_duration.total_seconds() / 86400
 
@@ -77,9 +77,10 @@ def generate_schedule(tournament, start_date, end_date, num_of_courts,
         finish_hour - start_hour) / game_duration) * num_of_courts
     max_players_in_category = 0
     for category in categories:
-        max_players_in_category = max(
-            max_players_in_category,
-            len(Entries.objects.filter(tournament_category=category)))
+        max_players_in_category = max(max_players_in_category,
+                                      category.player_list.count())
+        if (category.player_list.count() == 0):
+            return "could not compute,draws for a category is missing"
 
     if ((number_of_all_matches / avg_games_per_day) *
             find_num_stages(max_players_in_category) > tournament_duration):
@@ -88,10 +89,7 @@ def generate_schedule(tournament, start_date, end_date, num_of_courts,
     days_for_category = tournament_duration / len(categories)
     time = start_date
     for category in categories:
-
-        matches = Matches.objects.filter(
-            category__tournamet=tournament).filter(
-                category=category).order_by('pk')
+        matches = Matches.objects.filter(category=category).order_by('pk')
         games_per_day = days_for_category / len(matches)
         time = generate_category_schedule(matches, time, start_hour,
                                           finish_hour, num_of_courts,
@@ -112,11 +110,12 @@ def find_num_stages(match_len):
         32: 6,
     }[match_len]
 
+
 def delete_schedule(request):
     tournament_id = request.GET['tournament_id']
     draw = Matches.objects.filter(category__tournamet=tournament_id)
     for match in draw:
-        match.time=None
+        match.time = None
         match.save()
 
     return HttpResponse("schedule were deleted")
