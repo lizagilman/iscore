@@ -1,17 +1,25 @@
 from django.http import HttpResponse
+from iscore_app.serializers import MatchesReaderSerializer
+from iscore_app.models import Matches, RankedPlayers, RankingListCategories, Ranking_Lists, TournamentCategories, Entries, Tournaments
 from rest_framework.decorators import api_view
-from iscore_app.models import Matches, RankedPlayers, RankingListCategories, Ranking_Lists, TournamentCategories, Entries, Tournaments, Players
-from django.core import serializers
+from rest_framework.response import Response
 
 
+@api_view(['GET'])
 def handle_generate_draws(request):
 
     category_id = request.GET['category_id']
     Generate_Draws(category_id)
     draws = Matches.objects.filter(category=int(category_id)).order_by(
         '-stage', )
-    send_data = serializers.serialize('json', draws)
-    return HttpResponse(send_data)
+
+    serializer=MatchesReaderSerializer(data=draws, many=True)
+
+
+    serializer.is_valid()
+
+    return Response(serializer.data)
+
 
 
 class Player():

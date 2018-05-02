@@ -1,11 +1,14 @@
 import React from 'react';
 import * as mobx from 'mobx';
+import * as drawStyles from './draws_styles';
 import Paper from 'material-ui/Paper';
 import ArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
 import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
-import { inject, observer } from 'mobx-react/index';
-import * as drawStyles from './draws_styles';
 import FlatButton from 'material-ui/FlatButton';
+import { inject, observer } from 'mobx-react/index';
+
+import { Tree, Match, NextMatch } from './draw_body';
+
 
 @inject('stores')
 @observer
@@ -31,15 +34,6 @@ export default class Draws extends React.Component {
     }
   }
 
-  componentWillMount() {
-    const { TournamentStore, DrawsStore } = this.props.stores;
-
-    // to do - get form gui
-    const categoryId = 2;
-
-    DrawsStore.getCategoryDraw(categoryId);
-  }
-
   render() {
     const { DrawsStore, TournamentStore } = this.props.stores;
 
@@ -47,7 +41,7 @@ export default class Draws extends React.Component {
 
     const categories = TournamentStore.tournamentCategories;
 
-    const stageBar = (stage, nextStage) => (
+    const StageBar = () => (
       <Paper id={'stageBar'} zDepth={1} style={drawStyles.flexContainerStage}>
         {this.state.prevStage ? (
           <ArrowBack onClick={e => this.arrowForwardClick(e)} />
@@ -57,12 +51,12 @@ export default class Draws extends React.Component {
         <div
           style={{ ...drawStyles.basicBlockStyle, ...drawStyles.stageStyle }}
         >
-          {stage}
+          {this.state.currentStage}
         </div>
         <div
           style={{ ...drawStyles.basicBlockStyle, ...drawStyles.stageStyle }}
         >
-          {nextStage}
+          {this.state.nextStage}
         </div>
         {!(this.state.nextStage === 'F') ? (
           <ArrowForward onClick={e => this.arrowBackClick(e)} />
@@ -72,91 +66,31 @@ export default class Draws extends React.Component {
       </Paper>
     );
 
-    const tree = (matches, nextMatches) => (
-      <div id={'treeContainer'} style={drawStyles.treeContainerStyle}>
-        <div style={{ flexGrow: '2' }}>{matches}</div>
-        <div style={{ flexGrow: '2' }}>{nextMatches}</div>
-      </div>
-    );
-
-    const match = (playerA, playerB) => (
-      <Paper zDepth={1} style={drawStyles.flexContainerMatch}>
-        <div
-          style={{
-            ...drawStyles.basicBlockStyle,
-            ...drawStyles.stageStyle,
-            ...drawStyles.matchStyle,
-          }}
-        >
-          {playerA}
-        </div>
-        <div
-          style={{
-            ...drawStyles.basicBlockStyle,
-            ...drawStyles.stageStyle,
-            ...drawStyles.matchStyle,
-          }}
-        >
-          {playerB}
-        </div>
-      </Paper>
-    );
-
-    const nextMatch = (playerA, playerB) => (
-      <Paper
-        zDepth={1}
-        style={
-          this.state.nextStage === 'F'
-            ? {
-                ...drawStyles.flexContainerMatch,
-                ...drawStyles.flexContainerNextMatchFinal,
-              }
-            : {
-                ...drawStyles.flexContainerMatch,
-                ...drawStyles.flexContainerNextMatch,
-              }
-        }
-      >
-        <div
-          style={{
-            ...drawStyles.basicBlockStyle,
-            ...drawStyles.nextMatchStyle,
-          }}
-        >
-          {playerA}
-        </div>
-        <div
-          style={{
-            ...drawStyles.basicBlockStyle,
-            ...drawStyles.nextMatchStyle,
-          }}
-        >
-          {playerB}
-        </div>
-      </Paper>
-    );
-
     let matches = [];
     let nextMatches = [];
 
     if (draw) {
       if (this.state.currentStage === 'R16') {
         matches = DrawsStore.matchesR16.map(matchQF =>
-          match(matchQF.player1, matchQF.player2));
+          Match(matchQF.player1, matchQF.player2));
         nextMatches = DrawsStore.matchesQF.map(matchQF =>
-          nextMatch('WINNER A', 'WINNER B'));
+          NextMatch('WINNER A', 'WINNER B', this.state.nextStage));
       } else {
         matches = DrawsStore.matchesSF.map(matchSF =>
-          match('WINNER A', 'WINNER B'));
+          Match('WINNER A', 'WINNER B'));
         nextMatches = DrawsStore.matchesF.map(matchF =>
-          nextMatch('WINNER A', 'WINNER B'));
+          NextMatch('WINNER A', 'WINNER B', this.state.nextStage));
       }
     }
 
-    const treeDraw = draw ? (
+    const drawTree = draw ? (
       <div>
-        {stageBar(this.state.currentStage, this.state.nextStage)}
-        {tree(matches, nextMatches)}
+        {StageBar(
+          this.state.prevStage,
+          this.state.currentStage,
+          this.state.nextStage,
+        )}
+        {Tree(matches, nextMatches)}
       </div>
     ) : (
       false
@@ -164,31 +98,34 @@ export default class Draws extends React.Component {
 
     return (
       <div>
-        {categories
-          ? categories.map((category, index) => <h2 key={index}>{category.category}</h2>)
-          : false}
-        <FlatButton
-          label="Generate Draw"
-          primary={true}
-          onClick={() => {
-            const tournamentId = TournamentStore.tournament
-              ? TournamentStore.tournament.id
-              : false;
-            const categoryId = 4; //
+        <div>
+          {categories
+            ? categories.map((category, index) => (
+                <div>
+                  <a key={index}>{category.category}</a>
 
-            DrawsStore.getDraw(tournamentId, categoryId);
-          }}
-        />
-        <FlatButton
-          label="Delete Draw"
-          primary={true}
-          onClick={() => {
-            const categoryId = 4; //
+                  <FlatButton
+                    label="Generate/ Display Draw"
+                    primary={true}
+                    onClick={() => {
+                      DrawsStore.getCategoryDraw(category.id);
+                      this.forceUpdate();
+                    }}
+                  />
+                  <FlatButton
+                    label="Delete Draw"
+                    primary={true}
+                    onClick={() => {
+                      DrawsStore.getCategoryDraw(category.id);
+                      this.forceUpdate();
+                    }}
+                  />
+                </div>
+              ))
+            : false}
+        </div>
 
-            DrawsStore.deleteDraw(categoryId);
-          }}
-        />
-        {treeDraw}
+        <div>{drawTree}</div>
       </div>
     );
   }

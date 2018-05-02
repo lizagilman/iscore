@@ -170,7 +170,7 @@ export function editMatchesApi(match) {
 }
 
 export const getMatchesByTournamentCategoryIDApi = tournamentCategoryId =>
-  fetch(`/api/Matches/?draws=${tournamentCategoryId}`).then(response =>
+  fetch(`/api/Matches/?category=${tournamentCategoryId}`).then(response =>
     response.json()
   );
 
@@ -235,15 +235,13 @@ export const deleteSchedule = tournament_id => {
     response => response.json()
   );
 };
-export const generate_draws = categoryid =>
+export const generateDraws = categoryid =>
   fetch(`/generate_draws/?category_id=${categoryid}`).then(response =>
     response.json()
   );
 
 export const deleteDraws = categoryid => {
-  return fetch(`/delete_draws/?category_id=${categoryid}`).then(response =>
-    response.json()
+  return fetch(`/delete_draws/?category_id=${categoryid}`).then(
+    response => response
   );
 };
-
-/////////////////////////////

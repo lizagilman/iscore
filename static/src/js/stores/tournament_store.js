@@ -41,16 +41,18 @@ class TournamentStore {
   };
 
   @action
+  // eslint-disable-next-line
   getCategories = () => {
     if (this.tournament.id && !this.tournamentCategories.length) {
       getTournamentCategoriesByTournament(this.tournament.id).then((response) => {
         this.tournamentCategories = response;
       });
+    } else if (this.tournamentCategories.length) {
+      return this.tournamentCategories;
     }
   };
 
-  @action
-  getTournamentId = () => this.tournament.id;
+  @action getTournamentId = () => this.tournament.id;
 }
 
 const tournamentStore = new TournamentStore();

@@ -8,8 +8,6 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
-import ModeEdit from 'material-ui/svg-icons/editor/mode-edit';
-import categoryStore from '../../../stores/category_store';
 
 const mobx = require('mobx');
 
@@ -78,6 +76,7 @@ export default class Schedule extends React.Component {
     this.updateMatch = this.updateMatch.bind(this);
   }
 
+  // eslint-disable-next-line
   setDateTime(itemDate) {
     const date = new Date(itemDate);
     const formateDate = dateFormat(date);
