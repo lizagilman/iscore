@@ -40,6 +40,7 @@ class WizardStore {
   @action
   setTournamentCategories = (tournamentCategories) => {
     this.tournamentCategories = tournamentCategories;
+    this.tournament.categories = tournamentCategories;
   };
 
   @action

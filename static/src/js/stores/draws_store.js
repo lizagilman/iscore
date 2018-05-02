@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { observable, action } from 'mobx';
-import { getAllMatchesApi } from '../api';
+import { observable, action } from "mobx";
+import { getMatchesByTournamentCategoryIDApi } from "../api";
 
 class DrawsStore {
   @observable draw = [];
@@ -10,22 +10,22 @@ class DrawsStore {
   @observable matchesF = [];
 
   @action
-  getDraw = () => {
-    getAllMatchesApi().then((drawJson) => {
+  getCategoryDraw = categoryID => {
+    getMatchesByTournamentCategoryIDApi(categoryID).then(drawJson => {
       this.draw = drawJson;
 
-      drawJson.map((match) => {
+      drawJson.map(match => {
         switch (match.stage) {
-          case 'R16':
+          case "R16":
             this.matchesR16.push(match);
             break;
-          case 'QF':
+          case "QF":
             this.matchesQF.push(match);
             break;
-          case 'SF':
+          case "SF":
             this.matchesSF.push(match);
             break;
-          case 'F':
+          case "F":
             this.matchesF.push(match);
         }
       });

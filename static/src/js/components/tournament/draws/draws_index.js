@@ -6,7 +6,6 @@ import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import { inject, observer } from 'mobx-react/index';
 import * as drawStyles from './draws_styles';
 
-
 @inject('stores')
 @observer
 export default class Draws extends React.Component {
@@ -32,15 +31,20 @@ export default class Draws extends React.Component {
   }
 
   componentWillMount() {
-    const { DrawsStore } = this.props.stores;
+    const { TournamentStore, DrawsStore } = this.props.stores;
 
-    DrawsStore.getDraw();
+    // to do - get form gui
+    const categoryId = 2;
+
+    DrawsStore.getCategoryDraw(categoryId);
   }
 
   render() {
-    const { DrawsStore } = this.props.stores;
+    const { DrawsStore, TournamentStore } = this.props.stores;
 
-    const draw = DrawsStore.draw ? mobx.toJS(DrawsStore.draw) : false;
+    const draw = DrawsStore.draw.length ? mobx.toJS(DrawsStore.draw) : false;
+
+    const categories = TournamentStore.tournamentCategories;
 
     const stageBar = (stage, nextStage) => (
       <Paper id={'stageBar'} zDepth={1} style={drawStyles.flexContainerStage}>
@@ -98,37 +102,37 @@ export default class Draws extends React.Component {
     );
 
     const nextMatch = (playerA, playerB) => (
-        <Paper
-          zDepth={1}
-          style={
-            this.state.nextStage === 'F'
-              ? {
-                  ...drawStyles.flexContainerMatch,
-                  ...drawStyles.flexContainerNextMatchFinal,
-                }
-              : {
-                  ...drawStyles.flexContainerMatch,
-                  ...drawStyles.flexContainerNextMatch,
-                }
-          }
+      <Paper
+        zDepth={1}
+        style={
+          this.state.nextStage === 'F'
+            ? {
+                ...drawStyles.flexContainerMatch,
+                ...drawStyles.flexContainerNextMatchFinal,
+              }
+            : {
+                ...drawStyles.flexContainerMatch,
+                ...drawStyles.flexContainerNextMatch,
+              }
+        }
+      >
+        <div
+          style={{
+            ...drawStyles.basicBlockStyle,
+            ...drawStyles.nextMatchStyle,
+          }}
         >
-          <div
-            style={{
-              ...drawStyles.basicBlockStyle,
-              ...drawStyles.nextMatchStyle,
-            }}
-          >
-            {playerA}
-          </div>
-          <div
-            style={{
-              ...drawStyles.basicBlockStyle,
-              ...drawStyles.nextMatchStyle,
-            }}
-          >
-            {playerB}
-          </div>
-        </Paper>
+          {playerA}
+        </div>
+        <div
+          style={{
+            ...drawStyles.basicBlockStyle,
+            ...drawStyles.nextMatchStyle,
+          }}
+        >
+          {playerB}
+        </div>
+      </Paper>
     );
 
     let matches = [];
@@ -148,10 +152,42 @@ export default class Draws extends React.Component {
       }
     }
 
-    return (
+    const treeDraw = draw ? (
       <div>
         {stageBar(this.state.currentStage, this.state.nextStage)}
         {tree(matches, nextMatches)}
+      </div>
+    ) : (
+      false
+    );
+
+    return (
+      <div>
+        {categories
+          ? categories.map((category, index) => <h2 key={index}>{category.category}</h2>)
+          : false}
+        <FlatButton
+          label="Generate Draw"
+          primary={true}
+          onClick={() => {
+            const tournamentId = TournamentStore.tournament
+              ? TournamentStore.tournament.id
+              : false;
+            const categoryId = 4; //
+
+            DrawsStore.getDraw(tournamentId, categoryId);
+          }}
+        />
+        <FlatButton
+          label="Delete Draw"
+          primary={true}
+          onClick={() => {
+            const categoryId = 4; //
+
+            DrawsStore.deleteDraw(categoryId);
+          }}
+        />
+        {treeDraw}
       </div>
     );
   }
