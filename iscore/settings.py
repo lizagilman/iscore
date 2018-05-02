@@ -88,7 +88,6 @@ DATABASES = {
     'default': {
 
 
-
     }
 }
 
@@ -134,7 +133,7 @@ STATIC_URL = '/static/'
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
-        'django_filters.rest_framework.DjangoFilterBackend',   ),
+        'django_filters.rest_framework.DjangoFilterBackend' ),
 }
 
 # Configure Django App for Heroku.
