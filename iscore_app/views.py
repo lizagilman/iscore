@@ -3,7 +3,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter
+from rest_framework.filters import SearchFilter, OrderingFilter
 from django.http import HttpResponse
 from django.views import View
 from .models import RankingListCategories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, RankedPlayers, Organizations, Tournaments, Matches, TournamentCategories, Tournament_Managers, Coach, Games, Sets, Entries
@@ -217,10 +217,12 @@ class EntriesReaderViewSet(viewsets.ModelViewSet):
 
     queryset = Entries.objects.all()
     serializer_class = serializers.EntriesReaderSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filter_fields = ('player', 'tournament_category',
                      'tournament_category__tournamet',
                      'tournament_category__category')
+
+    ordering_fields = ('tournament_category', 'rank', 'is_seeded', 'player')
 
 
 class EntriesViewSet(viewsets.ModelViewSet):
