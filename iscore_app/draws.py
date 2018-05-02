@@ -5,9 +5,9 @@ from django.core import serializers
 
 
 def handle_generate_draws(request):
-    tournament_id = request.GET['tournament_id']
+
     category_id = request.GET['category_id']
-    Generate_Draws(tournament_id, category_id)
+    Generate_Draws(category_id)
     draws = Matches.objects.filter(category=int(category_id)).order_by(
         '-stage', )
     send_data = serializers.serialize('json', draws)
@@ -145,10 +145,11 @@ class Tournament():
         }[match_len]
 
 
-def Generate_Draws(tournamnet, category):
-
-    tournamnt_info = Tournaments.objects.get(pk=tournamnet)
+def Generate_Draws(category):
     category = TournamentCategories.objects.get(pk=category)
+    tournament_id = category.tournamet.id
+    tournamnt_info = Tournaments.objects.get(pk=tournament_id)
+
     match_generate(tournamnt_info, category)
 
 

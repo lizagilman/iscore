@@ -79,7 +79,7 @@ urlpatterns = [
         schedule.handle_generate_schedule,
         name='generate_schedule'),
     url(r'CreateTournament',
-        tournament.create_Tournament,
+        tournament.create_tournament,
         name='Create-Tournament'),
     url(r'^delete_draws/',
         draws.Delete_Draws,

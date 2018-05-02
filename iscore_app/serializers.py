@@ -163,7 +163,7 @@ class TournamentManagersReaderSerializer(serializers.ModelSerializer):
 class CoachSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coach
-        fields = ['name']
+        fields = '__all__'
 
 
 class CoachReaderSerializer(serializers.ModelSerializer):
