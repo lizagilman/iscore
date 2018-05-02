@@ -1,32 +1,62 @@
 import { observable, action } from 'mobx';
 import {
-  getAllMatchesApi,
-  editMatchesApi,
   getMatchToWriteByMatchId,
+  generateScheduleApi,
+  deleteScheduleApi,
+  getAllMatchesByTournamentIDApi,
+  updateMatchWinnerApi,
 } from '../api';
 
 class MatchesStore {
-  @observable allMatches = [];
+  @observable matches = [];
   @observable matchToUpdate = null;
+  @observable
+  scheduleParams = {
+    tournamentId: null,
+    numOfCourts: null,
+    startHour: '',
+    finishHour: '',
+    matchDuration: null,
+  };
 
   @action
-  fetchAllMatchs = () => {
-    getAllMatchesApi().then((matchesJson) => {
-      this.allMatches = [matchesJson];
+  fetchMatches = (id) => {
+    if (id) {
+      getAllMatchesByTournamentIDApi(id).then((matchesJson) => {
+        this.matches = [matchesJson];
+      });
+    }
+  };
+
+  @action
+  updateMatch = (matchId) => {
+    let matchWithPks;
+    getMatchToWriteByMatchId(matchId).then((response) => {
+      matchWithPks = response;
+      updateMatchWinnerApi(matchId, matchWithPks.player1);
     });
   };
 
-  @observable
-  updateMatch = (matchId) => {
-    let matchWithPks;
-    let matchToUpdate;
-    getMatchToWriteByMatchId(matchId).then((response) => {
-      matchWithPks = response;
-      matchToUpdate = matchWithPks;
-      matchToUpdate.winner = matchWithPks.player1;
-      editMatchesApi(matchToUpdate).then(alert('match winner updated'));
+  @action
+  updateParamValue(key, val) {
+    this.scheduleParams[key] = val;
+  }
+
+  @action
+  createSchedule() {
+    generateScheduleApi(this.scheduleParams).then((response) => {
+      this.matches = response;
     });
-  };
+  }
+
+  @action
+  deleteSchedule() {
+    deleteScheduleApi(this.scheduleParams.tournamentId).then((response) => {
+      response.status > 400
+        ? alert('Delete schedule failed')
+        : alert('Schedule deleted');
+    });
+  }
 
   // allMatches = [{
   //     "stage": 'F',

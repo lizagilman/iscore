@@ -8,6 +8,9 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import Spinner from '../../spinner/spinner';
 
 const mobx = require('mobx');
 
@@ -82,10 +85,6 @@ export default class Schedule extends React.Component {
     const formateDate = dateFormat(date);
     return formateDate;
   }
-  componentWillMount() {
-    const { MatchesStore } = this.props.stores;
-    MatchesStore.fetchAllMatchs();
-  }
 
   updateMatch(e, match) {
     e.preventDefault();
@@ -94,10 +93,21 @@ export default class Schedule extends React.Component {
     MatchesStore.updateMatch(match.id);
   }
 
+  componentWillMount() {
+    const { TournamentStore, MatchesStore } = this.props.stores;
+    const tournamentId = TournamentStore.getTournamentId();
+
+    MatchesStore.updateParamValue('tournamentId', tournamentId);
+
+    MatchesStore.fetchMatches(tournamentId);
+  }
+
   render() {
     const { MatchesStore } = this.props.stores;
 
-    const storedMatches = MatchesStore.allMatches;
+    const { scheduleParams } = MatchesStore;
+
+    const storedMatches = MatchesStore.matches;
 
     const data =
       storedMatches && storedMatches.length > 0
@@ -159,14 +169,84 @@ export default class Schedule extends React.Component {
             </TableRow>
           </TableHeader>
           <TableBody displayRowCheckbox={false}>
-            {data
-              ? data.map((Match, index) => createRow(Match, index))
-              : 'Loading...'}
+            {data ? (
+              data.map((Match, index) => createRow(Match, index))
+            ) : (
+              <div>{Spinner(70)}</div>
+            )}
           </TableBody>
         </Table>
       </div>
     );
 
-    return <div>{scheduleTable}</div>;
+    const scheduleParamsForm = (
+      <div>
+        <TextField
+          defaultValue={
+            scheduleParams.start_hour ? scheduleParams.start_hour : ''
+          }
+          floatingLabelText={'Start Hour'}
+          onChange={(event) => {
+            event.preventDefault();
+            MatchesStore.updateParamValue('startHour', event.target.value);
+          }}
+        />
+        <TextField
+          defaultValue={
+            scheduleParams.finish_hour ? scheduleParams.finish_hour : ''
+          }
+          floatingLabelText={'End Hour'}
+          onChange={(event) => {
+            event.preventDefault();
+            MatchesStore.updateParamValue('finishHour', event.target.value);
+          }}
+        />
+        <TextField
+          defaultValue={
+            scheduleParams.num_of_courts ? scheduleParams.num_of_courts : ''
+          }
+          floatingLabelText={'Number of Courts'}
+          onChange={(event) => {
+            event.preventDefault();
+            MatchesStore.updateParamValue('numOfCourts', event.target.value);
+          }}
+        />
+        <TextField
+          defaultValue={
+            scheduleParams.game_duration ? scheduleParams.game_duration : ''
+          }
+          floatingLabelText={'Match Duration'}
+          onChange={(event) => {
+            event.preventDefault();
+            MatchesStore.updateParamValue('matchDuration', event.target.value);
+          }}
+        />
+
+        <div>
+          <FlatButton
+            label="Generate Schedule"
+            primary={true}
+            onClick={() => {
+              MatchesStore.createSchedule();
+              this.forceUpdate();
+            }}
+          />
+          <FlatButton
+            label="Delete Schedule"
+            primary={true}
+            onClick={() => {
+              MatchesStore.deleteSchedule();
+            }}
+          />
+        </div>
+      </div>
+    );
+
+    return (
+      <div>
+        {scheduleParamsForm}
+        {scheduleTable}
+      </div>
+    );
   }
 }

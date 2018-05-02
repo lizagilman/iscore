@@ -116,7 +116,7 @@ export default class Draws extends React.Component {
                     label="Delete Draw"
                     primary={true}
                     onClick={() => {
-                      DrawsStore.getCategoryDraw(category.id);
+                      DrawsStore.deleteDraw(category.id);
                       this.forceUpdate();
                     }}
                   />
