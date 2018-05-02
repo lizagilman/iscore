@@ -8,12 +8,11 @@ from iscore_app.serializers import TournamentsSerializer
 def create_tournament(request):
     data = request.data
     tournament_serializer = TournamentsSerializer(data=data)
-    tournament_serializer.is_valid()
     if tournament_serializer.is_valid():
         tournament_serializer.save()
 
     try:
-        categories = data.getlist('categories')
+        categories = data['categories']
         for category in categories:
             new_category = TournamentCategories(
                 category=str(category), tournamet=tournament_serializer.instance)
@@ -21,4 +20,4 @@ def create_tournament(request):
     except:
         pass
 
-        return Response(tournament_serializer.data)
+    return Response(tournament_serializer.data)
