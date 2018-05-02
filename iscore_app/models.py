@@ -155,7 +155,7 @@ class Matches(models.Model):
     time = models.DateTimeField(null=True, blank=True)
     match_index = models.IntegerField(default=0)
     next_match = models.ForeignKey(
-        'Matches', on_delete=models.DO_NOTHING, null=True, blank=True)
+        'Matches', on_delete=models.SET_NULL, null=True, blank=True)
     category = models.ForeignKey(
         TournamentCategories, on_delete=models.CASCADE)
     court = models.IntegerField(default=0)
