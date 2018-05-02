@@ -197,4 +197,4 @@ class Entries(models.Model):
     player = models.ForeignKey(
         Players, on_delete=models.CASCADE, null=True, blank=True)
     is_seeded = models.BooleanField(default=False)
-    rank = models.IntegerField(default=0)
+    rank = models.IntegerField(null=True, blank=True)
