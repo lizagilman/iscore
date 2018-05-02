@@ -9,7 +9,6 @@ class EntriesStore {
   @action
   fetchEntriesByCategory = id => getEntriesByTournamentCategoryIDApi(id).then((entriesJson) => {
     this.returnedEntries = entriesJson;
-
     return this.returnedEntries;
   });
 

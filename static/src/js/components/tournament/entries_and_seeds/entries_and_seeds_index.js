@@ -30,7 +30,6 @@ const entriesTableStyle = {
   backgroundColor: 'white',
 };
 
-
 function sortBy(data, prop, isAsc) {
   isAsc = isAsc === undefined ? true : isAsc;
 
@@ -72,8 +71,6 @@ export default class EntriesAndSeeds extends React.Component {
 
   filterEntriesByName = (entry, name) => entry.tournament_category === name;
   componentDidMount() {
-    console.log('componentDidMount:: loading...');
-
     const { TournamentStore, CategoryStore } = this.props.stores;
 
     // Bring current tournament
@@ -82,7 +79,6 @@ export default class EntriesAndSeeds extends React.Component {
       : ' ';
     this.setState({ tournament });
 
-    console.log('tournament', tournament);
     const self = this;
     // Bring categories by the tournament id
     CategoryStore.CategoriesByTournament(tournament.id).then((storedCategories) => {
@@ -92,18 +88,16 @@ export default class EntriesAndSeeds extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.categories !== prevState.categories) {
-      console.log('category: ', this.state.categories);
       const self = this;
-      this.state.categories
-        ? this.state.categories.map((category, index) => {
+
+      if (this.state.categories) {
+        this.state.categories.map((category, index) => {
           const { EntriesStore } = self.props.stores;
 
-          category && EntriesStore
-            ? EntriesStore.fetchEntriesByCategory(category.id).then((storedPlayers) => {
+          if (category && EntriesStore) {
+            EntriesStore.fetchEntriesByCategory(category.id).then((storedPlayers) => {
               entrieDoc.push(mobx.toJS(storedPlayers));
-              self.setState({ entries: entrieDoc }, () => {
-                console.log('entries: ', this.state.entries);
-              });
+              self.setState({ entries: entrieDoc }, () => {});
               // let rawData = entrieDoc[category.id];
               //
               // console.log('componentDidMount::rawData', [].concat(rawData));
@@ -112,10 +106,10 @@ export default class EntriesAndSeeds extends React.Component {
               //     , 'rank'/* param To Sort By */
               //     , false, /* sort ascending */
               // );
-            })
-            : console.log('loading');
-        })
-        : console.log('loading categories: ', this.state.categories);
+            });
+          }
+        });
+      }
     }
   }
 
@@ -139,12 +133,7 @@ export default class EntriesAndSeeds extends React.Component {
       </TableRow>
     );
 
-    const entriesTable = (num) => {
-      {
-        console.log('num: ', num);
-        console.log('entries[num]: ', this.state.entries[num]);
-      }
-      return (
+    const entriesTable = num => (
         <div>
           <Table style={entriesTableStyle}>
             <TableHeader displaySelectAll={false}>
@@ -165,8 +154,7 @@ export default class EntriesAndSeeds extends React.Component {
             </TableBody>
           </Table>
         </div>
-      );
-    };
+    );
     return (
       <div>
         <Tabs onChange={this.handleChange} value={this.state.slideIndex}>
@@ -194,7 +182,7 @@ export default class EntriesAndSeeds extends React.Component {
           <div>
             {this.state.categories &&
             this.state.entries &&
-            this.state.slideIndex == 0 ? (
+            this.state.slideIndex === 0 ? (
               entriesTable(this.state.slideIndex)
             ) : (
               <div>{Spinner(70)}</div>
@@ -203,7 +191,7 @@ export default class EntriesAndSeeds extends React.Component {
           <div>
             {this.state.categories &&
             this.state.entries &&
-            this.state.slideIndex == 1 ? (
+            this.state.slideIndex === 1 ? (
               entriesTable(this.state.slideIndex)
             ) : (
               <div>{Spinner(70)}</div>
