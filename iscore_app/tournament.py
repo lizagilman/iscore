@@ -20,4 +20,4 @@ def create_tournament(request):
     except:
         pass
 
-        return Response(tournament_serializer.data)
+    return Response(tournament_serializer.data)

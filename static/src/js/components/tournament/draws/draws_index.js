@@ -5,6 +5,7 @@ import ArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
 import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import { inject, observer } from 'mobx-react/index';
 import * as drawStyles from './draws_styles';
+import FlatButton from 'material-ui/FlatButton';
 
 @inject('stores')
 @observer
