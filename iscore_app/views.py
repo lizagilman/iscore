@@ -237,3 +237,4 @@ class MatchesReaderViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MatchesReaderSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filter_fields = ('category__tournamet', 'category', 'stage')
+

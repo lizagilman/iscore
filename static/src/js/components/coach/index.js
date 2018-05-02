@@ -1,15 +1,42 @@
-/* eslint-disable */
 import React from "react";
 import { inject, observer } from "mobx-react";
 import styled from "styled-components";
-import SelectField from "material-ui/SelectField";
-import MenuItem from "material-ui/MenuItem";
+import RaisedButton from "material-ui/RaisedButton";
+import MyCheckbox from "./checkbox/myCheckbox";
 import { registerCoachPlayerToTournament } from "../../api";
-import CoachHeader from "./header/header";
+import ReactResponsiveSelect from "react-responsive-select";
 
 const mobx = require("mobx");
 
+const caretIcon = (
+  <svg
+    className="caret-icon"
+    x="1px"
+    y="1px"
+    width="11.848px"
+    height="6.338px"
+    viewBox="351.584 2118.292 11.848 6.338"
+  >
+    <g>
+      <path d="M363.311,2118.414c-0.164-0.163-0.429-0.163-0.592,0l-5.205,5.216l-5.215-5.216c-0.163-0.163-0.429-0.163-0.592,0s-0.163,0.429,0,0.592l5.501,5.501c0.082,0.082,0.184,0.123,0.296,0.123c0.103,0,0.215-0.041,0.296-0.123l5.501-5.501C363.474,2118.843,363.474,2118.577,363.311,2118.414L363.311,2118.414z" />
+    </g>
+  </svg>
+);
 const styles = {
+  list: {
+    listStyleType: "none",
+    display: "block",
+    margin: "0",
+    padding: "0"
+  },
+  block: {
+    maxWidth: 250
+  },
+
+  conteinerStyle: {
+    height: "100%",
+    width: "100%"
+  },
   customWidth: {
     width: "100%",
     fontSize: "50px",
@@ -27,6 +54,15 @@ const styles = {
   },
   hintText: {
     bottom: "1.2em"
+  },
+  button: {
+    display: "block",
+    margin: "12px",
+    height: "30px",
+    width: "40px",
+    color: "black",
+    backgroundColor: "white",
+    border: "1px solid black"
   }
 };
 const Row = styled.div`
@@ -49,173 +85,218 @@ const Column = styled.div`
 export default class CoachPage extends React.Component {
   constructor(props) {
     super(props);
-
+    this.createTournamentOptions = this.createTournamentOptions.bind(this);
+    this.createCategoriesOptions = this.createCategoriesOptions.bind(this);
+    this.createPlayerOptions = this.createPlayerOptions.bind(this);
+    this.handleChangeTour = this.handleChangeTour.bind(this);
+    this.handleChangeCat = this.handleChangeCat.bind(this);
+    this.handleOptionsSubmit = this.handleOptionsSubmit.bind(this);
+    this.buttonClicked = this.buttonClicked.bind(this);
+    this.registerPlayers = this.registerPlayers.bind(this);
     this.state = {
       coach_name: "dani",
       tournaments: [],
+      optionsPlayers: [],
+      optionsTournaments: [],
+      optionsCategories: [],
       tournamentSelected: null,
       categories: [],
       categorySelected: null,
       players: [],
-      playersChecked: []
+      checkedPlayers: [],
+      selectedOptions: [],
+      checkboxesofplayers: [],
+      refs: [],
+      playersSelection: {}
     };
   }
-  componentWillMount() {
-    localStorage.setItem('user_type', 'coach');
-    const { TournamentsStore } = this.props.stores;
-    const self = this;
-    TournamentsStore.fetchAllTournaments().then(storedTournaments => {
-      self.setState({ tournaments: mobx.toJS(storedTournaments) });
+
+  handleOptionsSubmit(event) {
+    let selected = [...this.state.selectedOptions];
+    selected.push(event.target.value);
+    this.setState({
+      selectedOptions: selected
     });
   }
-  createMenuItemTournament() {
-    return this.state.tournaments
-      ? this.state.tournaments.map((tournament, index) => (
-          <MenuItem
-            key={index}
-            primaryText={tournament.name}
-            style={styles.menuLabel}
-            value={tournament.id}
-          />
-        ))
-      : "";
+  addRef(node) {
+    let myrefs = [...this.state.refs];
+    myrefs.push(myRef);
+    this.setState({ refs: myrefs });
+  }
+  componentWillMount() {
+    const { TournamentsStore, CoachEnterPlayersStore } = this.props.stores;
+
+    const self = this;
+    CoachEnterPlayersStore.fetchPlayers(this.state.coach_name).then(
+      storedPlayers => {
+        self.setState({ players: mobx.toJS(storedPlayers) });
+
+        console.log("storedPlayers: ", mobx.toJS(storedPlayers));
+      }
+    );
+
+    TournamentsStore.fetchAllTournaments().then(storedTournaments => {
+      self.setState({ tournaments: mobx.toJS(storedTournaments) }, () => {
+        this.createTournamentOptions();
+      });
+    });
+
+    this.createPlayerOptions();
+  }
+  createTournamentOptions() {
+    console.log("crating oprions");
+    if (this.state.tournaments) {
+      const self = this;
+      console.log("createTournamentOptions");
+      let tourdoc = [];
+
+      this.state.tournaments.map((tournament, index) =>
+        tourdoc.push({ value: tournament.id, text: tournament.name })
+      );
+      console.log("tournament doc:", tourdoc);
+      self.setState({ optionsTournaments: tourdoc });
+    }
+  }
+  createCategoriesOptions() {
+    if (this.state.categories) {
+      const self = this;
+      console.log("in createCategoriesOptions categories");
+      let catdoc = [];
+      this.state.categories.map((category, index) =>
+        catdoc.push({ value: category.id, text: category.category })
+      );
+      console.log("tournament doc:", catdoc);
+      self.setState({ optionsCategories: catdoc });
+    }
   }
 
-  createMenuItemCategory() {
-    return this.state.categories
-      ? this.state.categories.map((category, index) => (
-          <MenuItem
-            key={index}
-            primaryText={category.category}
-            style={styles.menuLabel}
-            value={category.id}
+  createPlayerOptions() {
+    if (this.state.players) {
+      const self = this;
+      console.log("in createPlayerOptions players");
+      let playdoc = [];
+      this.state.players.map((player, index) =>
+        playdoc.push(
+          <MyCheckbox
+            contentEditable={true}
+            ref={instance => {
+              this.child = instance;
+            }}
+            label={player.name}
+            value={player.id}
+            changed={o => {
+              let playersSelection = self.state.playersSelection;
+              playersSelection[o.playerId] = o.isChecked;
+              self.setState({ playersSelection: playersSelection });
+              console.log("coachList ", playersSelection);
+            }}
+            submit={false}
           />
-        ))
-      : "";
+        )
+      );
+      console.log("player doc:", playdoc);
+      self.setState({ optionsPlayers: playdoc });
+    }
   }
-  createMenuItemsPlayers(values) {
-    return this.state.players.map(player => (
-      <MenuItem
-        style={styles.menuLabel}
-        key={player.name}
-        insetChildren={true}
-        checked={values && values.indexOf(player.name) > -1}
-        value={player.id}
-        primaryText={player.name}
-      />
-    ));
-  }
-  handleChangeTour = (event, index, value) => {
+
+  handleChangeTour = value => {
+    console.log("in  handleChangeTour value: ", value);
     this.setState({ tournamentSelected: value });
     console.log("handleChangeTour value", value);
     const { CoachEnterPlayersStore } = this.props.stores;
     const self = this;
     CoachEnterPlayersStore.receiveCategoriesByTournament(value).then(
       storedCategories => {
-        self.setState({ categories: mobx.toJS(storedCategories) });
-          console.log('storedCategories',  mobx.toJS(storedCategories));
-      }
- 
-    );
-  };
-
-  handleChangeCat = (event, index, value) => {
-    this.setState({ categorySelected: value });
-    console.log("categorySelected: ", value);
-
-    const { CoachEnterPlayersStore } = this.props.stores;
-    const self = this;
-    CoachEnterPlayersStore.fetchPlayers(this.state.coach_name).then(
-      storedPlayers => {
-        self.setState({ players: mobx.toJS(storedPlayers) });
-        console.log("storedPlayers: ", mobx.toJS(storedPlayers));
+        self.setState({ categories: mobx.toJS(storedCategories) }, () => {
+          this.createCategoriesOptions();
+        });
       }
     );
   };
 
-  handleChangePlayers = (event, index, values) => {
-    const selectedPlayer = [...this.state.playersChecked];
-    selectedPlayer.push(values);
-    this.setState({ playersChecked: selectedPlayer });
-
-    const categoryId = this.state.categorySelected
-      ? this.state.categorySelected
-      : false;
-    console.log("playersChecked value[0]: ", values[0]);
-    categoryId ? this.registerPlayers(categoryId, values[0]) : "";
-
-    console.log("playersChecked value: ", values);
-    console.log("playersChecked state: ", this.state.playersChecked);
+  handleChangeCat = value => {
+    console.log("in  handleChangeCat value is: ", value);
+    this.setState({ categorySelected: value }, () => {
+      this.createPlayerOptions();
+    });
   };
 
-  registerPlayers = (catId, player) => {
+  buttonClicked = event => {
+    let selectedPlayers = [];
+    for (var x in this.state.playersSelection) {
+      if (this.state.playersSelection[x]) {
+        selectedPlayers.push(x);
+        this.registerPlayers(x);
+      }
+    }
+
+    console.log("selected players ", selectedPlayers);
+  };
+  registerPlayers(player_id) {
+    console.log('in registerPlayers category:', this.state.categorySelected);
     const entry = {
-      tournament_category: catId,
-      player
+      tournament_category: this.state.categorySelected,
+      player: player_id
     };
+
     registerCoachPlayerToTournament(entry);
-  };
+  }
+
   render() {
-    const { values } = this.state;
     return (
-      <div>
+      <div style={styles.conteinerStyle}>
         <Row>
           <Column span="12">
-            {/*<CoachHeader />*/}
-          </Column>
-        </Row>
-        <Row>
-          <Column span="12">
-            <SelectField
-              hintText="Select tournament"
-              value={this.state.tournamentSelected}
-              onChange={(event, index, value) =>
-                this.handleChangeTour(event, index, value)
+            <ReactResponsiveSelect
+              style={styles.checkboxDiv}
+              name="select tournament"
+              options={
+                this.state.optionsTournaments
+                  ? this.state.optionsTournaments
+                  : ""
               }
-              style={styles.customWidth}
-            >
-                {console.log('in select tournament')}
-              <Row>
-                <Column span="12">{this.createMenuItemTournament()}</Column>
-              </Row>
-            </SelectField>
+              caretIcon={caretIcon}
+              prefix="Select tounarment "
+              selectedValue={this.state.tournamentSelected}
+              onChange={newValue => {
+                this.handleChangeTour(newValue.value);
+              }}
+            />
           </Column>
         </Row>
+        <Row>
+          <Column span="12">
+            <ReactResponsiveSelect
+              name="select category"
+              options={
+                this.state.optionsCategories ? this.state.optionsCategories : ""
+              }
+              caretIcon={caretIcon}
+              prefix="Select category "
+              selectedValue={this.state.categorySelected}
+              onChange={newValue => {
+                this.handleChangeCat(newValue.value);
+              }}
+            />
+          </Column>
+        </Row>
+        <div style={{ display: "block" }}>
+          <ul style={styles.list}>
+            {this.state.optionsPlayers ? this.state.optionsPlayers : ""}
+          </ul>
+        </div>
 
-        <Row>
-          <Column span="12">
-            <SelectField
-              hintText="Select category"
-              value={this.state.categorySelected}
-              onChange={(event, index, value) =>
-                this.handleChangeCat(event, index, value)
-              }
-              style={styles.customWidth}
-            >
-              <Row>
-                <Column span="12">{this.createMenuItemCategory()}</Column>
-              </Row>
-            </SelectField>
-          </Column>
-        </Row>
-
-        <Row>
-          <Column span="12">
-            <SelectField
-              hintText="Select players"
-              value={values}
-              onChange={(event, index, value) =>
-                this.handleChangePlayers(event, index, value)
-              }
-              multiple={true}
-              style={styles.customWidth}
-            >
-              <Row>
-                <Column span="12">{this.createMenuItemsPlayers(values)}</Column>
-              </Row>
-            </SelectField>
-          </Column>
-        </Row>
+        <div style={{ display: "block" }}>
+          <row>
+            <Column span="2">
+              <RaisedButton
+                label="Submit"
+                style={styles.button}
+                onClick={() => this.buttonClicked(event)}
+              />
+            </Column>
+          </row>
+        </div>
       </div>
     );
   }

@@ -15,7 +15,9 @@ class TournamentStore {
   fetchTournament = (id) => {
     getTournamentByIDApi(id).then((tournamentJson) => {
       this.tournament = tournamentJson;
+
       this.getCategories(tournamentJson.id);
+
     });
   };
 
@@ -52,7 +54,9 @@ class TournamentStore {
     ) {
       getTournamentCategoriesByTournament(id || this.tournament.id).then((response) => {
         this.tournamentCategories = response;
+
         return response;
+
       });
     } else if (this.tournamentCategories.length) {
       return this.tournamentCategories;
