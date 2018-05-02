@@ -119,4 +119,3 @@ def delete_schedule(request):
         match.save()
 
     return HttpResponse(status=200)
-

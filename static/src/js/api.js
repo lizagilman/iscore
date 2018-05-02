@@ -178,7 +178,7 @@ export const getMatchesByTournamentCategoryIDAndStageApi = (
   tournamentCategoryId,
   stage
 ) =>
-  fetch(`/api/Matches/?draws=${tournamentCategoryId}&stage=${stage}`).then(
+  fetch(`/api/Matches/?category=${tournamentCategoryId}&stage=${stage}`).then(
     response => response.json()
   );
 
@@ -187,6 +187,10 @@ export const getAllMatchesApi = () =>
 
 export const updateMatchWinnerApi = (matchId,winnerID) =>
   fetch(`/update_match_winner/?winner_id=${matchId}&match_id=${winnerID}`).then(response => response.json());
+
+
+export const getAllMatchesByTournamentIDApi = (tournID) =>
+  fetch(`/api/Matches/?category__tournamet=${tournID}`).then(response => response.json());
 
 
 ////////////////////////////////////////////

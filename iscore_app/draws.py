@@ -13,13 +13,11 @@ def handle_generate_draws(request):
     draws = Matches.objects.filter(category=int(category_id)).order_by(
         '-stage', )
 
-    serializer=MatchesReaderSerializer(data=draws, many=True)
-
+    serializer = MatchesReaderSerializer(data=draws, many=True)
 
     serializer.is_valid()
 
     return Response(serializer.data)
-
 
 
 class Player():

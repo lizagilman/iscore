@@ -4,8 +4,6 @@ from django.views.generic import TemplateView
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from django.http import HttpResponse
-from django.views import View
 from .models import RankingListCategories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, RankedPlayers, Organizations, Tournaments, Matches, TournamentCategories, Tournament_Managers, Coach, Games, Sets, Entries
 from iscore_app import serializers
 
@@ -152,6 +150,7 @@ class MatchesReaderViewSet(viewsets.ModelViewSet):
     search_fields = ['match_num', 'player1__name', 'player2__name']
     filter_fields = ('category', 'category__tournamet')
 
+
 class TournamentCategoriesViewSet(viewsets.ModelViewSet):
 
     queryset = TournamentCategories.objects.all()
@@ -237,4 +236,4 @@ class MatchesReaderViewSet(viewsets.ModelViewSet):
     queryset = Matches.objects.all()
     serializer_class = serializers.MatchesReaderSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
-    filter_fields = ('player1', 'player2', 'winner', 'category', 'stage')
+    filter_fields = ('category__tournamet', 'category', 'stage')
