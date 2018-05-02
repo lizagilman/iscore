@@ -15,7 +15,8 @@ def create_tournament(request):
         categories = data['categories']
         for category in categories:
             new_category = TournamentCategories(
-                category=str(category), tournamet=tournament_serializer.instance)
+                category=str(category),
+                tournamet=tournament_serializer.instance)
             new_category.save()
     except:
         pass

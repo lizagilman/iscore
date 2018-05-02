@@ -1,6 +1,6 @@
 from django.http import HttpResponse
-import json
-from iscore_app.models import Matches, RankedPlayers, RankingListCategories, Ranking_Lists, TournamentCategories, Entries, Tournaments
+from rest_framework.decorators import api_view
+from iscore_app.models import Matches, RankedPlayers, RankingListCategories, Ranking_Lists, TournamentCategories, Entries, Tournaments, Players
 from django.core import serializers
 
 
@@ -59,6 +59,7 @@ def match_generate(tournament, category_draw):
     tournament = Tournament(player_list)
 
     tournament.make_draws(category_draw)
+    tournament.Orginaize_matches(category_draw)
     return tournament
 
 
@@ -100,19 +101,18 @@ class Tournament():
                     category=draw_table)
                 new_match.save()
 
+            counter = len(self.placesList)
             matches_len = len(self.matchList)
             if matches_len % 4 == 0:
                 arrayM = []
-
                 self.addEmptyMatches(matches_len // 2, arrayM)
-                fill = 0
                 for k in arrayM:
                     stage = self.find_stage(k)
                     for j in range(int(k)):
                         match = Match(None, None)
                         self.matchList.append(match)
                         new_match = Matches(
-                            match_index=matches_len + fill,
+                            match_index=counter,
                             player1=match.playerA,
                             player2=match.playerB,
                             winner=None,
@@ -120,7 +120,7 @@ class Tournament():
                             time=None,
                             category=draw_table)
                         new_match.save()
-                        fill += 1
+                        counter += 2
         else:
             print('wrong input')
 
@@ -144,6 +144,29 @@ class Tournament():
             32: "R64",
         }[match_len]
 
+    def Orginaize_matches(self, category):
+
+        num_players = category.player_list.count() / 2
+        while (num_players > 1):
+            stage = self.find_stage(num_players)
+            current_match_list = Matches.objects.filter(stage=stage).filter(
+                category=category.id).order_by('matches__time').distinct()
+            num_players = num_players / 2
+            next_stage = self.find_stage(num_players)
+            next_match_list = Matches.objects.filter(category=category).filter(
+                stage=next_stage).order_by('matches__time').distinct()
+            index = 0
+            index_next = 0
+            num_players
+            for index in range(0, len(current_match_list), 2):
+                current_match_list[index].next_match = next_match_list[
+                    index_next]
+                current_match_list[index].save()
+                current_match_list[index + 1].next_match = next_match_list[
+                    index_next]
+                current_match_list[index + 1].save()
+                index_next += 1
+
 
 def Generate_Draws(category):
     category = TournamentCategories.objects.get(pk=category)
@@ -156,8 +179,39 @@ def Generate_Draws(category):
 def Delete_Draws(request):
 
     tournamnet = request.GET['category_id']
-    draw = Matches.objects.filter(category=tournamnet)
+    draw = Matches.objects.filter(category=tournamnet).order_by('-pk')
     for match in draw:
         match.delete()
 
     return HttpResponse("draws were deleted")
+
+
+def update_winner(match_id, winner_id):
+
+    ended_match = Matches.objects.get(pk=match_id)
+    winner = Players.objects.get(pk=winner_id)
+    ended_match.winner = winner
+
+    if (ended_match.next_match == None):
+        ended_match.save()
+        return
+    if ((ended_match.match_index / 2) % 2 == 0):
+        ended_match.next_match.player1 = winner
+        ended_match.next_match.save()
+    else:
+        ended_match.next_match.player2 = winner
+        ended_match.next_match.save()
+
+    ended_match.save()
+
+
+def handle_update_winner(request):
+
+    winner_id = request.GET['winner_id']
+    if (winner_id == None):
+        return HttpResponse("missing winner id")
+    match_id = request.GET['match_id']
+    if (match_id == None):
+        return HttpResponse("missing winner id")
+    update_winner(match_id, winner_id)
+    return HttpResponse("match: " + match_id + " has updated his winner")
