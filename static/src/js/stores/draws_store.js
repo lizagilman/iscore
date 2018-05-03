@@ -1,10 +1,10 @@
 /* eslint-disable */
-import { observable, action } from 'mobx';
+import { observable, action } from "mobx";
 import {
   getMatchesByTournamentCategoryIDApi,
   generateDraws,
-  deleteDraws,
-} from '../api';
+  deleteDraws
+} from "../api";
 
 class DrawsStore {
   @observable draw = [];
@@ -16,33 +16,33 @@ class DrawsStore {
   @observable drawsCache = [];
 
   @action
-  sortDrawToStages = (draw) => {
+  sortDrawToStages = draw => {
     this.matchesR16 = [];
     this.matchesQF = [];
     this.matchesSF = [];
     this.matchesF = [];
-    draw.map((match) => {
+    draw.map(match => {
       switch (match.stage) {
-        case 'R16':
+        case "R16":
           this.matchesR16.push(match);
           break;
-        case 'QF':
+        case "QF":
           this.matchesQF.push(match);
           break;
-        case 'SF':
+        case "SF":
           this.matchesSF.push(match);
           break;
-        case 'F':
+        case "F":
           this.matchesF.push(match);
       }
     });
   };
 
   @action
-  getCategoryDraw = (categoryID) => {
-    getMatchesByTournamentCategoryIDApi(categoryID).then((drawJson) => {
+  getCategoryDraw = categoryID => {
+    getMatchesByTournamentCategoryIDApi(categoryID).then(drawJson => {
       if (!drawJson.length) {
-        generateDraws(categoryID).then((newDrawJson) => {
+        generateDraws(categoryID).then(newDrawJson => {
           this.draw = newDrawJson;
 
           this.sortDrawToStages(newDrawJson);
@@ -53,11 +53,14 @@ class DrawsStore {
           }
         });
       } else {
+        drawJson.sort(
+          (match1, match2) => match1.match_index - match2.match_index
+        );
+
         this.draw = drawJson;
 
         this.sortDrawToStages(drawJson);
       }
-
 
       if (drawJson) {
         this.drawsCache.push({ id: categoryID, draw: drawJson });
@@ -68,9 +71,9 @@ class DrawsStore {
   // };
 
   @action
-  deleteDraw = (categoryID) => {
-    deleteDraws(categoryID).then((response) => {
-      alert('draw deleted');
+  deleteDraw = categoryID => {
+    deleteDraws(categoryID).then(response => {
+      alert("draw deleted");
     });
   };
 }
