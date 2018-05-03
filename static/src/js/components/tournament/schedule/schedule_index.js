@@ -135,10 +135,13 @@ export default class Schedule extends React.Component {
           {item.court ? item.court : ''}
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStyleCategory}>
-          {item.draws ? item.draws : ''}
+          {item.category ? item.draws : ''}
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStyleWinner}>
           {item.winner ? item.winner : ''}
+        </TableRowColumn>
+        <TableRowColumn style={scheduleTableStyleWinner}>
+          -
         </TableRowColumn>
       </TableRow>
     );

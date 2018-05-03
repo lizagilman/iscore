@@ -23,6 +23,9 @@ class MatchesStore {
   fetchMatches = (id) => {
     if (id) {
       getAllMatchesByTournamentIDApi(id).then((matchesJson) => {
+        matchesJson.sort(function(match1, match2){
+          return new Date(match1.time) - new Date(match2.time);
+});
         this.matches = [matchesJson];
       });
     }
