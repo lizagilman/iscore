@@ -9,7 +9,6 @@ import { inject, observer } from 'mobx-react/index';
 import { Tree, Match, NextMatch } from './draw_body';
 import Spinner from '../../spinner/spinner';
 
-
 @inject('stores')
 @observer
 export default class Draws extends React.Component {
@@ -71,15 +70,27 @@ export default class Draws extends React.Component {
 
     if (draw) {
       if (this.state.currentStage === 'R16') {
-        matches = DrawsStore.matchesR16.map(matchQF =>
-          Match(matchQF.player1, matchQF.player2));
-        nextMatches = DrawsStore.matchesQF.map(matchQF =>
-          NextMatch('WINNER A', 'WINNER B', this.state.nextStage));
+        matches = DrawsStore.matchesR16.map(matchR16 =>
+          Match(matchR16.player1, matchR16.player2));
+        nextMatches = DrawsStore.matchesQF.map((matchQF, index) =>
+          NextMatch(
+            matchQF.player1 ? matchQF.player1 : `Winner of R16 ${index + 1}`,
+            matchQF.player2 ? matchQF.player2 : `Winner of R16 ${index + 1}`,
+            this.state.nextStage,
+          ));
       } else {
-        matches = DrawsStore.matchesSF.map(matchSF =>
-          Match('WINNER A', 'WINNER B'));
-        nextMatches = DrawsStore.matchesF.map(matchF =>
-          NextMatch('WINNER A', 'WINNER B', this.state.nextStage));
+        matches = DrawsStore.matchesSF.map((matchSF, index) =>
+          Match(
+            matchSF.player1 ? matchSF.player1 : `Winner of QF ${index + 1}`,
+            matchSF.player2 ? matchSF.player2 : `Winner of QF ${index + 1}`,
+            this.state.nextStage,
+          ));
+        nextMatches = DrawsStore.matchesF.map((matchF, index) =>
+          NextMatch(
+            matchF.player1 ? matchF.player1 : `Winner of SF ${index + 1}`,
+            matchF.player2 ? matchF.player2 : `Winner of SF ${index + 1}`,
+            this.state.nextStage,
+          ));
       }
     }
 
@@ -93,36 +104,38 @@ export default class Draws extends React.Component {
         {Tree(matches, nextMatches)}
       </div>
     ) : (
-        <div>{Spinner(70)}</div>
+      <div>{Spinner(70)}</div>
     );
 
     return (
       <div>
         <div>
-          {categories
-            ? categories.map((category, index) => (
-                <div>
-                  <a key={index}>{category.category}</a>
+          {categories ? (
+            categories.map((category, index) => (
+              <div>
+                <a key={index}>{category.category}</a>
 
-                  <FlatButton
-                    label="Generate/ Display Draw"
-                    primary={true}
-                    onClick={() => {
-                      DrawsStore.getCategoryDraw(category.id);
-                      this.forceUpdate();
-                    }}
-                  />
-                  <FlatButton
-                    label="Delete Draw"
-                    primary={true}
-                    onClick={() => {
-                      DrawsStore.deleteDraw(category.id);
-                      this.forceUpdate();
-                    }}
-                  />
-                </div>
-              ))
-            : <div>{Spinner(70)}</div>}
+                <FlatButton
+                  label="Generate/ Display Draw"
+                  primary={true}
+                  onClick={() => {
+                    DrawsStore.getCategoryDraw(category.id);
+                    this.forceUpdate();
+                  }}
+                />
+                <FlatButton
+                  label="Delete Draw"
+                  primary={true}
+                  onClick={() => {
+                    DrawsStore.deleteDraw(category.id);
+                    this.forceUpdate();
+                  }}
+                />
+              </div>
+            ))
+          ) : (
+            <div>{Spinner(70)}</div>
+          )}
         </div>
 
         <div>{drawTree}</div>
