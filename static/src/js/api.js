@@ -185,13 +185,15 @@ export const getMatchesByTournamentCategoryIDAndStageApi = (
 export const getAllMatchesApi = () =>
   fetch("/api/Matches/").then(response => response.json());
 
-export const updateMatchWinnerApi = (matchId,winnerID) =>
-  fetch(`/update_match_winner/?winner_id=${matchId}&match_id=${winnerID}`).then(response => response.json());
+export const updateMatchWinnerApi = (matchId, winnerID) =>
+  fetch(`/update_match_winner/?winner_id=${matchId}&match_id=${winnerID}`).then(
+    response => response
+  );
 
-
-export const getAllMatchesByTournamentIDApi = (tournID) =>
-  fetch(`/api/Matches/?category__tournamet=${tournID}`).then(response => response.json());
-
+export const getAllMatchesByTournamentIDApi = tournID =>
+  fetch(`/api/Matches/?category__tournamet=${tournID}`).then(response =>
+    response.json()
+  );
 
 ////////////////////////////////////////////
 
@@ -223,20 +225,22 @@ export const createTournamentCategoryApi = TournamentCategory =>
 
 /////////////////////////////functions in api
 
-export const generate_schedule = (
-  tournamentId,
-  numOfCourts,
-  startHour,
-  finishHour,
-  gameduration
-) =>
-  fetch(
-    `/generate_schedule/?tournament_id=${tournamentId}&num_of_courts=${numOfCourts}&start_hour=${startHour}&finish_hour=${finishHour}&game_duration=${gameduration} `
-  ).then(response => response.json());
+export const generateScheduleApi = params => {
+  const {
+    tournamentId,
+    numOfCourts,
+    startHour,
+    finishHour,
+    matchDuration
+  } = params;
+  return fetch(
+    `/generate_schedule/?tournament_id=${tournamentId}&num_of_courts=${numOfCourts}&start_hour=${startHour}&finish_hour=${finishHour}&game_duration=${matchDuration} `
+  ).then(response => response);
+};
 
-export const deleteSchedule = tournament_id => {
+export const deleteScheduleApi = tournament_id => {
   return fetch(`/delete_schedule/?tournament_id=${tournament_id}`).then(
-    response => response.json()
+    response => response
   );
 };
 export const generateDraws = categoryid =>
