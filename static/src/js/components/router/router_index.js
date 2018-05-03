@@ -9,7 +9,7 @@ import CoachHeader from '../coach/header/header';
 const AppRouter = () => (
   <Router>
     <div>
-      {localStorage.user_type === 1 ? <Header /> : <CoachHeader />}
+      {localStorage.user_type === 'coach' ?  <CoachHeader /> : <Header /> }
       <Route exact path="/" component={Tournaments} />
       <Route exact path="/tournaments" component={Tournaments} />
       <Route exact path="/tournament/:id" component={Tournament} />

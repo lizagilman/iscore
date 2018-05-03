@@ -61,7 +61,7 @@ export default class CoachPage extends React.Component {
     };
   }
   componentWillMount() {
-    localStorage.setItem('user_type', '2');
+    localStorage.setItem('user_type', 'coach');
     const { TournamentsStore } = this.props.stores;
     const self = this;
     TournamentsStore.fetchAllTournaments().then((storedTournaments) => {
