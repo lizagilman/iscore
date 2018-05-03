@@ -61,6 +61,7 @@ export default class CoachPage extends React.Component {
     };
   }
   componentWillMount() {
+    localStorage.setItem('user_type', '2');
     const { TournamentsStore } = this.props.stores;
     const self = this;
     TournamentsStore.fetchAllTournaments().then((storedTournaments) => {
@@ -149,7 +150,7 @@ export default class CoachPage extends React.Component {
       <div>
         <Row>
           <Column span="12">
-            <CoachHeader />
+            {/*<CoachHeader />*/}
           </Column>
         </Row>
         <Row>

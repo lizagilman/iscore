@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from iscore_app.serializers import MatchesReaderSerializer
-from iscore_app.models import Matches, RankedPlayers, RankingListCategories, Ranking_Lists, TournamentCategories, Entries, Tournaments
+from iscore_app.models import Matches, RankedPlayers, RankingListCategories, Ranking_Lists, TournamentCategories, Entries, Tournaments, Players
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 

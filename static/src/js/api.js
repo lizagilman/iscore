@@ -186,7 +186,7 @@ export const getAllMatchesApi = () =>
   fetch("/api/Matches/").then(response => response.json());
 
 export const updateMatchWinnerApi = (matchId, winnerID) =>
-  fetch(`/update_match_winner/?winner_id=${matchId}&match_id=${winnerID}`).then(
+  fetch(`/update_match_winner/?winner_id=${winnerID}&match_id=${matchId}`).then(
     response => response
   );
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import SwipeableViews from 'react-swipeable-views';
+import Spinner from '../../spinner/spinner';
 import {
   Table,
   TableBody,
@@ -10,6 +11,7 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
+
 
 const mobx = require('mobx');
 
@@ -156,7 +158,7 @@ export default class EntriesAndSeeds extends React.Component {
                 this.state.entries[num].map((Entrie, index) =>
                   createRow(Entrie, index))
               ) : (
-                <h3>loading</h3>
+                <div>{Spinner(70)}</div>
               )}
             </TableBody>
           </Table>
@@ -193,7 +195,7 @@ export default class EntriesAndSeeds extends React.Component {
             this.state.slideIndex == 0 ? (
               entriesTable(this.state.slideIndex)
             ) : (
-              <h4>loading entries</h4>
+              <div>{Spinner(70)}</div>
             )}
           </div>
           <div>
@@ -202,7 +204,7 @@ export default class EntriesAndSeeds extends React.Component {
             this.state.slideIndex == 1 ? (
               entriesTable(this.state.slideIndex)
             ) : (
-              <h4>loading entries</h4>
+              <div>{Spinner(70)}</div>
             )}
           </div>
         </SwipeableViews>

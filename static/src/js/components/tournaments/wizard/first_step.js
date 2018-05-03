@@ -1,3 +1,4 @@
+
 import React from 'react';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
@@ -13,6 +14,7 @@ class FirstStep extends React.Component {
     super(props);
     this.handleTournamentNameChange = this.handleTournamentNameChange.bind(this);
     this.handleFieldOfSportChange = this.handleFieldOfSportChange.bind(this);
+    this.handleAddressChange = this.handleAddressChange.bind(this);
   }
 
   handleTournamentNameChange(event) {
@@ -20,6 +22,13 @@ class FirstStep extends React.Component {
     const { WizardStore } = this.props.stores;
 
     WizardStore.setTournamentProperty('name', event.target.value);
+  }
+
+  handleAddressChange(event) {
+    event.preventDefault();
+    const { WizardStore } = this.props.stores;
+
+    WizardStore.setTournamentProperty('address', event.target.value);
   }
 
   handleFieldOfSportChange(event, index, value) {
@@ -50,6 +59,13 @@ class FirstStep extends React.Component {
           floatingLabelText="Tournament Name"
           fullWidth={true}
           onChange={event => this.handleTournamentNameChange(event)}
+        />
+
+                        <TextField
+          defaultValue={tournament ? tournament.address : false}
+          floatingLabelText="Venue Address"
+          fullWidth={true}
+          onChange={event => this.handleAddressChange(event)}
         />
 
         <SelectField
@@ -84,6 +100,7 @@ class FirstStep extends React.Component {
             this.handleDateChange('end_date', date);
           }}
         />
+
       </div>
     );
   }

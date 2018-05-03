@@ -4,11 +4,12 @@ import Tournament from '../tournament/tournament_index';
 import Header from '../header/header_index';
 import Tournaments from '../tournaments/tournaments_index';
 import CoachPage from '../coach/index';
+import CoachHeader from '../coach/header/header';
 
 const AppRouter = () => (
   <Router>
     <div>
-      <Header />
+      {localStorage.user_type === 1 ? <Header /> : <CoachHeader />}
       <Route exact path="/" component={Tournaments} />
       <Route exact path="/tournaments" component={Tournaments} />
       <Route exact path="/tournament/:id" component={Tournament} />
