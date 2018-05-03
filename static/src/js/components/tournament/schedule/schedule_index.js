@@ -135,13 +135,10 @@ export default class Schedule extends React.Component {
           {item.court ? item.court : ''}
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStyleCategory}>
-          {item.category ? item.draws : ''}
+          {item.category ? item.category : ''}
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStyleWinner}>
           {item.winner ? item.winner : ''}
-        </TableRowColumn>
-        <TableRowColumn style={scheduleTableStyleWinner}>
-          -
         </TableRowColumn>
       </TableRow>
     );
@@ -168,7 +165,6 @@ export default class Schedule extends React.Component {
                 Category
               </TableHeaderColumn>
               <TableHeaderColumn>Winner</TableHeaderColumn>
-              <TableHeaderColumn>Actions</TableHeaderColumn>
             </TableRow>
           </TableHeader>
           <TableBody displayRowCheckbox={false}>
@@ -189,6 +185,7 @@ export default class Schedule extends React.Component {
             scheduleParams.start_hour ? scheduleParams.start_hour : ''
           }
           floatingLabelText={'Start Hour'}
+          style={{    marginRight: '2%'}}
           onChange={(event) => {
             event.preventDefault();
             MatchesStore.updateParamValue('startHour', event.target.value);
@@ -198,6 +195,7 @@ export default class Schedule extends React.Component {
           defaultValue={
             scheduleParams.finish_hour ? scheduleParams.finish_hour : ''
           }
+            style={{    marginRight: '2%'}}
           floatingLabelText={'End Hour'}
           onChange={(event) => {
             event.preventDefault();
@@ -208,6 +206,7 @@ export default class Schedule extends React.Component {
           defaultValue={
             scheduleParams.num_of_courts ? scheduleParams.num_of_courts : ''
           }
+            style={{    marginRight: '2%'}}
           floatingLabelText={'Number of Courts'}
           onChange={(event) => {
             event.preventDefault();
@@ -218,6 +217,7 @@ export default class Schedule extends React.Component {
           defaultValue={
             scheduleParams.game_duration ? scheduleParams.game_duration : ''
           }
+            style={{    marginRight: '2%'}}
           floatingLabelText={'Match Duration'}
           onChange={(event) => {
             event.preventDefault();
