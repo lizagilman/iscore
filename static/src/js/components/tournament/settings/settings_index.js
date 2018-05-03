@@ -6,6 +6,7 @@ import Checkbox from 'material-ui/Checkbox';
 import Subheader from 'material-ui/Subheader';
 import FlatButton from 'material-ui/FlatButton';
 import { inject, observer } from 'mobx-react/index';
+import Spinner from '../../spinner/spinner';
 
 const styles = {
   block: {
@@ -79,7 +80,7 @@ export default class Settings extends React.Component {
             {categories
               ? categories.map((category, index) =>
                   CreateCategoryCheckbox(category, index))
-              : ''}
+              : <div>{Spinner(70)}</div>}
           </ul>
         </div>
 

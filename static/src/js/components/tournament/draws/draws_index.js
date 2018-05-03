@@ -6,8 +6,8 @@ import ArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
 import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import FlatButton from 'material-ui/FlatButton';
 import { inject, observer } from 'mobx-react/index';
-
 import { Tree, Match, NextMatch } from './draw_body';
+import Spinner from '../../spinner/spinner';
 
 
 @inject('stores')
@@ -93,7 +93,7 @@ export default class Draws extends React.Component {
         {Tree(matches, nextMatches)}
       </div>
     ) : (
-      false
+        <div>{Spinner(70)}</div>
     );
 
     return (
@@ -122,7 +122,7 @@ export default class Draws extends React.Component {
                   />
                 </div>
               ))
-            : false}
+            : <div>{Spinner(70)}</div>}
         </div>
 
         <div>{drawTree}</div>
