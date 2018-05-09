@@ -14,6 +14,7 @@ class Tournament extends React.Component {
     this.state = {
       mainContent: <BasicInfo isForm={true} />,
       title: 'Basic Info',
+      tournament: null,
     };
   }
 
@@ -28,6 +29,10 @@ class Tournament extends React.Component {
 
   componentWillMount() {
     const { TournamentStore } = this.props.stores;
+
+    const tournamentId = parseInt(this.props.match.params.id, 10);
+
+    TournamentStore.fetchTournament(tournamentId);
 
     TournamentStore.getCategories();
   }

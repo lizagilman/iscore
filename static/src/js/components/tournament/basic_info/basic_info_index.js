@@ -14,10 +14,25 @@ const mobx = require('mobx');
 @inject('stores')
 @observer
 export default class BasicInfo extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      tournament: null,
+      categories: null,
+    };
+
+
+    this.state = {
+      tournament: null,
+    };
+  }
+
+
   render() {
     const tournament = mobx.toJS(this.props.stores.TournamentStore.tournament)
       ? mobx.toJS(this.props.stores.TournamentStore.tournament)
-      : ' ';
+      : false;
 
     const paperStyle = {
       height: 100,
@@ -26,6 +41,7 @@ export default class BasicInfo extends React.Component {
       textAlign: 'center',
       display: 'inline-block',
     };
+
 
     return (
       <div>

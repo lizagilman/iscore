@@ -52,11 +52,8 @@ class MatchesStore {
 
   @action
   deleteSchedule() {
-    deleteScheduleApi(this.scheduleParams.tournamentId).then((response) => {
-      response.status > 400
-        ? alert('Delete schedule failed')
-        : alert('Schedule deleted');
-    });
+    deleteScheduleApi(this.scheduleParams.tournamentId).then((response) =>
+      response.status > 400  ? alert('Delete schedule failed') : alert('Schedule deleted'));
   }
 
   // allMatches = [{
