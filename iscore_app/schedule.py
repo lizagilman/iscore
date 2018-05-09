@@ -14,17 +14,24 @@ def handle_generate_schedule(request):
     start_hour = int(request.GET['start_hour'])
     finish_hour = int(request.GET['finish_hour'])
     game_duration = int(request.GET['game_duration'])
-    data = generate_schedule(tournament, start_date, end_date, num_of_courts,
-                             start_hour, finish_hour, game_duration)
+    start_date += datetime.timedelta(hours=start_hour)
+    end_date += datetime.timedelta(hours=finish_hour)
+    data = generate_schedule_by_stage(tournament, start_date, end_date,
+                                      num_of_courts, start_hour, finish_hour,
+                                      game_duration)
+    #  data = generate_schedule(tournament, start_date, end_date, num_of_courts,
+    #                           start_hour, finish_hour, game_duration)
 
-    if (data == "could not compute, too few matches per day"):
-        return HttpResponse(data)
+    if (data == "could not compute, too few matches per day"
+            or data == "could not compute,draws for a category is missing"):
+        return HttpResponse(data, status=400)
     send_data = serializers.serialize('json', data)
     return HttpResponse(send_data)
 
 
-def generate_category_schedule(match_list, start_date, start_hour, finish_hour,
-                               num_of_courts, games_per_day, game_duration):
+def create_schedule_for_matches(match_list, start_date, start_hour,
+                                finish_hour, num_of_courts, games_per_day,
+                                game_duration):
 
     game_duration = game_duration
     match_date = start_date
@@ -34,18 +41,17 @@ def generate_category_schedule(match_list, start_date, start_hour, finish_hour,
     limit = 0
     court = 1
     for match in match_list:
-
-        if (limit >= games_per_day or match_date.hour > finish_hour
-                or match.stage != stage):  #starting new day
+        if (court > num_of_courts):  #case all courts are taken for that time
+            court = 1
+            match_date += datetime.timedelta(hours=game_duration)
+        if ((limit >= games_per_day) or (match_date.hour > finish_hour)
+                or (match.stage != stage)):  #starting new day
             limit = 0
             court = 1
             match_date += datetime.timedelta(days=1)
             match_date = match_date.replace(hour=beginning_hour)
             if (match.stage != stage):  #case new stage in tournament
                 stage = match.stage
-        if (court > num_of_courts):  #case all courts are taken for that time
-            court = 1
-            match_date += datetime.timedelta(hours=game_duration)
         match.time = match_date
         match.court = court
         match.save()
@@ -63,8 +69,9 @@ class match_time:
         self.time = time
 
 
-def generate_schedule(tournament, start_date, end_date, num_of_courts,
-                      start_hour, finish_hour, game_duration):
+def generate_schedule_by_category(tournament, start_date, end_date,
+                                  num_of_courts, start_hour, finish_hour,
+                                  game_duration):
 
     categories = TournamentCategories.objects.filter(tournamet=tournament)
     tournament_duration = end_date - start_date
@@ -91,9 +98,9 @@ def generate_schedule(tournament, start_date, end_date, num_of_courts,
     for category in categories:
         matches = Matches.objects.filter(category=category).order_by('pk')
         games_per_day = days_for_category / len(matches)
-        time = generate_category_schedule(matches, time, start_hour,
-                                          finish_hour, num_of_courts,
-                                          games_per_day, game_duration)
+        time = create_schedule_for_matches(matches, time, start_hour,
+                                           finish_hour, num_of_courts,
+                                           games_per_day, game_duration)
 
     return Matches.objects.filter(category__tournamet=tournament).order_by(
         'category__category', 'stage')
@@ -119,3 +126,34 @@ def delete_schedule(request):
         match.save()
 
     return HttpResponse(status=200)
+
+
+def generate_schedule_by_stage(tournament, start_date, end_date, num_of_courts,
+                               start_hour, finish_hour, game_duration):
+
+    categories = TournamentCategories.objects.filter(tournamet=tournament)
+    tournament_duration = end_date - start_date
+    tournament_duration = tournament_duration.total_seconds() / 86400
+    matches = Matches.objects.filter(category__tournamet=tournament).order_by(
+        'match_index', 'stage')
+    number_of_all_matches = len(matches)
+    games_per_day = ((
+        finish_hour - start_hour) / game_duration) * num_of_courts
+
+    #calculate if time needed doesnt excel tournament duration
+    max_players_in_category = 0
+    for category in categories:
+        max_players_in_category = max(max_players_in_category,
+                                      category.player_list.count())
+        if (category.player_list.count() == 0):
+            return "could not compute,draws for a category is missing"
+
+    if (number_of_all_matches / games_per_day > tournament_duration):
+        return "could not compute, too few matches per day"
+
+    time = create_schedule_for_matches(matches, start_date, start_hour,
+                                       finish_hour, num_of_courts,
+                                       games_per_day, game_duration)
+
+    return Matches.objects.filter(category__tournamet=tournament).order_by(
+        'category__category', 'stage')
