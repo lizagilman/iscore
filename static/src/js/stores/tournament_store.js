@@ -7,13 +7,14 @@ import {
 } from '../api';
 
 class TournamentStore {
-  @observable tournament = {};
+  @observable tournament = null;
   @observable tournamentCategories = [];
+  @observable matches = null;
 
   @action
-  getTournament = (id) => {
+  fetchTournament = (id) => {
     getTournamentByIDApi(id).then((tournamentJson) => {
-      this.tournaments = tournamentJson;
+      this.tournament = tournamentJson;
     });
   };
 
@@ -43,9 +44,10 @@ class TournamentStore {
   @action
   // eslint-disable-next-line
   getCategories = () => {
-    if (this.tournament.id && !this.tournamentCategories.length) {
+    if (this.tournament && this.tournament.id && !this.tournamentCategories.length) {
       getTournamentCategoriesByTournament(this.tournament.id).then((response) => {
         this.tournamentCategories = response;
+        return response;
       });
     } else if (this.tournamentCategories.length) {
       return this.tournamentCategories;
@@ -53,6 +55,7 @@ class TournamentStore {
   };
 
   @action getTournamentId = () => this.tournament.id;
+  @action getTournament = () => this.tournament;
 }
 
 const tournamentStore = new TournamentStore();

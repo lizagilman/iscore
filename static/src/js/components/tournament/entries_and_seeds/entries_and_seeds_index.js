@@ -1,8 +1,8 @@
 import React from 'react';
-import { inject, observer } from 'mobx-react';
-import { Tabs, Tab } from 'material-ui/Tabs';
 import SwipeableViews from 'react-swipeable-views';
 import Spinner from '../../spinner/spinner';
+import { inject, observer } from 'mobx-react';
+import { Tabs, Tab } from 'material-ui/Tabs';
 import {
   Table,
   TableBody,
@@ -43,8 +43,11 @@ function sortBy(data, prop, isAsc) {
     return diff < 0 ? 1 : -1;
   });
 }
+
 const entrieDoc = [];
+
 const sorted = [];
+
 @inject('stores')
 @observer
 export default class EntriesAndSeeds extends React.Component {

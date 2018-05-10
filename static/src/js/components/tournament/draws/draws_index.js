@@ -5,9 +5,10 @@ import Paper from 'material-ui/Paper';
 import ArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
 import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import FlatButton from 'material-ui/FlatButton';
+import Spinner from '../../spinner/spinner';
 import { inject, observer } from 'mobx-react/index';
 import { Tree, Match, NextMatch } from './draw_body';
-import Spinner from '../../spinner/spinner';
+
 
 @inject('stores')
 @observer

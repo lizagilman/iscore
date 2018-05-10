@@ -13,6 +13,7 @@ class TournamentsStore {
   @action
   updateTournament = (tournament) => {
     const newTournament = tournament;
+    // TO-DO: refactor to dynamic manager id
     newTournament.manager = 1;
     editTournamentApi(newTournament).then((response) => {
       if (response.status >= 400) {
