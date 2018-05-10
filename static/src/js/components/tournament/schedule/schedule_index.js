@@ -86,11 +86,12 @@ export default class Schedule extends React.Component {
     return formateDate;
   }
 
-  updateMatch(e, match) {
+  updateMatch(e, matchId, winner) {
     e.preventDefault();
     const { MatchesStore } = this.props.stores;
 
-    MatchesStore.updateMatch(match.id);
+
+    MatchesStore.updateMatch(matchId, winner);
   }
 
   componentWillMount() {
@@ -114,31 +115,32 @@ export default class Schedule extends React.Component {
         ? mobx.toJS(storedMatches)[0]
         : false;
 
-    const createRow = (item, index) => (
+    const createRow = (match, index) => (
       <TableRow key={index}>
         <TableRowColumn style={scheduleTableStyleStage}>
-          <a href={'#'} onClick={e => this.updateMatch(e, item)}>
-            {' '}
-            {item.stage ? item.stage : ''}{' '}
-          </a>
+          {match.stage ? match.stage : ''}
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStylePlayer1}>
-          {item.player1 ? item.player1 : ''}
+          <a title={'update match winner'} href={'#'} onClick={e => this.updateMatch(e, match.id, "player1")}>
+            {match.player1 ? match.player1 : ''}
+          </a>
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStylePlayer2}>
-          {item.player2 ? item.player2 : ''}
+            <a href={'#'} title={'update match winner'}  onClick={e => this.updateMatch(e, match.id, "player2")}>
+            {match.player2 ? match.player2 : ''}
+          </a>
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStyleTime}>
-          {item ? this.setDateTime(item.time) : ''}
+          {match ? this.setDateTime(match.time) : ''}
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStyleCourt}>
-          {item.court ? item.court : ''}
+          {match.court ? match.court : ''}
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStyleCategory}>
-          {item.category ? item.category : ''}
+          {match.category ? match.category : ''}
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStyleWinner}>
-          {item.winner ? item.winner : ''}
+          {match.winner ? match.winner : ''}
         </TableRowColumn>
       </TableRow>
     );

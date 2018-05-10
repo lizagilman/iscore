@@ -30,11 +30,19 @@ class MatchesStore {
   };
 
   @action
-  updateMatch = (matchId) => {
-    let matchWithPks;
+  updateMatch = (matchId, winner) => {
+    let winnerId;
+
     getMatchToWriteByMatchId(matchId).then((response) => {
-      matchWithPks = response;
-      updateMatchWinnerApi(matchId, matchWithPks.player1);
+
+
+      winnerId = winner === 'player1'? response.player1 : response.player2;
+
+      updateMatchWinnerApi(matchId, winnerId).then( (responseUpdate) => {
+
+        responseUpdate.status > 400 ?  alert('Winner Update failed') : alert('Winner Updated');
+
+      });
     });
   };
 
