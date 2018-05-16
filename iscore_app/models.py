@@ -161,7 +161,7 @@ class Matches(models.Model):
     court = models.IntegerField(default=0)
 
     def __str__(self):
-        return 'matach: p1: %s , p2: %s , stage:%s  ,category : %s' % (
+        return 'match: p1: %s , p2: %s , stage:%s  ,category : %s' % (
             self.player1, self.player2, self.stage, self.category)
 
 
