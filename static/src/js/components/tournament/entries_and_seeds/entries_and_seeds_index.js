@@ -106,7 +106,11 @@ export default class EntriesAndSeeds extends React.Component {
                 console.log('in createTab. slide index is:', this.state.slideIndex);
                 console.log('in createTab. categoriesEntries are:', this.state.categoriesEntries);
                 console.log('in createTab. entry is:', entry);
+<<<<<<< origin/master
 
+=======
+                
+>>>>>>> HEAD~0
             }
            return (
                 <Tab

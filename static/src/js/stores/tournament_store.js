@@ -46,6 +46,7 @@ class TournamentStore {
 
   @action
   // eslint-disable-next-line
+<<<<<<< origin/master
   getCategories = id => {
     if (
       this.tournament &&
@@ -61,6 +62,22 @@ class TournamentStore {
     } else if (this.tournamentCategories.length) {
       return this.tournamentCategories;
     }
+=======
+  getCategories = () => {
+
+    if(!this.tournament && this.tournament.id){
+      return Promise.resolve([]);
+    }
+
+    if (this.tournamentCategories.length) {
+      return Promise.resolve(this.tournamentCategories);
+    }
+
+    return getTournamentCategoriesByTournament(this.tournament.id).then((response) => {
+        this.tournamentCategories = response;
+        return this.tournamentCategories;
+    });
+>>>>>>> HEAD~0
   };
 
   @action getTournamentId = () => this.tournament.id;
