@@ -1,14 +1,13 @@
 import React from 'react';
 import * as mobx from 'mobx';
-import * as drawStyles from './draws_styles';
+import { inject, observer } from 'mobx-react/index';
 import Paper from 'material-ui/Paper';
 import ArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
 import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
 import FlatButton from 'material-ui/FlatButton';
-import Spinner from '../../spinner/spinner';
-import { inject, observer } from 'mobx-react/index';
+import * as drawStyles from './draws_styles';
 import { Tree, Match, NextMatch } from './draw_body';
-
+import Spinner from '../../spinner/spinner';
 
 @inject('stores')
 @observer
@@ -31,6 +30,16 @@ export default class Draws extends React.Component {
     e.preventDefault();
     if (!(this.state.nextStage === 'F')) {
       this.setState({ prevStage: 'QF', currentStage: 'SF', nextStage: 'F' });
+    }
+  }
+
+  componentWillMount() {
+    const { TournamentStore } = this.props.stores;
+
+    if (!TournamentStore.tournamentCategories.length) {
+      TournamentStore.getCategories(
+        this.props.tournamentId || parseInt(this.props.match.params.id, 10)
+      );
     }
   }
 
