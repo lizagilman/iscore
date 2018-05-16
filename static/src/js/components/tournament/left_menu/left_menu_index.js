@@ -59,12 +59,18 @@ class LeftMenu extends React.Component {
             <MenuItem
               primaryText="Draws"
               leftIcon={<List />}
-              onClick={contentSwitcher(<Draws />, 'Draws')}
+              onClick={contentSwitcher(
+                <Draws tournamentId={this.props.tournamentId} />,
+                'Draws',
+              )}
             />
             <MenuItem
               primaryText="Schedule"
               leftIcon={<ScheduleIcon />}
-              onClick={contentSwitcher(<Schedule />, 'Schedule')}
+              onClick={contentSwitcher(
+                <Schedule tournamentId={this.props.tournamentId} />,
+                'Schedule',
+              )}
             />
             <MenuItem
               primaryText="Settings"

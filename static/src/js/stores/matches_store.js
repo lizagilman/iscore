@@ -34,14 +34,10 @@ class MatchesStore {
     let winnerId;
 
     getMatchToWriteByMatchId(matchId).then((response) => {
+      winnerId = winner === 'player1' ? response.player1 : response.player2;
 
-
-      winnerId = winner === 'player1'? response.player1 : response.player2;
-
-      updateMatchWinnerApi(matchId, winnerId).then( (responseUpdate) => {
-
-        responseUpdate.status > 400 ?  alert('Winner Update failed') : alert('Winner Updated');
-
+      updateMatchWinnerApi(matchId, winnerId).then((responseUpdate) => {
+        responseUpdate.status > 400 ? alert('Winner Update failed') : alert('Winner Updated');
       });
     });
   };
@@ -60,8 +56,8 @@ class MatchesStore {
 
   @action
   deleteSchedule() {
-    deleteScheduleApi(this.scheduleParams.tournamentId).then((response) =>
-      response.status > 400  ? alert('Delete schedule failed') : alert('Schedule deleted'));
+    deleteScheduleApi(this.scheduleParams.tournamentId).then(response =>
+      (response.status > 400 ? alert('Delete schedule failed') : alert('Schedule deleted')));
   }
 
   // allMatches = [{

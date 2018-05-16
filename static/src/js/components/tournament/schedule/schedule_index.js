@@ -90,13 +90,13 @@ export default class Schedule extends React.Component {
     e.preventDefault();
     const { MatchesStore } = this.props.stores;
 
-
     MatchesStore.updateMatch(matchId, winner);
   }
 
   componentWillMount() {
     const { TournamentStore, MatchesStore } = this.props.stores;
-    const tournamentId = TournamentStore.getTournamentId();
+    const tournamentId =
+      this.props.tournamentId || TournamentStore.getTournamentId();
 
     MatchesStore.updateParamValue('tournamentId', tournamentId);
 
@@ -121,12 +121,20 @@ export default class Schedule extends React.Component {
           {match.stage ? match.stage : ''}
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStylePlayer1}>
-          <a title={'update match winner'} href={'#'} onClick={e => this.updateMatch(e, match.id, "player1")}>
+          <a
+            title={'update match winner'}
+            href={'#'}
+            onClick={e => this.updateMatch(e, match.id, 'player1')}
+          >
             {match.player1 ? match.player1 : ''}
           </a>
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStylePlayer2}>
-            <a href={'#'} title={'update match winner'}  onClick={e => this.updateMatch(e, match.id, "player2")}>
+          <a
+            href={'#'}
+            title={'update match winner'}
+            onClick={e => this.updateMatch(e, match.id, 'player2')}
+          >
             {match.player2 ? match.player2 : ''}
           </a>
         </TableRowColumn>

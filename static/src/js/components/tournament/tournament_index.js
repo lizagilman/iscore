@@ -33,14 +33,16 @@ class Tournament extends React.Component {
     const tournamentId = parseInt(this.props.match.params.id, 10);
 
     TournamentStore.fetchTournament(tournamentId);
-
-    TournamentStore.getCategories();
   }
 
   render() {
     return (
       <div id={'tindex'}>
-        <LeftMenu zDepth={0} mainContentSwitcher={this.mainContentSwitcher} />
+        <LeftMenu
+          zDepth={0}
+          mainContentSwitcher={this.mainContentSwitcher}
+          tournamentId={parseInt(this.props.match.params.id, 10)}
+        />
         <MainCard
           title={this.state.title}
           content={this.state.mainContent}

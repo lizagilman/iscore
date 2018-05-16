@@ -1,6 +1,5 @@
 import React from 'react';
 import SwipeableViews from 'react-swipeable-views';
-import Spinner from '../../spinner/spinner';
 import { inject, observer } from 'mobx-react';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import {
@@ -11,7 +10,7 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
-
+import Spinner from '../../spinner/spinner';
 
 const mobx = require('mobx');
 

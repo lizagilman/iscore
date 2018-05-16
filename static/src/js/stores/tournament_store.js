@@ -15,6 +15,7 @@ class TournamentStore {
   fetchTournament = (id) => {
     getTournamentByIDApi(id).then((tournamentJson) => {
       this.tournament = tournamentJson;
+      this.getCategories(tournamentJson.id);
     });
   };
 
@@ -43,9 +44,13 @@ class TournamentStore {
 
   @action
   // eslint-disable-next-line
-  getCategories = () => {
-    if (this.tournament && this.tournament.id && !this.tournamentCategories.length) {
-      getTournamentCategoriesByTournament(this.tournament.id).then((response) => {
+  getCategories = id => {
+    if (
+      this.tournament &&
+      (id || this.tournament.id) &&
+      !this.tournamentCategories.length
+    ) {
+      getTournamentCategoriesByTournament(id || this.tournament.id).then((response) => {
         this.tournamentCategories = response;
         return response;
       });
