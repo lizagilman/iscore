@@ -1,7 +1,7 @@
 import { observable, action } from 'mobx';
 import {
-    getAllCoachPlayersApi,
-    getTournamentByIDApi, getTournamentCategoriesByTournament,
+  getAllCoachPlayersApi,
+  getTournamentByIDApi, getTournamentCategoriesByTournament,
 } from '../api';
 
 class CoachEnterPlayersStore {
@@ -12,7 +12,7 @@ class CoachEnterPlayersStore {
 
   @action
   receiveCategoriesByTournament = id => getTournamentCategoriesByTournament(id).then((categoryJson) => {
-    console.log('in store. categoryJson: ',categoryJson);
+    console.log('in store. categoryJson: ', categoryJson);
     this.category = categoryJson;
     return this.category;
   });

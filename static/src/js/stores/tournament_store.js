@@ -17,7 +17,6 @@ class TournamentStore {
       this.tournament = tournamentJson;
 
       this.getCategories(tournamentJson.id);
-
     });
   };
 
@@ -44,28 +43,27 @@ class TournamentStore {
     });
   };
 
-  @action
+  // @action
   // eslint-disable-next-line
-<<<<<<< origin/master
-  getCategories = id => {
-    if (
-      this.tournament &&
-      (id || this.tournament.id) &&
-      !this.tournamentCategories.length
-    ) {
-      getTournamentCategoriesByTournament(id || this.tournament.id).then((response) => {
-        this.tournamentCategories = response;
 
-        return response;
-
-      });
-    } else if (this.tournamentCategories.length) {
-      return this.tournamentCategories;
-    }
-=======
+  // getCategories = id => {
+  //   if (
+  //     this.tournament &&
+  //     (id || this.tournament.id) &&
+  //     !this.tournamentCategories.length
+  //   ) {
+  //     getTournamentCategoriesByTournament(id || this.tournament.id).then((response) => {
+  //       this.tournamentCategories = response;
+  //
+  //       return response;
+  //
+  //     });
+  //   } else if (this.tournamentCategories.length) {
+  //     return this.tournamentCategories;
+  //   }
+  @action
   getCategories = () => {
-
-    if(!this.tournament && this.tournament.id){
+    if (!this.tournament && this.tournament.id) {
       return Promise.resolve([]);
     }
 
@@ -74,10 +72,9 @@ class TournamentStore {
     }
 
     return getTournamentCategoriesByTournament(this.tournament.id).then((response) => {
-        this.tournamentCategories = response;
-        return this.tournamentCategories;
+      this.tournamentCategories = response;
+      return this.tournamentCategories;
     });
->>>>>>> HEAD~0
   };
 
   @action getTournamentId = () => this.tournament.id;

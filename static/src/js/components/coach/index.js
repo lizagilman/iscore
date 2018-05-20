@@ -1,12 +1,12 @@
-import React from "react";
-import { inject, observer } from "mobx-react";
-import styled from "styled-components";
-import RaisedButton from "material-ui/RaisedButton";
-import MyCheckbox from "./checkbox/myCheckbox";
-import { registerCoachPlayerToTournament } from "../../api";
-import ReactResponsiveSelect from "react-responsive-select";
+import React from 'react';
+import { inject, observer } from 'mobx-react';
+import styled from 'styled-components';
+import RaisedButton from 'material-ui/RaisedButton';
+import MyCheckbox from './checkbox/myCheckbox';
+import { registerCoachPlayerToTournament } from '../../api';
+import ReactResponsiveSelect from 'react-responsive-select';
 
-const mobx = require("mobx");
+const mobx = require('mobx');
 
 const caretIcon = (
   <svg
@@ -24,46 +24,46 @@ const caretIcon = (
 );
 const styles = {
   list: {
-    listStyleType: "none",
-    display: "block",
-    margin: "0",
-    padding: "0"
+    listStyleType: 'none',
+    display: 'block',
+    margin: '0',
+    padding: '0',
   },
   block: {
-    maxWidth: 250
+    maxWidth: 250,
   },
 
   conteinerStyle: {
-    height: "100%",
-    width: "100%"
+    height: '100%',
+    width: '100%',
   },
   customWidth: {
-    width: "100%",
-    fontSize: "50px",
-    marginBottom: ".5em",
-    boxShadow: "5px 10px 18px #888888",
-    backgroundColor: "ivory",
-    height: "3em"
+    width: '100%',
+    fontSize: '50px',
+    marginBottom: '.5em',
+    boxShadow: '5px 10px 18px #888888',
+    backgroundColor: 'ivory',
+    height: '3em',
   },
   menuLabel: {
-    width: "100%",
-    fontSize: "40px",
-    marginTop: "60px",
-    marginBottom: "60px",
-    height: "100%"
+    width: '100%',
+    fontSize: '40px',
+    marginTop: '60px',
+    marginBottom: '60px',
+    height: '100%',
   },
   hintText: {
-    bottom: "1.2em"
+    bottom: '1.2em',
   },
   button: {
-    display: "block",
-    margin: "12px",
-    height: "30px",
-    width: "40px",
-    color: "black",
-    backgroundColor: "white",
-    border: "1px solid black"
-  }
+    display: 'block',
+    margin: '12px',
+    height: '30px',
+    width: '40px',
+    color: 'black',
+    backgroundColor: 'white',
+    border: '1px solid black',
+  },
 };
 const Row = styled.div`
   &::after {
@@ -76,11 +76,11 @@ const Column = styled.div`
   float: left;
   width: 100%;
   @media only screen and (min-width: 768px) {
-    width: ${props => (props.span ? props.span / 12 * 100 : "8.33")}%;
+    width: ${props => (props.span ? props.span / 12 * 100 : '8.33')}%;
   }
 `;
 
-@inject("stores")
+@inject('stores')
 @observer
 export default class CoachPage extends React.Component {
   constructor(props) {
@@ -94,7 +94,7 @@ export default class CoachPage extends React.Component {
     this.buttonClicked = this.buttonClicked.bind(this);
     this.registerPlayers = this.registerPlayers.bind(this);
     this.state = {
-      coach_name: "dani",
+      coach_name: 'dani',
       tournaments: [],
       optionsPlayers: [],
       optionsTournaments: [],
@@ -106,36 +106,32 @@ export default class CoachPage extends React.Component {
       checkedPlayers: [],
       selectedOptions: [],
       checkboxesofplayers: [],
-      refs: [],
-      playersSelection: {}
+      //refs: [],
+      playersSelection: {},
     };
   }
 
   handleOptionsSubmit(event) {
-    let selected = [...this.state.selectedOptions];
+    const selected = [...this.state.selectedOptions];
     selected.push(event.target.value);
     this.setState({
-      selectedOptions: selected
+      selectedOptions: selected,
     });
   }
-  addRef(node) {
-    let myrefs = [...this.state.refs];
-    myrefs.push(myRef);
-    this.setState({ refs: myrefs });
-  }
+  // addRef(node) {
+  //   const myrefs = [...this.state.refs];
+  //   myrefs.push(myRef);
+  //   this.setState({ refs: myrefs });
+  // }
   componentWillMount() {
     const { TournamentsStore, CoachEnterPlayersStore } = this.props.stores;
 
     const self = this;
-    CoachEnterPlayersStore.fetchPlayers(this.state.coach_name).then(
-      storedPlayers => {
-        self.setState({ players: mobx.toJS(storedPlayers) });
+    CoachEnterPlayersStore.fetchPlayers(this.state.coach_name).then((storedPlayers) => {
+      self.setState({ players: mobx.toJS(storedPlayers) });
+    });
 
-        console.log("storedPlayers: ", mobx.toJS(storedPlayers));
-      }
-    );
-
-    TournamentsStore.fetchAllTournaments().then(storedTournaments => {
+    TournamentsStore.fetchAllTournaments().then((storedTournaments) => {
       self.setState({ tournaments: mobx.toJS(storedTournaments) }, () => {
         this.createTournamentOptions();
       });
@@ -144,28 +140,25 @@ export default class CoachPage extends React.Component {
     this.createPlayerOptions();
   }
   createTournamentOptions() {
-    console.log("crating oprions");
     if (this.state.tournaments) {
       const self = this;
-      console.log("createTournamentOptions");
-      let tourdoc = [];
+
+      const tourdoc = [];
 
       this.state.tournaments.map((tournament, index) =>
-        tourdoc.push({ value: tournament.id, text: tournament.name })
-      );
-      console.log("tournament doc:", tourdoc);
+        tourdoc.push({ value: tournament.id, text: tournament.name }));
+
       self.setState({ optionsTournaments: tourdoc });
     }
   }
   createCategoriesOptions() {
     if (this.state.categories) {
       const self = this;
-      console.log("in createCategoriesOptions categories");
-      let catdoc = [];
+
+      const catdoc = [];
       this.state.categories.map((category, index) =>
-        catdoc.push({ value: category.id, text: category.category })
-      );
-      console.log("tournament doc:", catdoc);
+        catdoc.push({ value: category.id, text: category.category }));
+
       self.setState({ optionsCategories: catdoc });
     }
   }
@@ -173,70 +166,59 @@ export default class CoachPage extends React.Component {
   createPlayerOptions() {
     if (this.state.players) {
       const self = this;
-      console.log("in createPlayerOptions players");
-      let playdoc = [];
+
+      const playdoc = [];
       this.state.players.map((player, index) =>
-        playdoc.push(
-          <MyCheckbox
+        playdoc.push(<MyCheckbox
             contentEditable={true}
-            ref={instance => {
+            ref={(instance) => {
               this.child = instance;
             }}
             label={player.name}
             value={player.id}
-            changed={o => {
-              let playersSelection = self.state.playersSelection;
+            changed={(o) => {
+              const playersSelection = self.state.playersSelection;
               playersSelection[o.playerId] = o.isChecked;
-              self.setState({ playersSelection: playersSelection });
-              console.log("coachList ", playersSelection);
+              self.setState({ playersSelection });
             }}
             submit={false}
-          />
-        )
-      );
-      console.log("player doc:", playdoc);
+          />));
+
       self.setState({ optionsPlayers: playdoc });
     }
   }
 
-  handleChangeTour = value => {
-    console.log("in  handleChangeTour value: ", value);
+  handleChangeTour = (value) => {
     this.setState({ tournamentSelected: value });
-    console.log("handleChangeTour value", value);
+
     const { CoachEnterPlayersStore } = this.props.stores;
     const self = this;
-    CoachEnterPlayersStore.receiveCategoriesByTournament(value).then(
-      storedCategories => {
-        self.setState({ categories: mobx.toJS(storedCategories) }, () => {
-          this.createCategoriesOptions();
-        });
-      }
-    );
+    CoachEnterPlayersStore.receiveCategoriesByTournament(value).then((storedCategories) => {
+      self.setState({ categories: mobx.toJS(storedCategories) }, () => {
+        this.createCategoriesOptions();
+      });
+    });
   };
 
-  handleChangeCat = value => {
-    console.log("in  handleChangeCat value is: ", value);
+  handleChangeCat = (value) => {
     this.setState({ categorySelected: value }, () => {
       this.createPlayerOptions();
     });
   };
 
-  buttonClicked = event => {
-    let selectedPlayers = [];
-    for (var x in this.state.playersSelection) {
+  buttonClicked = (event) => {
+    const selectedPlayers = [];
+    for (const x in this.state.playersSelection) {
       if (this.state.playersSelection[x]) {
         selectedPlayers.push(x);
         this.registerPlayers(x);
       }
     }
-
-    console.log("selected players ", selectedPlayers);
   };
-  registerPlayers(player_id) {
-    console.log('in registerPlayers category:', this.state.categorySelected);
+  registerPlayers(playerId) {
     const entry = {
       tournament_category: this.state.categorySelected,
-      player: player_id
+      player: playerId,
     };
 
     registerCoachPlayerToTournament(entry);
@@ -253,12 +235,12 @@ export default class CoachPage extends React.Component {
               options={
                 this.state.optionsTournaments
                   ? this.state.optionsTournaments
-                  : ""
+                  : ''
               }
               caretIcon={caretIcon}
               prefix="Select tounarment "
               selectedValue={this.state.tournamentSelected}
-              onChange={newValue => {
+              onChange={(newValue) => {
                 this.handleChangeTour(newValue.value);
               }}
             />
@@ -269,24 +251,24 @@ export default class CoachPage extends React.Component {
             <ReactResponsiveSelect
               name="select category"
               options={
-                this.state.optionsCategories ? this.state.optionsCategories : ""
+                this.state.optionsCategories ? this.state.optionsCategories : ''
               }
               caretIcon={caretIcon}
               prefix="Select category "
               selectedValue={this.state.categorySelected}
-              onChange={newValue => {
+              onChange={(newValue) => {
                 this.handleChangeCat(newValue.value);
               }}
             />
           </Column>
         </Row>
-        <div style={{ display: "block" }}>
+        <div style={{ display: 'block' }}>
           <ul style={styles.list}>
-            {this.state.optionsPlayers ? this.state.optionsPlayers : ""}
+            {this.state.optionsPlayers ? this.state.optionsPlayers : ''}
           </ul>
         </div>
 
-        <div style={{ display: "block" }}>
+        <div style={{ display: 'block' }}>
           <row>
             <Column span="2">
               <RaisedButton

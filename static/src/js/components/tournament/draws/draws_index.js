@@ -37,9 +37,7 @@ export default class Draws extends React.Component {
     const { TournamentStore } = this.props.stores;
 
     if (!TournamentStore.tournamentCategories.length) {
-      TournamentStore.getCategories(
-        this.props.tournamentId || parseInt(this.props.match.params.id, 10)
-      );
+      TournamentStore.getCategories(this.props.tournamentId || parseInt(this.props.match.params.id, 10));
     }
   }
 
