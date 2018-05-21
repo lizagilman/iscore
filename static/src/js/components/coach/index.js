@@ -1,27 +1,16 @@
 import React from 'react';
+import ReactResponsiveSelect from 'react-responsive-select';
 import { inject, observer } from 'mobx-react';
 import styled from 'styled-components';
 import RaisedButton from 'material-ui/RaisedButton';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import MyCheckbox from './checkbox/myCheckbox';
 import { registerCoachPlayerToTournament } from '../../api';
-import ReactResponsiveSelect from 'react-responsive-select';
+import { teal500 } from 'material-ui/styles/colors';
 
 const mobx = require('mobx');
 
-const caretIcon = (
-  <svg
-    className="caret-icon"
-    x="1px"
-    y="1px"
-    width="11.848px"
-    height="6.338px"
-    viewBox="351.584 2118.292 11.848 6.338"
-  >
-    <g>
-      <path d="M363.311,2118.414c-0.164-0.163-0.429-0.163-0.592,0l-5.205,5.216l-5.215-5.216c-0.163-0.163-0.429-0.163-0.592,0s-0.163,0.429,0,0.592l5.501,5.501c0.082,0.082,0.184,0.123,0.296,0.123c0.103,0,0.215-0.041,0.296-0.123l5.501-5.501C363.474,2118.843,363.474,2118.577,363.311,2118.414L363.311,2118.414z" />
-    </g>
-  </svg>
-);
 const styles = {
   list: {
     listStyleType: 'none',
@@ -32,7 +21,6 @@ const styles = {
   block: {
     maxWidth: 250,
   },
-
   conteinerStyle: {
     height: '100%',
     width: '100%',
@@ -55,14 +43,36 @@ const styles = {
   hintText: {
     bottom: '1.2em',
   },
+  dialogButton: {
+    width: '100%',
+  },
+  dialogButtonLabel: {
+    width: '100%',
+    fontSize: '3em',
+    fontWeight: '600',
+
+    marginBottom: '1em',
+  },
+  dialog: {
+    width: '100%',
+    maxWidth: '100%',
+  },
+  dialogBody: {
+    fontSize: '4em',
+  },
   button: {
     display: 'block',
-    margin: '12px',
-    height: '30px',
-    width: '40px',
-    color: 'black',
-    backgroundColor: 'white',
-    border: '1px solid black',
+    height: '100px',
+    width: '100%',
+    backgroundColor: 'teal500',
+    border: 'solid 1px teal500',
+    borderRadius: '8px',
+  },
+  label: {
+    fontSize: '80px',
+    textAlign: 'center',
+    color: 'white',
+    fontWeight: '400',
   },
 };
 const Row = styled.div`
@@ -103,14 +113,20 @@ export default class CoachPage extends React.Component {
       categories: [],
       categorySelected: null,
       players: [],
-      checkedPlayers: [],
       selectedOptions: [],
-      checkboxesofplayers: [],
-      // refs: [],
+      open: false,
+      dialog: '',
       playersSelection: {},
     };
   }
 
+  handleOpen = (str) => {
+    this.setState({ open: true, dialog: str });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
   handleOptionsSubmit(event) {
     const selected = [...this.state.selectedOptions];
     selected.push(event.target.value);
@@ -118,11 +134,7 @@ export default class CoachPage extends React.Component {
       selectedOptions: selected,
     });
   }
-  // addRef(node) {
-  //   const myrefs = [...this.state.refs];
-  //   myrefs.push(myRef);
-  //   this.setState({ refs: myrefs });
-  // }
+
   componentWillMount() {
     const { TournamentsStore, CoachEnterPlayersStore } = this.props.stores;
 
@@ -208,23 +220,44 @@ export default class CoachPage extends React.Component {
 
   buttonClicked = (event) => {
     const selectedPlayers = [];
+    let res;
     for (const x in this.state.playersSelection) {
       if (this.state.playersSelection[x]) {
         selectedPlayers.push(x);
-        this.registerPlayers(x);
+        res = this.registerPlayers(x);
       }
     }
+    if (selectedPlayers.length === 0) {
+      return this.handleOpen('No players were selected.');
+    }
   };
+
   registerPlayers(playerId) {
     const entry = {
       tournament_category: this.state.categorySelected,
       player: playerId,
     };
 
-    registerCoachPlayerToTournament(entry);
+    registerCoachPlayerToTournament(entry).then((response) => {
+      if (response.status > 400) {
+        this.handleOpen('Error. Check your connection.');
+      } else {
+        this.handleOpen('Registration has been done successfully.');
+      }
+    });
   }
 
   render() {
+    const actions = [
+      <FlatButton
+        label="OK"
+        fullWidth={true}
+        primary={true}
+        onClick={this.handleClose}
+        buttonStyle={styles.dialogButton}
+        labelStyle={styles.dialogButtonLabel}
+      />,
+    ];
     return (
       <div style={styles.conteinerStyle}>
         <Row>
@@ -237,7 +270,7 @@ export default class CoachPage extends React.Component {
                   ? this.state.optionsTournaments
                   : ''
               }
-              caretIcon={caretIcon}
+              // caretIcon={caretIcon}
               prefix="Select tounarment "
               selectedValue={this.state.tournamentSelected}
               onChange={(newValue) => {
@@ -253,7 +286,7 @@ export default class CoachPage extends React.Component {
               options={
                 this.state.optionsCategories ? this.state.optionsCategories : ''
               }
-              caretIcon={caretIcon}
+              // caretIcon={caretIcon}
               prefix="Select category "
               selectedValue={this.state.categorySelected}
               onChange={(newValue) => {
@@ -269,15 +302,32 @@ export default class CoachPage extends React.Component {
         </div>
 
         <div style={{ display: 'block' }}>
-          <row>
-            <Column span="2">
+          <Row>
+            <Column span="12">
               <RaisedButton
-                label="Submit"
                 style={styles.button}
+                primary={true}
+                label="Submit"
+                labelStyle={styles.label}
+                // fullWidth={true}
                 onClick={() => this.buttonClicked(event)}
               />
             </Column>
-          </row>
+          </Row>
+          <Row>
+            <Column span="12">
+              <Dialog
+                bodyStyle={styles.dialogBody}
+                contentStyle={styles.dialog}
+                actions={actions}
+                modal={false}
+                open={this.state.open}
+                onRequestClose={this.handleClose}
+              >
+                {this.state.dialog}
+              </Dialog>
+            </Column>
+          </Row>
         </div>
       </div>
     );
