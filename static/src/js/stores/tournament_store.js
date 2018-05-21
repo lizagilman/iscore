@@ -15,6 +15,7 @@ class TournamentStore {
   fetchTournament = (id) => {
     getTournamentByIDApi(id).then((tournamentJson) => {
       this.tournament = tournamentJson;
+
       this.getCategories(tournamentJson.id);
     });
   };
@@ -42,21 +43,38 @@ class TournamentStore {
     });
   };
 
-  @action
+  // @action
   // eslint-disable-next-line
-  getCategories = id => {
-    if (
-      this.tournament &&
-      (id || this.tournament.id) &&
-      !this.tournamentCategories.length
-    ) {
-      getTournamentCategoriesByTournament(id || this.tournament.id).then((response) => {
-        this.tournamentCategories = response;
-        return response;
-      });
-    } else if (this.tournamentCategories.length) {
-      return this.tournamentCategories;
+
+  // getCategories = id => {
+  //   if (
+  //     this.tournament &&
+  //     (id || this.tournament.id) &&
+  //     !this.tournamentCategories.length
+  //   ) {
+  //     getTournamentCategoriesByTournament(id || this.tournament.id).then((response) => {
+  //       this.tournamentCategories = response;
+  //
+  //       return response;
+  //
+  //     });
+  //   } else if (this.tournamentCategories.length) {
+  //     return this.tournamentCategories;
+  //   }
+  @action
+  getCategories = () => {
+    if (!this.tournament && this.tournament.id) {
+      return Promise.resolve([]);
     }
+
+    if (this.tournamentCategories.length) {
+      return Promise.resolve(this.tournamentCategories);
+    }
+
+    return getTournamentCategoriesByTournament(this.tournament.id).then((response) => {
+      this.tournamentCategories = response;
+      return this.tournamentCategories;
+    });
   };
 
   @action getTournamentId = () => this.tournament.id;

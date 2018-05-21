@@ -1,7 +1,7 @@
 import React from 'react';
-import SwipeableViews from 'react-swipeable-views';
 import { inject, observer } from 'mobx-react';
 import { Tabs, Tab } from 'material-ui/Tabs';
+
 import {
   Table,
   TableBody,
@@ -10,7 +10,7 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
-import Spinner from '../../spinner/spinner';
+
 
 const mobx = require('mobx');
 
@@ -30,37 +30,17 @@ const entriesTableStyle = {
   backgroundColor: 'white',
 };
 
-
-function sortBy(data, prop, isAsc) {
-  isAsc = isAsc === undefined ? true : isAsc;
-
-  return [].concat(data).sort((a, b) => {
-    const diff = a[prop] - b[prop];
-    if (isAsc) {
-      return diff > 0 ? 1 : -1;
-    }
-    return diff < 0 ? 1 : -1;
-  });
-}
-
-const entrieDoc = [];
-
-const sorted = [];
-
 @inject('stores')
 @observer
 export default class EntriesAndSeeds extends React.Component {
   constructor(props) {
     super(props);
 
-    this.filterEntriesByName = this.filterEntriesByName.bind(this);
-
     this.state = {
       sortedEntries: null,
       slideIndex: 0,
-      tournament: null,
       entries: null,
-      categories: null,
+      categoriesEntries: null,
     };
   }
 
@@ -70,81 +50,52 @@ export default class EntriesAndSeeds extends React.Component {
     });
   };
 
-  filterEntriesByName = (entry, name) => entry.tournament_category === name;
-  componentDidMount() {
-    console.log('componentDidMount:: loading...');
+  componentWillMount() {
+    const { TournamentStore, EntriesStore } = this.props.stores;
 
-    const { TournamentStore, CategoryStore } = this.props.stores;
-
-    // Bring current tournament
-    const tournament = mobx.toJS(TournamentStore.tournament)
-      ? mobx.toJS(TournamentStore.tournament)
-      : ' ';
-    this.setState({ tournament });
-
-    console.log('tournament', tournament);
     const self = this;
-    // Bring categories by the tournament id
-    CategoryStore.CategoriesByTournament(tournament.id).then((storedCategories) => {
-      self.setState({ categories: mobx.toJS(storedCategories) });
+
+    TournamentStore.getCategories().then((categoriesRaw) => {
+      const categoriesFromStore = mobx.toJS(categoriesRaw);
+
+      self.setState({ slideIndex: categoriesFromStore[0].id });
+
+      categoriesFromStore.forEach((category) => {
+        let categoriesEntries = [];
+        EntriesStore.fetchEntriesByCategory(category.id).then((entries) => {
+          if (self.state.categoriesEntries) {
+            categoriesEntries = self.state.categoriesEntries;
+          }
+          categoriesEntries.push({
+            id: category.id,
+            value: mobx.toJS(entries),
+          });
+          self.setState({ categoriesEntries });
+        });
+      });
     });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.categories !== prevState.categories) {
-      console.log('category: ', this.state.categories);
-      const self = this;
-      this.state.categories
-        ? this.state.categories.map((category, index) => {
-          const { EntriesStore } = self.props.stores;
-
-          category && EntriesStore
-            ? EntriesStore.fetchEntriesByCategory(category.id).then((storedPlayers) => {
-              entrieDoc.push(mobx.toJS(storedPlayers));
-              self.setState({ entries: entrieDoc }, () => {
-                console.log('entries: ', this.state.entries);
-              });
-              // let rawData = entrieDoc[category.id];
-              //
-              // console.log('componentDidMount::rawData', [].concat(rawData));
-              // const data = sortBy(
-              //     rawData
-              //     , 'rank'/* param To Sort By */
-              //     , false, /* sort ascending */
-              // );
-            })
-            : console.log('loading');
-        })
-        : console.log('loading categories: ', this.state.categories);
-    }
-  }
-
   render() {
-    const createRow = (item, index) => (
-      <TableRow key={index}>
-        <TableRowColumn style={EntriesTableStyleIndex}>
-          {index + 1}
-        </TableRowColumn>
-        <TableRowColumn style={EntriesTableStylePlayer}>
-          {item.player}
-        </TableRowColumn>
-        <TableRowColumn style={entriesTableStyleRank}>
-          {item.rank}
-        </TableRowColumn>
-        {item.is_seeded ? (
-          <TableRowColumn style={entriesTableStyleSeed}>Seeded</TableRowColumn>
-        ) : (
-          <TableRowColumn style={entriesTableStyleSeed} />
-        )}
-      </TableRow>
+    const createButtons = () => (
+      <Tabs value={this.state.slideIndex} onChange={this.handleChange}>
+        {this.state.categoriesEntries
+          ? this.state.categoriesEntries.map(entry => createButton(entry))
+          : ''}
+      </Tabs>
     );
 
-    const entriesTable = (num) => {
-      {
-        console.log('num: ', num);
-        console.log('entries[num]: ', this.state.entries[num]);
-      }
-      return (
+    const createButton = entry => (
+        <Tab
+          label={entry ? entry.value[0].tournament_category : 'loading'}
+          value={entry.id}
+          key={entry.id}
+        >
+          {entriesTable2(entry)}
+        </Tab>
+    );
+
+    const entriesTable2 = entry => (
         <div>
           <Table style={entriesTableStyle}>
             <TableHeader displaySelectAll={false}>
@@ -156,60 +107,50 @@ export default class EntriesAndSeeds extends React.Component {
               </TableRow>
             </TableHeader>
             <TableBody displayRowCheckbox={false}>
-              {this.state.entries.length ? (
-                this.state.entries[num].map((Entrie, index) =>
-                  createRow(Entrie, index))
-              ) : (
-                <div>{Spinner(70)}</div>
-              )}
+              {createTable2(entry)}
             </TableBody>
           </Table>
         </div>
-      );
+    );
+
+    const createTable2 = (entry) => {
+      const players = this.state.categoriesEntries.filter(ce => ce.id == entry.id);
+      if (!players) {
+        return;
+      }
+
+      const playersTable = craetePlayersTable(players[0].value);
+
+      return playersTable;
     };
+
+    const craetePlayersTable = players =>
+      players.map((entry, index) => createRow2(entry, index));
+
+    const createRow2 = (item, index) => (
+        <TableRow key={index}>
+          <TableRowColumn style={EntriesTableStyleIndex}>
+            {index + 1}
+          </TableRowColumn>
+          <TableRowColumn style={EntriesTableStylePlayer}>
+            {item.player}
+          </TableRowColumn>
+          <TableRowColumn style={entriesTableStyleRank}>
+            {item.rank}
+          </TableRowColumn>
+          {item.is_seeded ? (
+            <TableRowColumn style={entriesTableStyleSeed}>
+              Seeded
+            </TableRowColumn>
+          ) : (
+            <TableRowColumn style={entriesTableStyleSeed} />
+          )}
+        </TableRow>
+    );
+
     return (
       <div>
-        <Tabs onChange={this.handleChange} value={this.state.slideIndex}>
-          <Tab
-            label={
-              this.state.categories
-                ? this.state.categories[0].category
-                : 'loading'
-            }
-            value={0}
-          />
-          <Tab
-            label={
-              this.state.categories
-                ? this.state.categories[1].category
-                : 'loading'
-            }
-            value={1}
-          />
-        </Tabs>
-        <SwipeableViews
-          index={this.state.slideIndex}
-          onChangeIndex={this.handleChange}
-        >
-          <div>
-            {this.state.categories &&
-            this.state.entries &&
-            this.state.slideIndex == 0 ? (
-              entriesTable(this.state.slideIndex)
-            ) : (
-              <div>{Spinner(70)}</div>
-            )}
-          </div>
-          <div>
-            {this.state.categories &&
-            this.state.entries &&
-            this.state.slideIndex == 1 ? (
-              entriesTable(this.state.slideIndex)
-            ) : (
-              <div>{Spinner(70)}</div>
-            )}
-          </div>
-        </SwipeableViews>
+        {this.state.categoriesEntries ? createButtons() : ''}
       </div>
     );
   }

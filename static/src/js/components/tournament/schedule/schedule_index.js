@@ -140,6 +140,7 @@ export default class Schedule extends React.Component {
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStyleTime}>
           {match ? this.setDateTime(match.time) : ''}
+
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStyleCourt}>
           {match.court ? match.court : ''}
