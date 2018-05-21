@@ -106,7 +106,7 @@ export default class CoachPage extends React.Component {
       checkedPlayers: [],
       selectedOptions: [],
       checkboxesofplayers: [],
-      //refs: [],
+      // refs: [],
       playersSelection: {},
     };
   }
