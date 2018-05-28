@@ -5,6 +5,7 @@ import Header from '../header/header_index';
 import Tournaments from '../tournaments/tournaments_index';
 import CoachPage from '../coach/index';
 import CoachHeader from '../coach/header/header';
+import LogIn from '../login/login_index';
 
 const AppRouter = () => (
   <Router>
@@ -14,6 +15,7 @@ const AppRouter = () => (
       <Route exact path="/tournaments" component={Tournaments} />
       <Route exact path="/tournament/:id" component={Tournament} />
       <Route exact path="/coach" component={CoachPage} />
+         <Route exact path="/login" component={LogIn} />
     </div>
   </Router>
 );
