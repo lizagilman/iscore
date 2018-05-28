@@ -3,6 +3,17 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
+
+
+class User(AbstractUser):
+    is_coach = models.BooleanField(default=False)
+    is_manager = models.BooleanField(default=False)
+    is_umpire = models.BooleanField(default=False)
+    is_organization = models.BooleanField(default=False)
+
+    pass
 
 
 class RankingListCategories(models.Model):
@@ -74,6 +85,7 @@ class Ranking_Lists(models.Model):
     grades = models.ManyToManyField(
         Grades, null=True, blank=True
     )  # also creates the joining table between Ranking_List and Grade(Rules Table)
+    updated_at = models.DateTimeField(default=timezone.now())
     categories = models.ManyToManyField(
         RankingListCategories, null=True, blank=True)
 
@@ -91,7 +103,9 @@ class RankedPlayers(models.Model):
     rank = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
-        return self.list.name
+        return 'ranking list: : %s , category: %s , player:%s  ,rank : %s ,points : %s' % (
+            self.list.name, self.category.name, self.player.name, self.rank,
+            self.points)
 
 
 class Tournaments(models.Model):
@@ -161,7 +175,7 @@ class Matches(models.Model):
     court = models.IntegerField(default=0)
 
     def __str__(self):
-        return 'match: p1: %s , p2: %s , stage:%s  ,category : %s' % (
+        return 'matach: p1: %s , p2: %s , stage:%s  ,category : %s' % (
             self.player1, self.player2, self.stage, self.category)
 
 
@@ -180,6 +194,7 @@ class Games(models.Model):
 
 
 class Tournament_Managers(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(db_index=True, max_length=300)
 
     def __str__(self):
@@ -187,6 +202,7 @@ class Tournament_Managers(models.Model):
 
 
 class Coach(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(db_index=True, max_length=300)
     player_list = models.ManyToManyField(Players, null=True, blank=True)
 

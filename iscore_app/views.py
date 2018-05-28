@@ -88,18 +88,17 @@ class RankedPlayersViewSet(viewsets.ModelViewSet):
     queryset = RankedPlayers.objects.all()
     serializer_class = serializers.RankedPlayersSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
-    search_fields = [
-        'list__name', 'catagory__name', 'player__name', 'points__name'
-    ]
+    search_fields = ['list', 'catagory', 'player__name', 'points__name']
 
 
 class RankedPlayersReaderViewSet(viewsets.ModelViewSet):
 
     queryset = RankedPlayers.objects.all()
     serializer_class = serializers.RankedPlayersReaderSerializer
-    filter_backends = (DjangoFilterBackend, SearchFilter)
+    filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
     filter_fields = ('player__name', 'category__name', 'list__name', 'player',
                      'category', 'list')
+    ordering_fields = ('category', 'rank', 'points')
 
 
 class OrganizationsViewSet(viewsets.ModelViewSet):
@@ -237,4 +236,3 @@ class MatchesReaderViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.MatchesReaderSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filter_fields = ('category__tournamet', 'category', 'stage')
-
