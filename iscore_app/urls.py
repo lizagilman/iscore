@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 from rest_framework import routers
 from iscore_app.views import IndexView
-from iscore_app import views, draws, schedule, tournament
+from iscore_app import views, draws, schedule, tournament,ranking
 
 router = routers.DefaultRouter()
 router.register(r'RankingListCategories', views.CatagoriesViewSet)
