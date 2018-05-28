@@ -129,7 +129,9 @@ export function registerCoachPlayerToTournament(entry) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(entry)
-  }).then(response => response);
+  }).then(response => {
+   return response
+  });
 }
 
 export const getAllDrawsApi = () =>
