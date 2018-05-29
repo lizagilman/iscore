@@ -2,7 +2,7 @@ import React from 'react';
 import AppBar from 'material-ui/AppBar';
 import Tabs from 'material-ui/Tabs/Tabs';
 import Tab from 'material-ui/Tabs/Tab';
-import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 const styles = {
   appBar: {
@@ -13,19 +13,36 @@ const styles = {
   },
 };
 
-const Header = () => (
-  <AppBar
-    title="iSCORE"
-    style={styles.appBar}
-    iconClassNameRight="muidocs-icon-navigation-expand-more"
-  >
-    <Tabs style={styles.tabs}>
-      <Tab label="Tournaments" containerElement={<Link to="/tournaments" />} />
-      <Tab label="Rankings" />
-      <Tab label="Points Distribution Methods" />
-      <Tab label="Money Distribution Methods" />
-    </Tabs>
-  </AppBar>
-);
+class Header extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleCallToRouter = this.handleCallToRouter.bind(this);
+  }
 
-export default Header;
+  handleCallToRouter = (value) => {
+    this.props.history.push(value);
+  };
+
+  render() {
+    return (
+      <AppBar
+        title="iSCORE"
+        style={styles.appBar}
+        iconClassNameRight="muidocs-icon-navigation-expand-more"
+      >
+        <Tabs
+          style={styles.tabs}
+          value={this.props.history.location.pathname}
+          onChange={this.handleCallToRouter}
+        >
+          <Tab label="Tournaments" value={'/tournaments'} />
+          <Tab label="Rankings" value={'/rankings'} />
+          <Tab label="Points Distribution Methods" />
+          <Tab label="Money Distribution Methods" />
+        </Tabs>
+      </AppBar>
+    );
+  }
+}
+
+export default withRouter(Header);
