@@ -1,9 +1,11 @@
 @import url(/small-screen.css) (max-width: 720px);
+/*@import url(/small-screen.css) (max-width: 720px);*/
 /*
 
   React Responsive Select - Default styles
 
 */
+
 .rrs {
   position: relative;
   box-sizing: border-box;
@@ -168,6 +170,7 @@
 
 
 @media (max-width: 720px) {
+
   /* Fullscreen `<DatePicker/>` "Close" button */
   .rrui__date-picker__close {
     font-size: 4em;

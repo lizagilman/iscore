@@ -39,7 +39,7 @@ const scheduleTableStyleStage = {
 };
 const scheduleTableStyleTime = {
   display: 'inline-block',
-  paddingLeft: '27px',
+  paddingLeft: '0px',
   paddingRight: '0px',
   width: '14%',
 };

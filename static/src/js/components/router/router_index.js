@@ -8,11 +8,17 @@ import Rankings from '../rankings/rankings_index';
 import CoachPage from '../coach/index';
 import CoachHeader from '../coach/header/header';
 import LogIn from '../login/login_index';
+import Match from "../umpire/umpire_index";
+import UmpireMatches from "../umpire/umpire_matches";
+import UmpireTournaments from "../umpire/umpire_tournaments";
 
 const AppRouter = () => (
   <Router>
     <div>
       {localStorage.user_type === 'coach' ? <CoachHeader /> : <Header />}
+       <Route exact path="/umpire" component={UmpireTournaments}/>
+        <Route exact path="/umpire/tournament/:id/matches" component={UmpireMatches}/>
+      <Route exact path="/umpire/match/:id" component={Match}/>
       <Route exact path="/" component={Tournaments} />
       <Route exact path="/tournaments" component={Tournaments} />
       <Route exact path="/rankings" component={Rankings} />
