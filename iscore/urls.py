@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.conf.urls import include, url
 
 urlpatterns = [
+    url(r'^auth/', include('djoser.urls')),
+    url(r'^auth/', include('djoser.urls.authtoken')),
     url('', include('iscore_app.urls')),
     url('admin/', admin.site.urls),
 ]

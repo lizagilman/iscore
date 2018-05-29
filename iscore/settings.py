@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'iscore_app',
     'rest_framework',
     'django_filters',
+    'djoser',
+    'rest_framework.authtoken',
 ]
 
 WEBPACK_LOADER = {
@@ -87,7 +89,6 @@ WSGI_APPLICATION = 'iscore.wsgi.application'
 DATABASES = {
     'default': {
 
-
     }
 }
 
@@ -115,6 +116,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
+AUTH_USER_MODEL = 'iscore_app.User'
 
 LANGUAGE_CODE = 'en-us'
 
@@ -134,6 +136,9 @@ STATIC_URL = '/static/'
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'django_filters.rest_framework.DjangoFilterBackend' ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
 }
 
 # Configure Django App for Heroku.

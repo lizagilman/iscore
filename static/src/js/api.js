@@ -99,6 +99,16 @@ export const getMoneyMethodsByOrganization = organizationId =>
     `/api/MoneyDistributionMethods/?grades__ranking_lists__organization=${organizationId}`
   ).then(response => response.json());
 
+export function deleteRankingList(id) {
+  return fetch(`/api/RankingLists/${id}/`, {
+    method: "Delete",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    }
+  }).then(response => response);
+}
+
 //////////////////////////////////////////
 ////////////////Coach/////////////////////
 export function getAllCoachPlayersApi(name) {
