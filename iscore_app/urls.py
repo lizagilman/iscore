@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 from rest_framework import routers
 from iscore_app.views import IndexView
-from iscore_app import views, draws, schedule, tournament
+from iscore_app import views, draws, schedule, tournament, ranking
 
 router = routers.DefaultRouter()
 router.register(r'RankingListCategories', views.CatagoriesViewSet)
@@ -87,5 +87,8 @@ urlpatterns = [
     url(r'^update_match_winner/',
         draws.handle_update_winner,
         name='update_match_winner'),
+    url(r'^retrieve_ranking_list/',
+        ranking.retrieve_ranking_list,
+        name='retrieve_ranking_list'),
     url(r'', IndexView.as_view(), name='index'),
 ]

@@ -57,12 +57,15 @@ class RankingListsReaderSerializer(serializers.ModelSerializer):
         read_only=True, slug_field='name')
     grades = serializers.SlugRelatedField(
         read_only=True, slug_field='name', many=True)
+    field_of_sport = serializers.CharField(
+        source='organization.field_of_sports')
     categories = serializers.SlugRelatedField(
         read_only=True, slug_field='name', many=True)
 
     class Meta:
         model = Ranking_Lists
-        fields = '__all__'
+        fields = ('organization', 'name', 'field_of_sport', 'updated_at',
+                  'grades', 'categories')
 
 
 class RankedPlayersSerializer(serializers.ModelSerializer):
@@ -75,10 +78,13 @@ class RankedPlayersReaderSerializer(serializers.ModelSerializer):
     list = serializers.SlugRelatedField(read_only=True, slug_field='name')
     category = serializers.SlugRelatedField(read_only=True, slug_field='name')
     player = serializers.SlugRelatedField(read_only=True, slug_field='name')
+    nationality = serializers.CharField(source='player.nationality')
 
     class Meta:
         model = RankedPlayers
-        fields = '__all__'
+        fields = ('player', 'nationality', 'category', 'list', 'rank',
+                  'points')
+
 
 
 class OrganizationsSerializer(serializers.ModelSerializer):
