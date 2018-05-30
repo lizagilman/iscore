@@ -121,7 +121,7 @@ export function getAllCoachPlayersApi(name) {
 /////////////////Umpire//////////////////
 export function getUmpireApi(id) {
   return fetch(`/api/Coachs/${name}/`).then(response => response.json());
-
+}
 //////////////////////////////////////////
 /////////////////Entries////////////////
 export const getAllEntriesApi = () =>
