@@ -1,4 +1,4 @@
-from iscore_app.models import RankingListCategories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, RankedPlayers, Organizations, Tournaments, Matches, TournamentCategories, Tournament_Managers, Coach, Games, Sets, Entries
+from iscore_app.models import RankingListCategories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, RankedPlayers, Organizations, Tournaments, Matches, TournamentCategories, Tournament_Managers, Coach, Games, Sets, Entries,Umpires
 from rest_framework import serializers
 
 
@@ -191,6 +191,11 @@ class GamesSerializer(serializers.ModelSerializer):
 class SetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Sets
+        fields = '__all__'
+
+class UmpireSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Umpires
         fields = '__all__'
 
 
