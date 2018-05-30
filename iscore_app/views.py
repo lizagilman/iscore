@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from .models import RankingListCategories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, RankedPlayers, Organizations, Tournaments, Matches, TournamentCategories, Tournament_Managers, Coach, Games, Sets, Entries
+from .models import RankingListCategories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, RankedPlayers, Organizations, Tournaments, Matches, TournamentCategories, Tournament_Managers, Coach, Games, Sets, Entries,Umpires
 from iscore_app import serializers
 
 
@@ -130,7 +130,7 @@ class TournamentsReaderViewSet(viewsets.ModelViewSet):
     queryset = Tournaments.objects.all()
     serializer_class = serializers.TournamentsReaderSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_fields = ('name', 'manager')
+    filter_fields = ('name', 'manager','organization')
 
 
 class MatchesViewSet(viewsets.ModelViewSet):
@@ -192,6 +192,13 @@ class CoachsViewSet(viewsets.ModelViewSet):
 class CoachsReaderViewSet(viewsets.ModelViewSet):
 
     queryset = Coach.objects.all()
+    serializer_class = serializers.CoachReaderSerializer
+    filter_backends = (DjangoFilterBackend, SearchFilter)
+    filter_fields = ('name', )
+
+class UmpiresReaderViewSet(viewsets.ModelViewSet):
+
+    queryset = Umpires.objects.all()
     serializer_class = serializers.CoachReaderSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
     filter_fields = ('name', )

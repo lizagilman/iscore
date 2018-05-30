@@ -68,6 +68,7 @@ router.register(r'Coachs', views.CoachsReaderViewSet)
 router.register(
     r'ModifyCoachs', views.CoachsViewSet, base_name='Modify Coachs')
 
+router.register(r'Umpires', views.UmpiresReaderViewSet)
 urlpatterns = [
     url(r'^api/', include(router.urls)),
     url(r'^api-auth/',

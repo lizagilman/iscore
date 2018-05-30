@@ -206,6 +206,11 @@ class Coach(models.Model):
     name = models.CharField(db_index=True, max_length=300)
     player_list = models.ManyToManyField(Players, null=True, blank=True)
 
+class Umpires(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    name = models.CharField(db_index=True, max_length=300)
+    organization = models.ForeignKey(Organizations,on_delete=models.DO_NOTHING ,null=True, blank=True)
+
 
 class Entries(models.Model):
     tournament_category = models.ForeignKey(

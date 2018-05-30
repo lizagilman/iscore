@@ -60,6 +60,9 @@ export function getTournamentByIDApi(tournamentId) {
     response.json()
   );
 }
+export function getAllTournamentsByOrganization(organization_id) {
+  return fetch(`/api/Tournaments/?organization=${organization_id}`).then(response => response.json());
+}
 
 ///////////////////////////////////////
 //////////////organization/////////////
@@ -115,7 +118,11 @@ export function getAllCoachPlayersApi(name) {
   return fetch(`/api/Coachs/?name=${name}`).then(response => response.json());
 }
 ///////////////////////////////////
+/////////////////Umpire//////////////////
+export function getUmpireApi(id) {
+  return fetch(`/api/Coachs/${name}/`).then(response => response.json());
 
+//////////////////////////////////////////
 /////////////////Entries////////////////
 export const getAllEntriesApi = () =>
   fetch("/api/Entries/").then(response => response.json());
