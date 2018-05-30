@@ -2,7 +2,7 @@ import random
 
 from django.http import HttpResponse
 from iscore_app.serializers import MatchesReaderSerializer
-from iscore_app.models import Matches, RankedPlayers, RankingListCategories, Ranking_Lists, TournamentCategories, Entries, Tournaments, Players
+from iscore_app.models import Matches, RankedPlayers, RankingListCategories, Ranking_Lists, TournamentCategories, Entries, Tournaments, Players,Score
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -275,5 +275,10 @@ def set_seeded_in_tournament(tournament):
                 player.save()
 
 
+def create_score_table(tournament):
+    matches=Matches.objects.filter(category__tournamet=tournament)
+    for match in matches:
+        score=Score(match_id=match)
+        score.save()
 
 

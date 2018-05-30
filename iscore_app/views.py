@@ -4,8 +4,9 @@ from django.views.generic import TemplateView
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from .models import RankingListCategories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, RankedPlayers, Organizations, Tournaments, Matches, TournamentCategories, Tournament_Managers, Coach, Games, Sets, Entries,Umpires,User
+from .models import RankingListCategories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, RankedPlayers, Organizations, Tournaments, Matches, TournamentCategories, Tournament_Managers, Coach, Games, Sets, Entries,Umpires,User,Score
 from iscore_app import serializers,ranking,draws
+
 
 
 
@@ -108,6 +109,14 @@ class OrganizationsViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend, SearchFilter)
     filter_fields = ('field_of_sports', 'name')
 
+class ScoreViewSet(viewsets.ModelViewSet):
+
+    queryset = Score.objects.all()
+    serializer_class = serializers.ScoresSerializer
+    filter_backends = (DjangoFilterBackend, SearchFilter)
+    filter_fields = ('match_id',)
+
+
 
 class OrganizationsReaderViewSet(viewsets.ModelViewSet):
 
@@ -130,7 +139,8 @@ class TournamentsViewSet(viewsets.ModelViewSet):
             ranking.update_ranking_according_to_tournament_records(instance)
         elif instance.status == "Registration Closed":
             draws.set_seeded_in_tournament(instance)
-
+        elif instance.status == "Schedule Published":
+            draws.create_score_table(instance)
 
 
 class TournamentsReaderViewSet(viewsets.ModelViewSet):
@@ -217,6 +227,7 @@ class GamesViewSet(viewsets.ModelViewSet):
     queryset = Games.objects.all()
     serializer_class = serializers.GamesSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
+    filter_fields = ('set',)
 
 
 class SetsViewSet(viewsets.ModelViewSet):
@@ -225,11 +236,14 @@ class SetsViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.SetSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
 
+
 class UsersViewSet(viewsets.ModelViewSet):
 
     queryset = User.objects.all()
     serializer_class = serializers.UsersSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
+
+
 
 class EntriesReaderViewSet(viewsets.ModelViewSet):
 

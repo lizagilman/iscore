@@ -33,6 +33,7 @@ INSTALLED_APPS = [
 
     'django.contrib.admin',
     'django.contrib.auth',
+    'channels',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'django_filters',
     'djoser',
     'rest_framework.authtoken',
+
 ]
 
 WEBPACK_LOADER = {
@@ -90,7 +92,7 @@ WSGI_APPLICATION = 'iscore.wsgi.application'
 DATABASES = {
     'default': {
 
-}
+    }
 }
 
 # Password validation
@@ -142,6 +144,17 @@ REST_FRAMEWORK = {
     ),
 }
 
+
+ASGI_APPLICATION = "iscore.routing.application"
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 # Configure Django App for Heroku.
 django_heroku.settings(locals())
 TEST_RUNNER = 'django_heroku.HerokuDiscoverRunner'

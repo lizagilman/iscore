@@ -213,6 +213,39 @@ class Games(models.Model):
     player2_score = models.IntegerField(default=0)
     set = models.ForeignKey(Sets, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return 'game_num: %d p1: %d , p2: %d , set:%d  '%(
+            self.game_num, self.player1_score, self.player2_score, self.set.id)
+
+
+class Score(models.Model):
+    match_id=models.ForeignKey(Matches, on_delete=models.CASCADE)
+    current_set = models.IntegerField(default=1)
+    current_game= models.IntegerField(default=1)
+    p1_set1 = models.IntegerField(default=0)
+    p2_set1 = models.IntegerField(default=0)
+    p1_set2 = models.IntegerField(default=0)
+    p2_set2 = models.IntegerField(default=0)
+    p1_set3 = models.IntegerField(default=0)
+    p2_set3 = models.IntegerField(default=0)
+    p1_set4 = models.IntegerField(default=0)
+    p1_set4 = models.IntegerField(default=0)
+    p1_set5 = models.IntegerField(default=0)
+    p2_set5 = models.IntegerField(default=0)
+    p1_sets =models.IntegerField(default=0)
+    p2_sets = models.IntegerField(default=0)
+    p1_games = models.IntegerField(default=0)
+    p2_games = models.IntegerField(default=0)
+    p1_points = models.IntegerField(default=0)
+    p2_points = models.IntegerField(default=0)
+
+
+    def __str__(self):
+        return 'game_num: %d p1: %d , p2: %d , set:%d  '%(
+            self.game_num, self.player1_score, self.player2_score, self.set.id)
+
+
+
 
 class Tournament_Managers(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -247,3 +280,4 @@ class Entries(models.Model):
     def __str__(self):
         return 'category: : %s , player: %s , rank:%d  ,seeded : %s ' % (
             self.tournament_category.category, self.player.name, self.rank, self.is_seeded)
+

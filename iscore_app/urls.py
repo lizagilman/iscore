@@ -51,6 +51,8 @@ router.register(
     views.TournamentCategoriesViewSet,
     base_name='Modify Tournament Categories')
 
+router.register(r'Scores', views.ScoreViewSet)
+
 router.register(r'Sets', views.SetsViewSet)
 
 router.register(r'Games', views.GamesViewSet)
