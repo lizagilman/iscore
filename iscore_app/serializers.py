@@ -65,7 +65,7 @@ class RankingListsReaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ranking_Lists
         fields = ('organization', 'name', 'field_of_sport', 'updated_at',
-                  'grades', 'categories')
+                  'grades', 'categories','id')
 
 
 class RankedPlayersSerializer(serializers.ModelSerializer):

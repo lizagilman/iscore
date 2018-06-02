@@ -112,6 +112,11 @@ export function deleteRankingList(id) {
   }).then(response => response);
 }
 
+export const getRankingList = rankingListId =>
+  fetch(`/retrieve_ranking_list/?list_id=${rankingListId}`).then(response =>
+    response.json()
+  );
+
 //////////////////////////////////////////
 ////////////////Coach/////////////////////
 export function getAllCoachPlayersApi(name) {
@@ -147,7 +152,7 @@ export function registerCoachPlayerToTournament(entry) {
     },
     body: JSON.stringify(entry)
   }).then(response => {
-   return response
+    return response;
   });
 }
 
