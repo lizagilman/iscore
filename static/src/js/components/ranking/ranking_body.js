@@ -9,7 +9,8 @@ import {
   TableRowColumn,
 } from 'material-ui/Table';
 
-const getFlag = (countryCode) => {
+const getFlagIcon = (countryCode) => {
+
   switch (countryCode) {
     case 'ISR':
       return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Israel.png';
@@ -19,6 +20,20 @@ const getFlag = (countryCode) => {
       return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Belgium.png';
     case 'ITA':
       return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Italy.png';
+    case 'ESP':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Spain.png';
+    case 'POL':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Poland.png';
+    case 'IRL':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Ireland.png';
+    case 'BUL':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Bulgaria.png';
+    case 'NED':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Netherlands.png';
+    case 'CRO':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Croatia.png';
+    case 'AUS':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Austria.png';
     default:
       return false;
   }
@@ -31,7 +46,7 @@ const createRow = (item, index) => (
       <div>
         <img
           className={'flag'}
-          src={getFlag(item.nationality)}
+          src={getFlagIcon(item.nationality)}
           data-toggle="tooltip"
           title={item.nationality}
         />

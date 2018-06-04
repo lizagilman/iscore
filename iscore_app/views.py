@@ -5,7 +5,7 @@ from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from .models import RankingListCategories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, RankedPlayers, Organizations, Tournaments, Matches, TournamentCategories, Tournament_Managers, Coach, Games, Sets, Entries,Umpires,User
-from iscore_app import serializers
+from iscore_app import serializers, ranking
 
 
 class IndexView(TemplateView):
@@ -122,6 +122,11 @@ class TournamentsViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.TournamentsSerializer
     filter_backends = [DjangoFilterBackend]
     filter_fields = ('name', 'manager')
+
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        if instance.status == "finished":
+            ranking.update_ranking_according_to_tournament_records(instance)
 
 
 class TournamentsReaderViewSet(viewsets.ModelViewSet):
