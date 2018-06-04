@@ -1,5 +1,6 @@
 import React from 'react';
 import Paper from 'material-ui/Paper';
+import Done from 'material-ui/svg-icons/action/done';
 import * as drawStyles from './draws_styles';
 
 export const Tree = (matches, nextMatches) => (
@@ -9,7 +10,7 @@ export const Tree = (matches, nextMatches) => (
   </div>
 );
 
-export const Match = (playerA, playerB) => (
+export const Match = (playerA, playerB, winner) => (
   <Paper zDepth={1} style={drawStyles.flexContainerMatch}>
     <div
       style={{
@@ -18,7 +19,21 @@ export const Match = (playerA, playerB) => (
         ...drawStyles.matchStyle,
       }}
     >
-      {playerA}
+      {playerA === winner ? (
+        <span>
+          <img
+            src={
+              'https://cdn3.iconfinder.com/data/icons/higher-education-icon-set/256/trophy.png'
+            }
+            className={'trophy'}
+          />
+        </span>
+      ) : (
+        false
+      )}
+      <span className={playerA === winner ? 'matchWinner' : false}>
+        {playerA}
+      </span>
     </div>
     <div
       style={{
@@ -27,12 +42,26 @@ export const Match = (playerA, playerB) => (
         ...drawStyles.matchStyle,
       }}
     >
-      {playerB}
+      {playerB === winner ? (
+        <span>
+          <img
+            src={
+              'https://cdn3.iconfinder.com/data/icons/higher-education-icon-set/256/trophy.png'
+            }
+            className={'trophy'}
+          />
+        </span>
+      ) : (
+        false
+      )}
+      <span className={playerB === winner ? 'matchWinner' : false}>
+        {playerB}
+      </span>
     </div>
   </Paper>
 );
 
-export const NextMatch = (playerA, playerB, nextStage) => (
+export const NextMatch = (playerA, playerB, winner, nextStage) => (
   <Paper
     zDepth={1}
     style={
@@ -53,7 +82,21 @@ export const NextMatch = (playerA, playerB, nextStage) => (
         ...drawStyles.nextMatchStyle,
       }}
     >
-      {playerA}
+      {playerA === winner ? (
+        <span>
+          <img
+            src={
+              'https://cdn3.iconfinder.com/data/icons/higher-education-icon-set/256/trophy.png'
+            }
+            className={'trophy'}
+          />
+        </span>
+      ) : (
+        false
+      )}
+      <span className={playerA === winner ? 'matchWinner' : false}>
+        {playerA}
+      </span>
     </div>
     <div
       style={{
@@ -61,7 +104,21 @@ export const NextMatch = (playerA, playerB, nextStage) => (
         ...drawStyles.nextMatchStyle,
       }}
     >
-      {playerB}
+      {playerB === winner ? (
+        <span>
+          <img
+            src={
+              'https://cdn3.iconfinder.com/data/icons/higher-education-icon-set/256/trophy.png'
+            }
+            className={'trophy'}
+          />
+        </span>
+      ) : (
+        false
+      )}
+      <span className={playerB === winner ? 'matchWinner' : false}>
+        {playerB}
+      </span>
     </div>
   </Paper>
 );

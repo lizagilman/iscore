@@ -10,7 +10,6 @@ import {
 } from 'material-ui/Table';
 
 const getFlagIcon = (countryCode) => {
-
   switch (countryCode) {
     case 'ISR':
       return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Israel.png';

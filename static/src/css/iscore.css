@@ -238,3 +238,13 @@ body {
   height: 40px;
   margin: 0px 15px;
 }
+
+.matchWinner {
+  font-weight: 900;
+}
+
+.trophy {
+  width: 40px;
+  height: 40px;
+  margin-right: 6px;
+}
