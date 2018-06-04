@@ -4,6 +4,7 @@ from iscore_app.views import IndexView
 from iscore_app import views, draws, schedule, tournament, ranking
 
 router = routers.DefaultRouter()
+router.register(r'Users', views.UsersViewSet)
 router.register(r'RankingListCategories', views.CatagoriesViewSet)
 router.register(r'Players', views.PlayersViewSet)
 router.register(r'MoneyDistributionMethods',
