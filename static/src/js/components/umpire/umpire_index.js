@@ -1,11 +1,11 @@
 import React from 'react';
-import MainCard from '../main_card/main_card_index';
+import { inject, observer } from 'mobx-react/index';
 import Paper from 'material-ui/Paper';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import RaisedButton from 'material-ui/RaisedButton';
 import { createSetApi } from '../../api';
-import { inject, observer } from 'mobx-react/index';
+import MainCard from '../main_card/main_card_index';
 
 const mobx = require('mobx');
 
@@ -222,7 +222,7 @@ toggleServing=() => {
                         style={styles.serveButton}
                         onClick={() => this.toggleServing()}
                      >
-                         {this.state.serving == true ? <h5>🎾</h5> : ''}
+                         {this.state.serving === true ? <h5>🎾</h5> : ''}
                      </FloatingActionButton>
                 </div>
               </div>
@@ -265,7 +265,7 @@ toggleServing=() => {
                         style={styles.serveButton}
                         onClick={() => this.toggleServing()}
                      >
-                         {this.state.serving == true ? '' : <h5>🎾</h5>}
+                         {this.state.serving === true ? '' : <h5>🎾</h5>}
                      </FloatingActionButton>
 
               </div>
@@ -356,7 +356,6 @@ toggleServing=() => {
         <MainCard
           title={'Matches'}
           content={Match}
-          // style={{ flex: 1, height: "100%", margin: "1vw 2vw 0 2vw" }}
         />
       </div>
     );

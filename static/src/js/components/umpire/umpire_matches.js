@@ -10,10 +10,7 @@ import {
   TableRowColumn,
 } from 'material-ui/Table';
 import MainCard from '../main_card/main_card_index';
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
 import Spinner from '../spinner/spinner';
-import Match from './umpire_index';
 
 const mobx = require('mobx');
 
@@ -216,72 +213,6 @@ export default class UmpireMatches extends React.Component {
       </div>
     );
 
-    // const scheduleParamsForm = (
-    //   <div>
-    //     <TextField
-    //       defaultValue={
-    //         scheduleParams.start_hour ? scheduleParams.start_hour : ''
-    //       }
-    //       floatingLabelText={'Start Hour'}
-    //       style={{ marginRight: '2%' }}
-    //       onChange={(event) => {
-    //         event.preventDefault();
-    //         MatchesStore.updateParamValue('startHour', event.target.value);
-    //       }}
-    //     />
-    //     <TextField
-    //       defaultValue={
-    //         scheduleParams.finish_hour ? scheduleParams.finish_hour : ''
-    //       }
-    //       style={{ marginRight: '2%' }}
-    //       floatingLabelText={'End Hour'}
-    //       onChange={(event) => {
-    //         event.preventDefault();
-    //         MatchesStore.updateParamValue('finishHour', event.target.value);
-    //       }}
-    //     />
-    //     <TextField
-    //       defaultValue={
-    //         scheduleParams.num_of_courts ? scheduleParams.num_of_courts : ''
-    //       }
-    //       style={{ marginRight: '2%' }}
-    //       floatingLabelText={'Number of Courts'}
-    //       onChange={(event) => {
-    //         event.preventDefault();
-    //         MatchesStore.updateParamValue('numOfCourts', event.target.value);
-    //       }}
-    //     />
-    //     <TextField
-    //       defaultValue={
-    //         scheduleParams.game_duration ? scheduleParams.game_duration : ''
-    //       }
-    //       style={{ marginRight: '2%' }}
-    //       floatingLabelText={'Match Duration'}
-    //       onChange={(event) => {
-    //         event.preventDefault();
-    //         MatchesStore.updateParamValue('matchDuration', event.target.value);
-    //       }}
-    //     />
-    //
-    //     <div>
-    //       <FlatButton
-    //         label="Generate Schedule"
-    //         primary={true}
-    //         onClick={() => {
-    //           MatchesStore.createSchedule();
-    //           this.forceUpdate();
-    //         }}
-    //       />
-    //       <FlatButton
-    //         label="Delete Schedule"
-    //         primary={true}
-    //         onClick={() => {
-    //           MatchesStore.deleteSchedule();
-    //         }}
-    //       />
-    //     </div>
-    //   </div>
-    // );
 
     return (
       <div>
