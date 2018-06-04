@@ -115,12 +115,14 @@ def retrieve_ranking_list(request):
     ranking_list = Ranking_Lists.objects.get(pk=request.GET['list_id'])
     categories = ranking_list.categories.all()
     data = {}
+    data["name"] = ranking_list.name
+    data["list"] = {}
     for category in categories:
         ranked_players = RankedPlayers.objects.filter(
             list=ranking_list).filter(category=category)
         list = RankedPlayersReaderSerializer(data=ranked_players, many=True)
         list.is_valid()
-        data[category.name] = list.data
+        data["list"][category.name] = list.data
 
     return Response(data)
 

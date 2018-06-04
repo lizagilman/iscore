@@ -22,13 +22,13 @@ export default class RankingList extends React.Component {
     RankingStore.fetchRankingList(id).then((ranking) => {
       const data = mobx.toJS(ranking);
 
-      Object.keys(data).forEach((category, index) => {
-        if (data[category].length && !this.state.categoryToDisplay) {
+      Object.keys(data.list).forEach((category, index) => {
+        if (data.list[category].length && !this.state.categoryToDisplay) {
           this.setState({ categoryToDisplay: index });
         }
       });
 
-      this.setState({ data });
+      this.setState({ data: data.list });
     });
   }
 

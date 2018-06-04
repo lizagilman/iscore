@@ -47,7 +47,7 @@ export default class RankingsTable extends React.Component {
   componentWillMount() {
     const { RankingsStore } = this.props.stores;
 
-    RankingsStore.fetchAllRankings();
+    RankingsStore.fetchAllRankings(localStorage.organization_id);
   }
 
   render() {
@@ -60,7 +60,9 @@ export default class RankingsTable extends React.Component {
     const createRow = (item, index) => (
       <TableRow key={index}>
         <TableRowColumn>
-          <Link to={`/ranking/${item.id}`}>
+          <Link
+            to={{ pathname: `/ranking/${item.id}`, state: { name: item.name } }}
+          >
             <div style={nameStyle}>{item.name}</div>
           </Link>
         </TableRowColumn>

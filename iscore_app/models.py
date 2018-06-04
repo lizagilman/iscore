@@ -27,7 +27,7 @@ class Players(models.Model):
     name = models.CharField(db_index=True, max_length=300)
     age = models.IntegerField(null=True, blank=True)
     gender = models.CharField(max_length=6)
-    nationality = models.CharField(max_length=50)
+    nationality = models.CharField(max_length=3)
     date = models.DateField(null=True)
 
     def __str__(self):
@@ -101,6 +101,7 @@ class RankedPlayers(models.Model):
         Players, on_delete=models.DO_NOTHING, null=True, blank=True)
     points = models.IntegerField(default=0)
     rank = models.IntegerField(null=True, blank=True)
+    tournaments_played = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return 'ranking list: : %s , category: %s , player:%s  ,rank : %s ,points : %s' % (

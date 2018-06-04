@@ -43,24 +43,6 @@ class TournamentStore {
     });
   };
 
-  // @action
-  // eslint-disable-next-line
-
-  // getCategories = id => {
-  //   if (
-  //     this.tournament &&
-  //     (id || this.tournament.id) &&
-  //     !this.tournamentCategories.length
-  //   ) {
-  //     getTournamentCategoriesByTournament(id || this.tournament.id).then((response) => {
-  //       this.tournamentCategories = response;
-  //
-  //       return response;
-  //
-  //     });
-  //   } else if (this.tournamentCategories.length) {
-  //     return this.tournamentCategories;
-  //   }
   @action
   getCategories = () => {
     if (!this.tournament && this.tournament.id) {

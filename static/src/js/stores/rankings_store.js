@@ -5,9 +5,8 @@ class RankingsStore {
   @observable allRankings = null;
 
   @action
-  // TO-DO: move to dynamic org id
-  fetchAllRankings = () =>
-    getRankingListByOrganization(1).then((rankingsJson) => {
+  fetchAllRankings = id =>
+    getRankingListByOrganization(id).then((rankingsJson) => {
       this.allRankings = rankingsJson;
     });
 
