@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from .models import RankingListCategories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, RankedPlayers, Organizations, Tournaments, Matches, TournamentCategories, Tournament_Managers, Coach, Games, Sets, Entries,Umpires
+from .models import RankingListCategories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, RankedPlayers, Organizations, Tournaments, Matches, TournamentCategories, Tournament_Managers, Coach, Games, Sets, Entries,Umpires,User
 from iscore_app import serializers
 
 
@@ -216,6 +216,11 @@ class SetsViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.SetSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
 
+class UsersViewSet(viewsets.ModelViewSet):
+
+    queryset = User.objects.all()
+    serializer_class = serializers.UsersSerializer
+    filter_backends = (DjangoFilterBackend, SearchFilter)
 
 class EntriesReaderViewSet(viewsets.ModelViewSet):
 
