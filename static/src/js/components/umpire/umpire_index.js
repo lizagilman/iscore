@@ -1,53 +1,55 @@
-import React from "react";
-import MainCard from "../main_card/main_card_index";
-import Paper from "material-ui/Paper";
-import FloatingActionButton from "material-ui/FloatingActionButton";
-import ContentAdd from "material-ui/svg-icons/content/add";
-import RaisedButton from "material-ui/RaisedButton";
-import { createSetApi } from "../../api";
-import {inject, observer} from "mobx-react/index";
-const mobx = require("mobx");
+import React from 'react';
+import MainCard from '../main_card/main_card_index';
+import Paper from 'material-ui/Paper';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+import RaisedButton from 'material-ui/RaisedButton';
+import { createSetApi } from '../../api';
+import { inject, observer } from 'mobx-react/index';
+
+const mobx = require('mobx');
+
 const styles = {
-    serveButton:{
-            marginTop: "4%",
-    },
+  serveButton: {
+    marginTop: '4%',
+  },
   start: {
-    fontSize: "2em"
+    fontSize: '2em',
   },
   sets: {
-    margin: "2%",
-    color: "white",
-    fontSize: "4em",
-    textAlign: "center"
+    margin: '2%',
+    color: 'white',
+    fontSize: '4em',
+    textAlign: 'center',
   },
   paperSetsSquares: {
-    height: "100%",
-    width: "100%",
-    backgroundColor: "black",
-    margin: "auto"
+    height: '100%',
+    width: '100%',
+    backgroundColor: 'black',
+    margin: 'auto',
   },
   paperScore: {
-    height: "100%",
-    width: "40%",
-    backgroundColor: "black",
-    margin: "auto"
+    height: '100%',
+    width: '40%',
+    backgroundColor: 'black',
+    margin: 'auto',
   },
 
   score: {
-    margin: "2%",
-    color: "white",
-    fontSize: "6em"
+    margin: '2%',
+    color: 'white',
+    fontSize: '6em',
   },
   addButton: {
-    height: "20%",
-    width: "20%"
+    height: '20%',
+    width: '20%',
   },
   minusButton: {
-    height: "10%",
-    width: "10%"
-  }
+    height: '10%',
+    width: '10%',
+  },
 };
-@inject("stores")
+@inject('stores')
 @observer
 class Match extends React.Component {
   constructor(props) {
@@ -57,29 +59,29 @@ class Match extends React.Component {
       player1Score: 0,
       player2Score: 0,
       startDisabled: false,
-        serving:false,
+      serving: false,
     };
 
-    this.toggleServing=this.toggleServing.bind(this);
+    this.toggleServing = this.toggleServing.bind(this);
     this.addScore = this.addScore.bind(this);
     this.subtractScore = this.subtractScore.bind(this);
     this.startMatch = this.startMatch.bind(this);
   }
 
-toggleServing=()=>{
-      this.setState(prevState => ({
-  serving: !prevState.serving
-}));
+toggleServing=() => {
+  this.setState(prevState => ({
+    serving: !prevState.serving,
+  }));
 };
   startMatch = () => {
     const set = {
-      set_num: "1",
-      Matches: "1"
+      set_num: '1',
+      Matches: '1',
     };
     createSetApi(set);
     this.setState({ startDisabled: true });
   };
-  addScore = num => {
+  addScore = (num) => {
     let newScore = null;
     let myScore = null;
     if (num === 1) {
@@ -92,7 +94,7 @@ toggleServing=()=>{
         newScore = 15;
         break;
       }
-      case "0": {
+      case '0': {
         newScore = 15;
         break;
       }
@@ -105,10 +107,10 @@ toggleServing=()=>{
         break;
       }
       case 40: {
-        newScore = "AD";
+        newScore = 'AD';
         break;
       }
-      case "AD": {
+      case 'AD': {
         newScore = 60;
         break;
       }
@@ -117,7 +119,7 @@ toggleServing=()=>{
         break;
       }
       default: {
-        console.log("Invalid choice");
+        console.log('Invalid choice');
         break;
       }
     }
@@ -128,7 +130,7 @@ toggleServing=()=>{
     }
   };
 
-  subtractScore = num => {
+  subtractScore = (num) => {
     let newScore = null;
     let myScore = null;
     if (num === 1) {
@@ -138,15 +140,15 @@ toggleServing=()=>{
     }
     switch (myScore) {
       case 0: {
-        newScore = "0";
+        newScore = '0';
         break;
       }
-      case "0": {
-        newScore = "0";
+      case '0': {
+        newScore = '0';
         break;
       }
       case 15: {
-        newScore = "0";
+        newScore = '0';
         break;
       }
       case 30: {
@@ -157,7 +159,7 @@ toggleServing=()=>{
         newScore = 30;
         break;
       }
-      case "AD": {
+      case 'AD': {
         newScore = 40;
         break;
       }
@@ -166,7 +168,7 @@ toggleServing=()=>{
         break;
       }
       default: {
-        console.log("Invalid choice");
+        console.log('Invalid choice');
         break;
       }
     }
@@ -177,19 +179,19 @@ toggleServing=()=>{
     }
   };
   render() {
-  const {UmpireStore} = this.props.stores;
-  const match =  mobx.toJS(UmpireStore.getSingleMatch());
+    const { UmpireStore } = this.props.stores;
+    const match = mobx.toJS(UmpireStore.getSingleMatch());
 
-    console.log('match :',match);
+    console.log('match :', match);
     const Match = (
       <div>
         <div className="row">
           <div className="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-            <Paper className={"paper"} id={"player1Score"} zDepth={2}>
+            <Paper className={'paper'} id={'player1Score'} zDepth={2}>
               <div class="row">
                 <div className="col-md-3">
                   <FloatingActionButton
-                    backgroundColor={"red"}
+                    backgroundColor={'red'}
                     mini={true}
                     className={styles.minusButton}
                     onClick={() => this.subtractScore(1)}
@@ -202,7 +204,7 @@ toggleServing=()=>{
                 </div>
                 <div className="col-md-3">
                   <FloatingActionButton
-                    backgroundColor={"rgb(0, 150, 136)"}
+                    backgroundColor={'rgb(0, 150, 136)'}
                     className={styles.addButton}
                     onClick={() => this.addScore(1)}
                   >
@@ -216,11 +218,11 @@ toggleServing=()=>{
                 </div>
                 <div class="col-md-12">
                      <FloatingActionButton
-                        backgroundColor={this.state.serving===true ? "yellow":"white"}
+                        backgroundColor={this.state.serving === true ? 'yellow' : 'white'}
                         style={styles.serveButton}
                         onClick={() => this.toggleServing()}
                      >
-                         {this.state.serving==true ? <h5>🎾</h5>:''}
+                         {this.state.serving == true ? <h5>🎾</h5> : ''}
                      </FloatingActionButton>
                 </div>
               </div>
@@ -228,11 +230,11 @@ toggleServing=()=>{
           </div>
 
           <div className="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-            <Paper className={"paper"} id={"player2Score"} zDepth={2}>
+            <Paper className={'paper'} id={'player2Score'} zDepth={2}>
               <div class="row">
                 <div className="col-md-3">
                   <FloatingActionButton
-                    backgroundColor={"red"}
+                    backgroundColor={'red'}
                     mini={true}
                     className={styles.minusButton}
                     onClick={() => this.subtractScore(1)}
@@ -245,7 +247,7 @@ toggleServing=()=>{
                 </div>
                 <div className="col-md-3">
                   <FloatingActionButton
-                    backgroundColor={"rgb(0, 150, 136)"}
+                    backgroundColor={'rgb(0, 150, 136)'}
                     className={styles.addButton}
                     onClick={() => this.addScore(2)}
                   >
@@ -259,11 +261,11 @@ toggleServing=()=>{
                 </div>
                 <div className="col-md-12">
                     <FloatingActionButton
-                        backgroundColor={this.state.serving===true ? "white":"yellow"}
+                        backgroundColor={this.state.serving === true ? 'white' : 'yellow'}
                         style={styles.serveButton}
                         onClick={() => this.toggleServing()}
                      >
-                         {this.state.serving==true ? '':<h5>🎾</h5>}
+                         {this.state.serving == true ? '' : <h5>🎾</h5>}
                      </FloatingActionButton>
 
               </div>
@@ -272,7 +274,7 @@ toggleServing=()=>{
           </div>
         </div>
 
-        <Paper className={"setsMatch"} id={"sets"} zDepth={2}>
+        <Paper className={'setsMatch'} id={'sets'} zDepth={2}>
           <div className="row">
             <div className="col-lg-8 col-md-12 col-sm-12 col-xs-12 ">
               <h3>sets:</h3>
@@ -326,7 +328,7 @@ toggleServing=()=>{
               </div>
             </div>
             <div className="col-lg-4 col-md-12 col-sm-12 col-xs-12">
-              <div className={"row"}>
+              <div className={'row'}>
                 <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                   <h2>time:</h2>
                 </div>
@@ -352,7 +354,7 @@ toggleServing=()=>{
     return (
       <div>
         <MainCard
-          title={"Matches"}
+          title={'Matches'}
           content={Match}
           // style={{ flex: 1, height: "100%", margin: "1vw 2vw 0 2vw" }}
         />

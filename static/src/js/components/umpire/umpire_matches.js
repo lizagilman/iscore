@@ -1,5 +1,5 @@
-import React from "react";
-import { inject, observer } from "mobx-react";
+import React from 'react';
+import { inject, observer } from 'mobx-react';
 import { Link } from 'react-router-dom';
 import {
   Table,
@@ -7,75 +7,76 @@ import {
   TableHeader,
   TableHeaderColumn,
   TableRow,
-  TableRowColumn
-} from "material-ui/Table";
-import MainCard from "../main_card/main_card_index";
-import TextField from "material-ui/TextField";
-import FlatButton from "material-ui/FlatButton";
-import Spinner from "../spinner/spinner";
-import Match from "./umpire_index";
+  TableRowColumn,
+} from 'material-ui/Table';
+import MainCard from '../main_card/main_card_index';
+import TextField from 'material-ui/TextField';
+import FlatButton from 'material-ui/FlatButton';
+import Spinner from '../spinner/spinner';
+import Match from './umpire_index';
 
-const mobx = require("mobx");
-const scheduleTableStyleStart={
-      paddingLeft: "4em",
-      paddingRight: "0px",
-      width:"12.5%"
+const mobx = require('mobx');
+
+const scheduleTableStyleStart = {
+  paddingLeft: '4em',
+  paddingRight: '0px',
+  width: '12.5%',
 
 };
 const scheduleTableStylePlayer1 = {
-  display: "inline-block",
-  paddingLeft: "10px",
-  paddingRight: "0px",
-  width:"12.5%"
+  display: 'inline-block',
+  paddingLeft: '10px',
+  paddingRight: '0px',
+  width: '12.5%',
 };
 const scheduleTableHeader = {
-  paddingLeft: "0px",
-  paddingRight: "0px"
+  paddingLeft: '0px',
+  paddingRight: '0px',
 };
 const scheduleTableStylePlayer2 = {
-  display: "inline-block",
-  paddingLeft: "10px",
-  paddingRight: "0px",
-  width:"12.5%"
+  display: 'inline-block',
+  paddingLeft: '10px',
+  paddingRight: '0px',
+  width: '12.5%',
 };
 
 const scheduleTableStyleStage = {
-  display: "inline-block",
-  paddingLeft: "6em",
-  paddingRight: "0px",
-  width:"12.5%"
+  display: 'inline-block',
+  paddingLeft: '6em',
+  paddingRight: '0px',
+  width: '12.5%',
 };
 const scheduleTableStyleTime = {
-  display: "inline-block",
-  paddingLeft: "0px",
-  paddingRight: "0px",
-  width:"12.5%"
+  display: 'inline-block',
+  paddingLeft: '0px',
+  paddingRight: '0px',
+  width: '12.5%',
 };
 const scheduleTableStyle = {
-  backgroundColor: "white"
+  backgroundColor: 'white',
 };
 const scheduleTableStyleCourt = {
-  display: "inline-block",
-  paddingLeft: "2em",
-  paddingRight: "0px",
-  width:"12.5%"
+  display: 'inline-block',
+  paddingLeft: '2em',
+  paddingRight: '0px',
+  width: '12.5%',
 };
 const scheduleTableStyleCategory = {
-  display: "inline-block",
-  paddingLeft: "10px",
-  paddingRight: "0px",
-  width:"12.5%"
+  display: 'inline-block',
+  paddingLeft: '10px',
+  paddingRight: '0px',
+  width: '12.5%',
 };
 const scheduleTableStyleWinner = {
-  display: "inline-block",
-  paddingLeft: "10px",
-  paddingRight: "0px",
-  width:"12.5%"
+  display: 'inline-block',
+  paddingLeft: '10px',
+  paddingRight: '0px',
+  width: '12.5%',
 };
 
-const dateFormat = require("dateformat");
+const dateFormat = require('dateformat');
 
-@inject("stores")
+@inject('stores')
 @observer
 export default class UmpireMatches extends React.Component {
   constructor(props) {
@@ -84,7 +85,7 @@ export default class UmpireMatches extends React.Component {
     this.state = {};
 
     this.setDateTime = this.setDateTime.bind(this);
-    this.onLinkClick=this.onLinkClick.bind(this);
+    this.onLinkClick = this.onLinkClick.bind(this);
     this.updateMatch = this.updateMatch.bind(this);
   }
 
@@ -96,18 +97,17 @@ export default class UmpireMatches extends React.Component {
   }
 
   onLinkClick(id) {
-      console.log('id:',id);
-    const {  UmpireStore } = this.props.stores;
+    console.log('id:', id);
+    const { UmpireStore } = this.props.stores;
 
 
-     const storedMatches = UmpireStore.matches;
+    const storedMatches = UmpireStore.matches;
 
-    console.log('matches:',mobx.toJS(storedMatches)[0]);
+    console.log('matches:', mobx.toJS(storedMatches)[0]);
 
     const singleMatch = mobx.toJS(storedMatches)[0].find(match => match.id === id);
     UmpireStore.setSingleMatch(singleMatch);
-    console.log('singleMatch',singleMatch);
-
+    console.log('singleMatch', singleMatch);
   }
 
   updateMatch(e, matchId, winner) {
@@ -126,56 +126,56 @@ export default class UmpireMatches extends React.Component {
   }
 
   render() {
-    const {UmpireStore } = this.props.stores;
+    const { UmpireStore } = this.props.stores;
     const storedMatches = UmpireStore.matches;
-    console.log('matches:',mobx.toJS(storedMatches));
+    console.log('matches:', mobx.toJS(storedMatches));
 
     const data =
       storedMatches && storedMatches.length > 0
         ? mobx.toJS(storedMatches)[0]
         : false;
-    console.log('data: ',data);
+    console.log('data: ', data);
     const createRow = (match, index) => (
       <TableRow class={'row'} key={index}>
-          <TableRowColumn class={"col-lg-1.5 col-md-1.5 col-sm-1.5"}  style={scheduleTableStyleStart}>
+          <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleStart}>
                <Link to={`/umpire/match/${match.id}`}>
-                    <div  onClick={() => this.onLinkClick(match.id)}>
+                    <div onClick={() => this.onLinkClick(match.id)}>
                         <h3>START</h3>
                     </div>
                </Link>
           </TableRowColumn>
-        <TableRowColumn class={"col-lg-1.5 col-md-1.5 col-sm-1.5"}  style={scheduleTableStyleStage}>
-          {match.stage ? match.stage : ""}
+        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleStage}>
+          {match.stage ? match.stage : ''}
         </TableRowColumn>
-        <TableRowColumn class={"col-lg-1.5 col-md-1.5 col-sm-1.5"}   style={scheduleTableStylePlayer1}>
+        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStylePlayer1}>
           <a
-            title={"update match winner"}
-            href={"#"}
-            onClick={e => this.updateMatch(e, match.id, "player1")}
+            title={'update match winner'}
+            href={'#'}
+            onClick={e => this.updateMatch(e, match.id, 'player1')}
           >
-            {match.player1 ? match.player1 : ""}
+            {match.player1 ? match.player1 : ''}
           </a>
         </TableRowColumn>
-        <TableRowColumn class={"col-lg-1.5 col-md-1.5 col-sm-1.5"} style={scheduleTableStylePlayer2}>
+        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStylePlayer2}>
           <a
-            href={"#"}
-            title={"update match winner"}
-            onClick={e => this.updateMatch(e, match.id, "player2")}
+            href={'#'}
+            title={'update match winner'}
+            onClick={e => this.updateMatch(e, match.id, 'player2')}
           >
-            {match.player2 ? match.player2 : ""}
+            {match.player2 ? match.player2 : ''}
           </a>
         </TableRowColumn>
-        <TableRowColumn class={"col-lg-1.5 col-md-1.5 col-sm-1.5"} style={scheduleTableStyleTime}>
-          {match ? this.setDateTime(match.time) : ""}
+        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleTime}>
+          {match ? this.setDateTime(match.time) : ''}
         </TableRowColumn>
-        <TableRowColumn class={"col-lg-1.5 col-md-1.5 col-sm-1.5"} style={scheduleTableStyleCourt}>
-          {match.court ? match.court : ""}
+        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleCourt}>
+          {match.court ? match.court : ''}
         </TableRowColumn>
-        <TableRowColumn class={"col-lg-1.5 col-md-1.5 col-sm-1.5"} style={scheduleTableStyleCategory}>
-          {match.category ? match.category : ""}
+        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleCategory}>
+          {match.category ? match.category : ''}
         </TableRowColumn>
-        <TableRowColumn class={"col-lg-1.5 col-md-1.5 col-sm-1.5"} style={scheduleTableStyleWinner}>
-          {match.winner ? match.winner : ""}
+        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleWinner}>
+          {match.winner ? match.winner : ''}
         </TableRowColumn>
       </TableRow>
     );
@@ -183,8 +183,8 @@ export default class UmpireMatches extends React.Component {
     const scheduleTable = (
       <div>
         <Table style={scheduleTableStyle}>
-          <TableHeader class={"row"} displaySelectAll={false}>
-            <TableRow class={"col-lg-12 col-md-12 col-sm-12"}>
+          <TableHeader class={'row'} displaySelectAll={false}>
+            <TableRow class={'col-lg-12 col-md-12 col-sm-12'}>
                 <TableHeaderColumn></TableHeaderColumn>
               <TableHeaderColumn>Stage</TableHeaderColumn>
               <TableHeaderColumn style={scheduleTableHeader}>
@@ -286,9 +286,9 @@ export default class UmpireMatches extends React.Component {
     return (
       <div>
         <MainCard
-          title={"Matches"}
+          title={'Matches'}
           content={scheduleTable}
-          style={{ flex: 1, height: "100%", margin: "1vw 2vw 0 2vw" }}
+          style={{ flex: 1, height: '100%', margin: '1vw 2vw 0 2vw' }}
         />
       </div>
     );

@@ -59,7 +59,6 @@ class MatchesStore {
     deleteScheduleApi(this.scheduleParams.tournamentId).then(response =>
       (response.status > 400 ? alert('Delete schedule failed') : alert('Schedule deleted')));
   }
-
 }
 const matchesStore = new MatchesStore();
 

@@ -296,3 +296,33 @@ export const deleteDraws = categoryid => {
     response => response
   );
 };
+
+export function loginUser(user){
+
+  return fetch("/auth/token/create/",{
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(user)
+  }).then(function (response) {
+      console.log(response);
+        return response;
+  })
+}
+export function RegisterUser(user){
+
+  return fetch("/auth/users/create/",{
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(user)
+  }).then(function (response) {
+      console.log(response);
+      return response;
+  })
+}
+

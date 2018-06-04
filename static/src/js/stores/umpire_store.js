@@ -1,6 +1,8 @@
-import { observable, action } from "mobx";
-import {getAllMatchesByTournamentIDApi, getAllTournamentsApi} from "../api";
-const mobx = require("mobx");
+import { observable, action } from 'mobx';
+import { getAllMatchesByTournamentIDApi, getAllTournamentsApi } from '../api';
+
+const mobx = require('mobx');
+
 class UmpireStore {
   @observable allTournaments = [];
   @observable tournament = null;
@@ -9,32 +11,27 @@ class UmpireStore {
 
   @action
   fetchAllTournaments = () =>
-    getAllTournamentsApi().then(tournamentsJson => {
+    getAllTournamentsApi().then((tournamentsJson) => {
       this.allTournaments = tournamentsJson;
       return this.allTournaments;
     });
 
   @action
-  getSingleTournament = id => {
-    const singleTournament = this.allTournaments.filter(
-      tournament => tournament.id === id
-    );
+  getSingleTournament = (id) => {
+    const singleTournament = this.allTournaments.filter(tournament => tournament.id === id);
 
     return singleTournament.length ? singleTournament[0] : false;
   };
 
   @action
-  getSingleMatch = ()=>{
-
-        return this.match;
-  };
+  getSingleMatch = () => this.match;
 
   @action
-    setSingleMatch(match){
-        this.match=match;
-    };
+  setSingleMatch(match) {
+    this.match = match;
+  }
   @action
-  setCurrentTournament = tournament => {
+  setCurrentTournament = (tournament) => {
     this.tournament = tournament;
   };
   @action getTournamentId = () => this.tournament.id;
@@ -44,7 +41,7 @@ class UmpireStore {
     if (id) {
       getAllMatchesByTournamentIDApi(id).then((matchesJson) => {
         matchesJson.sort((match1, match2) => new Date(match1.time) - new Date(match2.time));
-        this.matches =  mobx.toJS([matchesJson]);
+        this.matches = mobx.toJS([matchesJson]);
       });
     }
   };

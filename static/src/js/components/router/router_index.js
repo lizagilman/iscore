@@ -8,9 +8,9 @@ import Rankings from '../rankings/rankings_index';
 import CoachPage from '../coach/index';
 import CoachHeader from '../coach/header/header';
 import LogIn from '../login/login_index';
-import Match from "../umpire/umpire_index";
-import UmpireMatches from "../umpire/umpire_matches";
-import UmpireTournaments from "../umpire/umpire_tournaments";
+import Match from '../umpire/umpire_index';
+import UmpireMatches from '../umpire/umpire_matches';
+import UmpireTournaments from '../umpire/umpire_tournaments';
 
 const AppRouter = () => (
   <Router>
