@@ -1,5 +1,6 @@
 import React from 'react';
 import * as mobx from 'mobx';
+import { inject, observer } from 'mobx-react';
 import {
   Table,
   TableBody,
@@ -12,10 +13,11 @@ import Toggle from 'material-ui/Toggle';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import DeleteForever from 'material-ui/svg-icons/action/delete-forever';
-import { inject, observer } from 'mobx-react';
 import { Link } from 'react-router-dom';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
+import SelectField from 'material-ui/SelectField';
+import MenuItem from 'material-ui/MenuItem';
 import Wizard from './wizard/wizard_index';
 import Spinner from '../spinner/spinner';
 
@@ -37,6 +39,7 @@ export default class TournamentsTable extends React.Component {
     this.deleteTournament = this.deleteTournament.bind(this);
     this.saveNewTournament = this.saveNewTournament.bind(this);
     this.setDateTime = this.setDateTime.bind(this);
+    this.handleStatusChange = this.handleStatusChange.bind(this);
 
     this.state = {
       displayModal: false,
@@ -89,6 +92,20 @@ export default class TournamentsTable extends React.Component {
     }
   }
 
+  handleStatusChange(e, index, value, tournament) {
+    e.preventDefault();
+    const { TournamentsStore } = this.props.stores;
+
+    // eslint-disable-next-line
+    const updatedTournament = (({ id, name, field_of_sport }) => ({
+      id,
+      name,
+      field_of_sport,
+    }))(tournament);
+    updatedTournament.status = value;
+    TournamentsStore.updateTournament(updatedTournament);
+  }
+
   componentWillMount() {
     const { TournamentsStore } = this.props.stores;
 
@@ -112,7 +129,37 @@ export default class TournamentsTable extends React.Component {
           </Link>
         </TableRowColumn>
         <TableRowColumn>{item.field_of_sport}</TableRowColumn>
-        <TableRowColumn>{item.status}</TableRowColumn>
+        <TableRowColumn>
+          <SelectField
+            value={item.status}
+            onChange={(event, index, value) =>
+              this.handleStatusChange(event, index, value, item)
+            }
+          >
+            <MenuItem key={1} value={'Created'} primaryText={'Created'} />
+            <MenuItem
+              key={2}
+              value={'Open for Registration'}
+              primaryText="Open for Registration'"
+            />
+            <MenuItem
+              key={3}
+              value={'Registration Closed'}
+              primaryText="Registration Closed"
+            />
+            <MenuItem
+              key={4}
+              value={'Draw Published'}
+              primaryText="Registration Closed"
+            />
+            <MenuItem
+              key={5}
+              value={'Schedule Published'}
+              primaryText="Schedule Published"
+            />
+            <MenuItem key={6} value={'finished'} primaryText="Finished" />
+          </SelectField>
+        </TableRowColumn>
         <TableRowColumn>{this.setDateTime(item.start_date)}</TableRowColumn>
         <TableRowColumn>
           <Toggle

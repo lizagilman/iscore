@@ -1,4 +1,3 @@
-
 import React from 'react';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
@@ -61,7 +60,7 @@ class FirstStep extends React.Component {
           onChange={event => this.handleTournamentNameChange(event)}
         />
 
-                        <TextField
+        <TextField
           defaultValue={tournament ? tournament.address : false}
           floatingLabelText="Venue Address"
           fullWidth={true}
@@ -100,7 +99,6 @@ class FirstStep extends React.Component {
             this.handleDateChange('end_date', date);
           }}
         />
-
       </div>
     );
   }
