@@ -29,14 +29,15 @@ def get_player_ranking(player, category, ranking_list):
 
     player_ranking = RankedPlayers.objects.filter(list=ranking_list).filter(
         category__name=category.category).filter(player=player)
-
+    if(player_ranking.exists()==False):
+        return None
     return player_ranking[0]
 
 
 #add the points according to the grade
 def update_player_score(player_ranking, grade, stage):
 
-    points_distribution = grade.points
+    points_distribution = grade.points.distribution
     index = find_stage_index(stage)
     player_ranking.points += points_distribution[index]
     player_ranking.save()
@@ -46,7 +47,7 @@ def update_player_score(player_ranking, grade, stage):
 def update_ranking_of_registered_players(tournament_category, ranking_list,
                                          grade):
 
-    player_list = tournament_category.player_list
+    player_list = tournament_category.player_list.all()
     for player in player_list:
         stage = find_player_position(player, tournament_category)
         ranking = get_player_ranking(player, tournament_category, ranking_list)
@@ -89,7 +90,7 @@ def update_players_ranking(ranking_list, category):
 
 # update the entire ranking list
 def update_ranking_list(ranking_list):
-    categories = ranking_list.categories
+    categories = ranking_list.categories.all()
     for category in categories:
         update_players_ranking(ranking_list, category)
 
