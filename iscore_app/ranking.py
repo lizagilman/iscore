@@ -20,6 +20,8 @@ def find_player_position(player, category):
     query = Q(player1=player) | Q(player2=player)
     player_matches = Matches.objects.filter(
         category=category).filter(query).order_by('-match_index')
+    if(player_matches[0].stage=='F' and player_matches[0].winner==player):
+        return 'W'
 
     return player_matches[0].stage
 
@@ -62,6 +64,7 @@ def update_ranking_of_registered_players(tournament_category, ranking_list,
         update_player_score(ranking, grade, stage)
 
 
+
 #goes through all the categories and update the scores of the registered players
 def update_ranking_according_to_tournament_records(tournament):
 
@@ -98,6 +101,7 @@ def update_ranking_list(ranking_list):
 def find_stage_index(match_len):
 
     return {
+        'W':0,
         'F': 1,
         'SF': 2,
         'QF': 3,
