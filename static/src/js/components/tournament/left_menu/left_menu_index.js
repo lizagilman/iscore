@@ -33,8 +33,8 @@ const style = {
 
 class LeftMenu extends React.Component {
   render() {
-    const contentSwitcher = (content, title) => e =>
-      this.props.mainContentSwitcher(e, content, title);
+    
+    const contentSwitcher = (content, title) => e => this.props.mainContentSwitcher(e, content, title);
 
     return (
       <div>

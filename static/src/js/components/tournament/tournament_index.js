@@ -40,7 +40,7 @@ class Tournament extends React.Component {
       <div id={'tindex'}>
         <LeftMenu
           zDepth={0}
-          mainCoLntentSwitcher={this.mainContentSwitcher}
+          mainContentSwitcher={this.mainContentSwitcher}
           tournamentId={parseInt(this.props.match.params.id, 10)}
         />
         <MainCard
