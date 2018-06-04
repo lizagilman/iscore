@@ -9,11 +9,35 @@ import {
   TableRowColumn,
 } from 'material-ui/Table';
 
+const getFlag = (countryCode) => {
+  switch (countryCode) {
+    case 'ISR':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Israel.png';
+    case 'FRA':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_France.png';
+    case 'BEL':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Belgium.png';
+    case 'ITA':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Italy.png';
+    default:
+      return false;
+  }
+};
+
 const createRow = (item, index) => (
   <TableRow key={index}>
     <TableRowColumn>{item.rank}</TableRowColumn>
-    <TableRowColumn>{item.player}</TableRowColumn>
-    <TableRowColumn>{item.nationality}</TableRowColumn>
+    <TableRowColumn>
+      <div>
+        <img
+          className={'flag'}
+          src={getFlag(item.nationality)}
+          data-toggle="tooltip"
+          title={item.nationality}
+        />
+        <span>{item.player}</span>
+      </div>
+    </TableRowColumn>
     <TableRowColumn>{item.points}</TableRowColumn>
     <TableRowColumn>{Math.floor(Math.random() * 14) + 1}</TableRowColumn>
   </TableRow>
@@ -25,7 +49,6 @@ const createTable = rankedPlayers => (
       <TableRow>
         <TableHeaderColumn>Rank</TableHeaderColumn>
         <TableHeaderColumn>Name</TableHeaderColumn>
-        <TableHeaderColumn>Nationality</TableHeaderColumn>
         <TableHeaderColumn>Points</TableHeaderColumn>
         <TableHeaderColumn>Tournaments Played</TableHeaderColumn>
       </TableRow>

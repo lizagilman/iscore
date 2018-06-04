@@ -123,7 +123,7 @@
   border-bottom: 1px solid #fff;
   outline: 0;
   border: 1px solid #999;
-    font-size: 4em;
+  font-size: 4em;
 }
 
 .rrs__label {
@@ -180,7 +180,7 @@
 
   /* Fullscreen `<Select/>` options */
   .rrui__select__options:not(.rrui__select__options--autocomplete) {
-   font-size: 4em;
+    font-size: 4em;
   }
 
   /* Fullscreen `<Select/>`s and `<DatePicker/>`s `z-index`es */
@@ -212,23 +212,29 @@
   }
   .rrui__input-field--invalid {
     border-color : red;
-}
+  }
 }
 
 /* Fullscreen `<Select/>` options */
-    /*
+/*
 @media (max-width: 720px) {
 
-    .rrui__select__options:not(.rrui__select__options--autocomplete) {
-        font-size: 22px;
-    }
+.rrui__select__options:not(.rrui__select__options--autocomplete) {
+    font-size: 22px;
+}
 }
 */
 
 body {
-    background-color: #e0e0e0 !important;
+  background-color: #e0e0e0 !important;
 }
 
 .formField {
-    margin-top: 10px;
+  margin-top: 10px;
+}
+
+.flag {
+  width: 40px;
+  height: 40px;
+  margin: 0px 15px;
 }

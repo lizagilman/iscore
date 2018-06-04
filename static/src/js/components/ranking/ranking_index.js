@@ -17,6 +17,8 @@ export default class Ranking extends React.Component {
   }
 
   componentWillMount() {
+    // TO-DO: parse id from url and fetch ranking list name
+
     // if (!(this.state.rankingListName) {
     //
     // }

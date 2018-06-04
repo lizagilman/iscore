@@ -101,7 +101,7 @@ class RankedPlayers(models.Model):
         Players, on_delete=models.DO_NOTHING, null=True, blank=True)
     points = models.IntegerField(default=0)
     rank = models.IntegerField(null=True, blank=True)
-    tournaments_played = models.IntegerField(null=True, blank=True)
+    tournaments_played = models.IntegerField(default=0)
 
     def __str__(self):
         return 'ranking list: : %s , category: %s , player:%s  ,rank : %s ,points : %s' % (
