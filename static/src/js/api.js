@@ -160,7 +160,26 @@ export const getAllDrawsApi = () =>
   fetch("/api/Entries/").then(response => response.json()); ///probably old function ,not relevant
 
 ////////////////  matches  //////////////////
-
+export function createSetApi(set) {
+  return fetch("/api/Sets/", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(set)
+  }).then(response => response);
+}
+export function createGameApi(game) {
+  return fetch("/api/Games/", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(game)
+  }).then(response => response);
+}
 export function getMatchToWriteByMatchId(id) {
   return fetch(`/api/ModifyMatches/${id}/`, {
     method: "GET",
@@ -277,3 +296,33 @@ export const deleteDraws = categoryid => {
     response => response
   );
 };
+
+export function loginUser(user){
+
+  return fetch("/auth/token/create/",{
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(user)
+  }).then(function (response) {
+      console.log(response);
+        return response;
+  })
+}
+export function RegisterUser(user){
+
+  return fetch("/auth/users/create/",{
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(user)
+  }).then(function (response) {
+      console.log(response);
+      return response;
+  })
+}
+

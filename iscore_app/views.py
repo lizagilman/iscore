@@ -15,7 +15,6 @@ class IndexView(TemplateView):
     def dispatch(self, *args, **kwargs):
         return super(IndexView, self).dispatch(*args, **kwargs)
 
-
 class CatagoriesViewSet(viewsets.ModelViewSet):
 
     queryset = RankingListCategories.objects.all().distinct()

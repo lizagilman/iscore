@@ -1,5 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import { Link } from 'react-router-dom';
 import {
   Table,
   TableBody,
@@ -8,17 +9,22 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
-import TextField from 'material-ui/TextField';
-import FlatButton from 'material-ui/FlatButton';
-import Spinner from '../../spinner/spinner';
+import MainCard from '../main_card/main_card_index';
+import Spinner from '../spinner/spinner';
 
 const mobx = require('mobx');
 
+const scheduleTableStyleStart = {
+  paddingLeft: '4em',
+  paddingRight: '0px',
+  width: '12.5%',
+
+};
 const scheduleTableStylePlayer1 = {
   display: 'inline-block',
-  paddingLeft: '44px',
+  paddingLeft: '10px',
   paddingRight: '0px',
-  width: '14%',
+  width: '12.5%',
 };
 const scheduleTableHeader = {
   paddingLeft: '0px',
@@ -26,56 +32,57 @@ const scheduleTableHeader = {
 };
 const scheduleTableStylePlayer2 = {
   display: 'inline-block',
-  paddingLeft: '40px',
+  paddingLeft: '10px',
   paddingRight: '0px',
-  width: '14%',
+  width: '12.5%',
 };
 
 const scheduleTableStyleStage = {
   display: 'inline-block',
-  paddingLeft: '74px',
+  paddingLeft: '6em',
   paddingRight: '0px',
-  width: '14%',
+  width: '12.5%',
 };
 const scheduleTableStyleTime = {
   display: 'inline-block',
   paddingLeft: '0px',
   paddingRight: '0px',
-  width: '14%',
+  width: '12.5%',
 };
 const scheduleTableStyle = {
   backgroundColor: 'white',
 };
 const scheduleTableStyleCourt = {
   display: 'inline-block',
-  paddingLeft: '47px',
+  paddingLeft: '2em',
   paddingRight: '0px',
-  width: '14%',
+  width: '12.5%',
 };
 const scheduleTableStyleCategory = {
   display: 'inline-block',
-  paddingLeft: '60px',
+  paddingLeft: '10px',
   paddingRight: '0px',
-  width: '14%',
+  width: '12.5%',
 };
 const scheduleTableStyleWinner = {
   display: 'inline-block',
-  paddingLeft: '38px',
+  paddingLeft: '10px',
   paddingRight: '0px',
-  width: '14%',
+  width: '12.5%',
 };
 
 const dateFormat = require('dateformat');
 
 @inject('stores')
 @observer
-export default class Schedule extends React.Component {
+export default class UmpireMatches extends React.Component {
   constructor(props) {
     super(props);
-    this.setDateTime = this.setDateTime.bind(this);
 
     this.state = {};
 
+    this.setDateTime = this.setDateTime.bind(this);
+    this.onLinkClick = this.onLinkClick.bind(this);
     this.updateMatch = this.updateMatch.bind(this);
   }
 
@@ -86,6 +93,20 @@ export default class Schedule extends React.Component {
     return formateDate;
   }
 
+  onLinkClick(id) {
+    console.log('id:', id);
+    const { UmpireStore } = this.props.stores;
+
+
+    const storedMatches = UmpireStore.matches;
+
+    console.log('matches:', mobx.toJS(storedMatches)[0]);
+
+    const singleMatch = mobx.toJS(storedMatches)[0].find(match => match.id === id);
+    UmpireStore.setSingleMatch(singleMatch);
+    console.log('singleMatch', singleMatch);
+  }
+
   updateMatch(e, matchId, winner) {
     e.preventDefault();
     const { MatchesStore } = this.props.stores;
@@ -94,33 +115,36 @@ export default class Schedule extends React.Component {
   }
 
   componentWillMount() {
-    const { TournamentStore, MatchesStore } = this.props.stores;
+    const { UmpireStore } = this.props.stores;
     const tournamentId =
-      this.props.tournamentId || TournamentStore.getTournamentId();
+      this.props.tournamentId || UmpireStore.getTournamentId();
 
-    MatchesStore.updateParamValue('tournamentId', tournamentId);
-
-    MatchesStore.fetchMatches(tournamentId);
+    UmpireStore.fetchMatches(tournamentId);
   }
 
   render() {
-    const { MatchesStore } = this.props.stores;
-
-    const { scheduleParams } = MatchesStore;
-
-    const storedMatches = MatchesStore.matches;
+    const { UmpireStore } = this.props.stores;
+    const storedMatches = UmpireStore.matches;
+    console.log('matches:', mobx.toJS(storedMatches));
 
     const data =
       storedMatches && storedMatches.length > 0
         ? mobx.toJS(storedMatches)[0]
         : false;
-
+    console.log('data: ', data);
     const createRow = (match, index) => (
-      <TableRow key={index}>
-        <TableRowColumn style={scheduleTableStyleStage}>
+      <TableRow class={'row'} key={index}>
+          <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleStart}>
+               <Link to={`/umpire/match/${match.id}`}>
+                    <div onClick={() => this.onLinkClick(match.id)}>
+                        <h3>START</h3>
+                    </div>
+               </Link>
+          </TableRowColumn>
+        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleStage}>
           {match.stage ? match.stage : ''}
         </TableRowColumn>
-        <TableRowColumn style={scheduleTableStylePlayer1}>
+        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStylePlayer1}>
           <a
             title={'update match winner'}
             href={'#'}
@@ -129,7 +153,7 @@ export default class Schedule extends React.Component {
             {match.player1 ? match.player1 : ''}
           </a>
         </TableRowColumn>
-        <TableRowColumn style={scheduleTableStylePlayer2}>
+        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStylePlayer2}>
           <a
             href={'#'}
             title={'update match winner'}
@@ -138,17 +162,16 @@ export default class Schedule extends React.Component {
             {match.player2 ? match.player2 : ''}
           </a>
         </TableRowColumn>
-        <TableRowColumn style={scheduleTableStyleTime}>
+        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleTime}>
           {match ? this.setDateTime(match.time) : ''}
-
         </TableRowColumn>
-        <TableRowColumn style={scheduleTableStyleCourt}>
+        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleCourt}>
           {match.court ? match.court : ''}
         </TableRowColumn>
-        <TableRowColumn style={scheduleTableStyleCategory}>
+        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleCategory}>
           {match.category ? match.category : ''}
         </TableRowColumn>
-        <TableRowColumn style={scheduleTableStyleWinner}>
+        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleWinner}>
           {match.winner ? match.winner : ''}
         </TableRowColumn>
       </TableRow>
@@ -157,8 +180,9 @@ export default class Schedule extends React.Component {
     const scheduleTable = (
       <div>
         <Table style={scheduleTableStyle}>
-          <TableHeader displaySelectAll={false}>
-            <TableRow>
+          <TableHeader class={'row'} displaySelectAll={false}>
+            <TableRow class={'col-lg-12 col-md-12 col-sm-12'}>
+                <TableHeaderColumn></TableHeaderColumn>
               <TableHeaderColumn>Stage</TableHeaderColumn>
               <TableHeaderColumn style={scheduleTableHeader}>
                 Player
@@ -189,77 +213,14 @@ export default class Schedule extends React.Component {
       </div>
     );
 
-    const scheduleParamsForm = (
-      <div>
-        <TextField
-          defaultValue={
-            scheduleParams.start_hour ? scheduleParams.start_hour : ''
-          }
-          floatingLabelText={'Start Hour'}
-          style={{ marginRight: '2%' }}
-          onChange={(event) => {
-            event.preventDefault();
-            MatchesStore.updateParamValue('startHour', event.target.value);
-          }}
-        />
-        <TextField
-          defaultValue={
-            scheduleParams.finish_hour ? scheduleParams.finish_hour : ''
-          }
-          style={{ marginRight: '2%' }}
-          floatingLabelText={'End Hour'}
-          onChange={(event) => {
-            event.preventDefault();
-            MatchesStore.updateParamValue('finishHour', event.target.value);
-          }}
-        />
-        <TextField
-          defaultValue={
-            scheduleParams.num_of_courts ? scheduleParams.num_of_courts : ''
-          }
-          style={{ marginRight: '2%' }}
-          floatingLabelText={'Number of Courts'}
-          onChange={(event) => {
-            event.preventDefault();
-            MatchesStore.updateParamValue('numOfCourts', event.target.value);
-          }}
-        />
-        <TextField
-          defaultValue={
-            scheduleParams.game_duration ? scheduleParams.game_duration : ''
-          }
-          style={{ marginRight: '2%' }}
-          floatingLabelText={'Match Duration'}
-          onChange={(event) => {
-            event.preventDefault();
-            MatchesStore.updateParamValue('matchDuration', event.target.value);
-          }}
-        />
-
-        <div>
-          <FlatButton
-            label="Generate Schedule"
-            primary={true}
-            onClick={() => {
-              MatchesStore.createSchedule();
-              this.forceUpdate();
-            }}
-          />
-          <FlatButton
-            label="Delete Schedule"
-            primary={true}
-            onClick={() => {
-              MatchesStore.deleteSchedule();
-            }}
-          />
-        </div>
-      </div>
-    );
 
     return (
       <div>
-        {scheduleParamsForm}
-        {scheduleTable}
+        <MainCard
+          title={'Matches'}
+          content={scheduleTable}
+          style={{ flex: 1, height: '100%', margin: '1vw 2vw 0 2vw' }}
+        />
       </div>
     );
   }
