@@ -33,6 +33,9 @@ const getFlagIcon = (countryCode) => {
       return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Croatia.png';
     case 'AUS':
       return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Austria.png';
+    case 'SWE':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Sweden.png';
+
     default:
       return false;
   }

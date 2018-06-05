@@ -6,7 +6,7 @@ class RankingsStore {
 
   @action
   fetchAllRankings = id =>
-    getRankingListByOrganization(id).then((rankingsJson) => {
+    getRankingListByOrganization(id || 1).then((rankingsJson) => {
       this.allRankings = rankingsJson;
     });
 
