@@ -21,6 +21,7 @@ def create_tournament(request):
         for category in categories:
             new_category = TournamentCategories(
                 category=str(category),
+                max_players=data['max_players'],
                 tournamet=tournament_serializer.instance)
             new_category.save()
     except:

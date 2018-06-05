@@ -104,7 +104,7 @@ export default class CoachPage extends React.Component {
     this.buttonClicked = this.buttonClicked.bind(this);
     this.registerPlayers = this.registerPlayers.bind(this);
     this.state = {
-      coach_name: 'dani',
+      coach_name: 'Haim',
       tournaments: [],
       optionsPlayers: [],
       optionsTournaments: [],
