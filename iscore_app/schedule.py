@@ -156,4 +156,4 @@ def generate_schedule_by_stage(tournament, start_date, end_date, num_of_courts,
                                        games_per_day, game_duration)
 
     return Matches.objects.filter(category__tournamet=tournament).order_by(
-        'category__category', 'stage')
+       'category__category','stage')
