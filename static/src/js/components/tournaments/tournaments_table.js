@@ -144,20 +144,15 @@ export default class TournamentsTable extends React.Component {
             />
             <MenuItem
               key={3}
-              value={'Registration Closed'}
-              primaryText="Registration Closed"
-            />
-            <MenuItem
-              key={4}
               value={'Draw Published'}
               primaryText="Registration Closed"
             />
             <MenuItem
-              key={5}
+              key={4}
               value={'Schedule Published'}
               primaryText="Schedule Published"
             />
-            <MenuItem key={6} value={'finished'} primaryText="Finished" />
+            <MenuItem key={5} value={'Finished'} primaryText="Finished" />
           </SelectField>
         </TableRowColumn>
         <TableRowColumn>{this.setDateTime(item.start_date)}</TableRowColumn>

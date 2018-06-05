@@ -6,6 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import FirstStep from './first_step';
 import SecondStep from './second_step';
+import ThirdStep from './third_step';
 
 @inject('stores')
 @observer
@@ -43,8 +44,7 @@ export default class Wizard extends React.Component {
 
     const categoriesStep = <SecondStep />;
 
-    const settingsStep = <div>settings</div>;
-
+    const settingsStep = <ThirdStep />;
     switch (stepIndex) {
       case 0:
         return basicInfoStep;
