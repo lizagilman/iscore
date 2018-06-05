@@ -36,7 +36,7 @@ class Players(models.Model):
 
 class Money_Distribution_Methods(models.Model):
     name = models.CharField(db_index=True, max_length=300)
-    distribution = ArrayField(models.IntegerField(default=0))
+    distribution = ArrayField(models.IntegerField(default=0),size=7)
 
     def __str__(self):
         return self.name
@@ -44,7 +44,7 @@ class Money_Distribution_Methods(models.Model):
 
 class Points_Distribution_Methods(models.Model):
     name = models.CharField(db_index=True, max_length=300)
-    distribution = ArrayField(models.IntegerField(default=0))
+    distribution = ArrayField(models.IntegerField(default=0),size=7)
 
     def __str__(self):
         return self.name
