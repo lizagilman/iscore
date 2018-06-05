@@ -220,3 +220,7 @@ class Entries(models.Model):
         Players, on_delete=models.CASCADE, null=True, blank=True)
     is_seeded = models.BooleanField(default=False)
     rank = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return 'category: : %s , player: %s , rank:%d  ,seeded : %s ' % (
+            self.tournament_category.category, self.player.name, self.rank, self.is_seeded)

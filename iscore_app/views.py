@@ -5,7 +5,7 @@ from rest_framework import viewsets
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from .models import RankingListCategories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, RankedPlayers, Organizations, Tournaments, Matches, TournamentCategories, Tournament_Managers, Coach, Games, Sets, Entries,Umpires,User
-from iscore_app import serializers,ranking
+from iscore_app import serializers,ranking,draws
 
 
 
@@ -126,8 +126,11 @@ class TournamentsViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         instance = serializer.save()
-        if instance.status == "finished":
+        if instance.status == "Finished":
             ranking.update_ranking_according_to_tournament_records(instance)
+        elif instance.status == "Registration Closed":
+            draws.set_seeded_in_tournament(instance)
+
 
 
 class TournamentsReaderViewSet(viewsets.ModelViewSet):
