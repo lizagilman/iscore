@@ -54,24 +54,8 @@ def match_generate(tournament, category_draw):
     registered_players = Entries.objects.filter(
         tournament_category=category_draw)
 
-    for player in rankedPlayers:
-        for registered in registered_players:
-            if registered.player.name == player.player.name:
-                registered.rank = player.rank
-                registered.save()
-
     ranked_registered_players = Entries.objects.filter(
         tournament_category=category_draw).order_by('rank')
-
-    if (registered_players.count() <= 4):
-        count_seeded = 1
-    else:
-        count_seeded = int(registered_players.count()/ 4)
-
-    for i in range(0,count_seeded):
-        if(ranked_registered_players[i].rank!=None):
-            ranked_registered_players[i].is_seeded=True
-            ranked_registered_players[i].save()
 
     player_list = []
     for player_in_list in ranked_registered_players:
@@ -109,8 +93,6 @@ class Tournament():
         for i in range(1,num_seeded+1):
             place_index = self.seedPlayer(i, part_size)
             self.placesList[place_index] = self.playerList[i-1]
-            print(place_index)
-
 
         for i in range(0,part_size):
             if(self.placesList[i]==None):
@@ -249,3 +231,38 @@ def handle_update_winner(request):
         return HttpResponse("missing winner id")
     update_winner(match_id, winner_id)
     return HttpResponse("match: " + match_id + " has updated his winner")
+
+def set_seeded_in_tournament(tournament):
+
+    categories=TournamentCategories.objects.filter(tournamet=tournament)
+    for category in categories:
+        rankedPlayers = RankedPlayers.objects.filter(list__organization=tournament.organization).filter(
+            list__name=tournament.ranking_list).filter(
+            category__name=category.category).order_by('points')
+
+        registered_players = Entries.objects.filter(
+            tournament_category=category)
+
+        for player in rankedPlayers:
+            for registered in registered_players:
+                if registered.player.name == player.player.name:
+                    registered.rank = player.rank
+                    registered.save()
+
+        ranked_registered_players = Entries.objects.filter(
+            tournament_category=category).order_by('rank')
+
+        if (registered_players.count() <= 4):
+            count_seeded = 1
+        else:
+            count_seeded = int(registered_players.count() / 4)
+
+        for i in range(0, count_seeded):
+            player=ranked_registered_players[i]
+            if (player.rank!=None):
+                player.is_seeded=True
+                player.save()
+
+
+
+
