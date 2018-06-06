@@ -144,7 +144,7 @@ export default class TournamentsTable extends React.Component {
             />
             <MenuItem
               key={3}
-              value={'Draw Published'}
+              value={'Registration Closed'}
               primaryText="Registration Closed"
             />
             <MenuItem

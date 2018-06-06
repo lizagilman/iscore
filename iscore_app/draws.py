@@ -252,10 +252,21 @@ def set_seeded_in_tournament(tournament):
         ranked_registered_players = Entries.objects.filter(
             tournament_category=category).order_by('rank')
 
-        if (registered_players.count() <= 4):
+
+        if(ranked_registered_players.count()>category.max_players):
+            size=registered_players.count()
+            for i in range(size, category.max_players,-1):
+                player = ranked_registered_players[i-1]
+                player.delete()
+
+
+            ranked_registered_players = Entries.objects.filter(
+                tournament_category=category).order_by('rank')
+
+        if (ranked_registered_players.count() <= 4):
             count_seeded = 1
         else:
-            count_seeded = int(registered_players.count() / 4)
+            count_seeded = int(ranked_registered_players.count() / 4)
 
         for i in range(0, count_seeded):
             player=ranked_registered_players[i]
