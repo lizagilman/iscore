@@ -61,30 +61,47 @@ export function getTournamentByIDApi(tournamentId) {
   );
 }
 export function getAllTournamentsByOrganization(organization_id) {
-  return fetch(`/api/Tournaments/?organization=${organization_id}`).then(response => response.json());
+  return fetch(`/api/Tournaments/?organization=${organization_id}`).then(
+    response => response.json()
+  );
 }
 
 ///////////////////////////////////////
 //////////////organization/////////////
+
+//in
+export function createRankingListApi(rankingList) {
+  return fetch("/api/ModifyRankingLists/", {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(rankingList)
+  }).then(response => response);
+}
+
 export const getOrganizationBySports = fieldOfSports =>
   fetch(`/api/Organizations/?field_of_sports=${fieldOfSports}`).then(response =>
     response.json()
   );
 
 export const getRankingListByOrganization = organizationId =>
-  fetch(`/api/RankingLists/?organization=${organizationId}`).then(response =>
-    response.json()
-  );
+  fetch(`/api/RankingLists/?organization=${organizationId}`).then(response => {
+    return response.json();
+  });
+
+export const getCategoriesByOrganization = organizationId => {
+  return fetch(
+    `/api/RankingListCategories/?organization=${organizationId}`
+  ).then(response => {
+    return response.json();
+  });
+};
 
 export function getCategoriesByRankingList(rankingListId) {
   return fetch(
     `/api/catagories/?rankings_list_catagories__list=${rankingListId}`
-  ).then(response => response.json());
-}
-
-export function getCategoriesByOrganization(organizationId) {
-  return fetch(
-    `/api/catagories/?organization=${organizationId}`
   ).then(response => response.json());
 }
 
@@ -126,14 +143,14 @@ export const getRankingList = rankingListId =>
 //////////////////////////////////////////
 ////////////////Coach/////////////////////
 export function getAllCoachPlayersApi(id) {
-  return fetch(`/api/Coachs/${id}/`).then(function (response){
+  return fetch(`/api/Coachs/${id}/`).then(function(response) {
     return response.json();
-  } );
+  });
 }
 export function getAllCoachByUser(id) {
-  return fetch(`/api/Coachs/?user=${id}`).then(function (response){
+  return fetch(`/api/Coachs/?user=${id}`).then(function(response) {
     return response.json();
-  } );
+  });
 }
 ///////////////////////////////////
 /////////////////Umpire//////////////////
@@ -363,8 +380,8 @@ export const deleteScheduleApi = tournament_id => {
 };
 
 export const generateDraws = categoryid =>
-  fetch(`/generate_draws/?category_id=${categoryid}`).then(response =>
-    response
+  fetch(`/generate_draws/?category_id=${categoryid}`).then(
+    response => response
   );
 
 export const deleteDraws = categoryid => {
@@ -373,49 +390,46 @@ export const deleteDraws = categoryid => {
   );
 };
 
-export function loginUser(user){
-
-  return fetch("/auth/token/create/",{
+export function loginUser(user) {
+  return fetch("/auth/token/create/", {
     method: "POST",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json"
     },
     body: JSON.stringify(user)
-  }).then(function (response) {
-        return response.json();
-  })
+  }).then(function(response) {
+    return response.json();
+  });
 }
-export function RegisterUser(user){
-
-  return fetch("/auth/users/create/",{
+export function RegisterUser(user) {
+  return fetch("/auth/users/create/", {
     method: "POST",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json"
     },
     body: JSON.stringify(user)
-  }).then(function (response) {
-      return response.json();
-  })
+  }).then(function(response) {
+    return response.json();
+  });
 }
 
-export function GetUser(token){
-
-  return fetch("/auth/me/",{
+export function GetUser(token) {
+  return fetch("/auth/me/", {
     method: "GET",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-        "Authorization": "Token "+token
-    },
-  }).then(function (response) {
-      return response.json();
-  })
+      Authorization: "Token " + token
+    }
+  }).then(function(response) {
+    return response.json();
+  });
 }
-export const getRegisteredUser = (id) =>
-  fetch(`/api/Users/${id}/`).then(function (response) {
-      return response.json();
+export const getRegisteredUser = id =>
+  fetch(`/api/Users/${id}/`).then(function(response) {
+    return response.json();
   });
 
 export function editUserApi(user) {
