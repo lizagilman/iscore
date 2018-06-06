@@ -35,7 +35,18 @@ const getFlagIcon = (countryCode) => {
       return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Austria.png';
     case 'SWE':
       return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Sweden.png';
-
+     case 'ROM':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Romania.png';
+      case 'SWI':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Switzerland.png';
+     case 'UK':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_United_Kingdom.png';
+      case 'UKR':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Ukraine.png';
+      case 'LAT':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Latvia.png';
+       case 'CHA':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Chad.png';
     default:
       return false;
   }
@@ -56,7 +67,7 @@ const createRow = (item, index) => (
       </div>
     </TableRowColumn>
     <TableRowColumn>{item.points}</TableRowColumn>
-    <TableRowColumn>{Math.floor(Math.random() * 14) + 1}</TableRowColumn>
+    <TableRowColumn>{item.tournaments_played}</TableRowColumn>
   </TableRow>
 );
 

@@ -15,9 +15,20 @@ class User(AbstractUser):
 
     pass
 
+class Organizations(models.Model):
+    name = models.CharField(db_index=True, max_length=300)
+    field_of_sports = models.CharField(max_length=300)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
 
 class RankingListCategories(models.Model):
     name = models.CharField(db_index=True, max_length=300)
+    organization = models.ForeignKey(Organizations, on_delete=models.DO_NOTHING)
+
+    class Meta:
+        unique_together = ('name', 'organization',)
 
     def __str__(self):
         return self.name
@@ -37,6 +48,10 @@ class Players(models.Model):
 class Money_Distribution_Methods(models.Model):
     name = models.CharField(db_index=True, max_length=300)
     distribution = ArrayField(models.IntegerField(default=0),size=7)
+    organization = models.ForeignKey(Organizations, on_delete=models.DO_NOTHING)
+
+    class Meta:
+        unique_together = ('name', 'organization',)
 
     def __str__(self):
         return self.name
@@ -45,6 +60,10 @@ class Money_Distribution_Methods(models.Model):
 class Points_Distribution_Methods(models.Model):
     name = models.CharField(db_index=True, max_length=300)
     distribution = ArrayField(models.IntegerField(default=0),size=7)
+    organization = models.ForeignKey(Organizations, on_delete=models.DO_NOTHING)
+
+    class Meta:
+        unique_together = ('name', 'organization',)
 
     def __str__(self):
         return self.name
@@ -54,33 +73,28 @@ class Grades(models.Model):
     name = models.CharField(db_index=True, max_length=300)
     points = models.OneToOneField(
         Points_Distribution_Methods,
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         null=True,
         blank=True)
     money = models.OneToOneField(
         Money_Distribution_Methods,
-        on_delete=models.CASCADE,
+        on_delete=models.DO_NOTHING,
         null=True,
         blank=True)
+    organization=models.ForeignKey(Organizations,on_delete=models.DO_NOTHING)
+
+    class Meta:
+        unique_together = ('name', 'organization',)
 
     def __str__(self):
         return self.name
 
 
-class Organizations(models.Model):
-    name = models.CharField(db_index=True, max_length=300)
-    points_list = models.ManyToManyField(
-        Points_Distribution_Methods, null=True, blank=True)
-    money_list = models.ManyToManyField(
-        Money_Distribution_Methods, null=True, blank=True)
-    field_of_sports = models.CharField(max_length=300)
 
-    def __str__(self):
-        return self.name
 
 
 class Ranking_Lists(models.Model):
-    organization = models.ForeignKey(Organizations, on_delete=models.CASCADE)
+    organization = models.ForeignKey(Organizations, on_delete=models.DO_NOTHING)
     name = models.CharField(db_index=True, max_length=300)
     grades = models.ManyToManyField(
         Grades, null=True, blank=True
@@ -89,12 +103,15 @@ class Ranking_Lists(models.Model):
     categories = models.ManyToManyField(
         RankingListCategories, null=True, blank=True)
 
+    class Meta:
+        unique_together = ('organization', 'name',)
+
     def __str__(self):
         return self.name
 
 
 class RankedPlayers(models.Model):
-    list = models.ForeignKey(Ranking_Lists, on_delete=models.CASCADE)
+    list = models.ForeignKey(Ranking_Lists, on_delete=models.DO_NOTHING)
     category = models.ForeignKey(
         RankingListCategories, on_delete=models.DO_NOTHING)
     player = models.ForeignKey(
@@ -102,6 +119,9 @@ class RankedPlayers(models.Model):
     points = models.IntegerField(default=0)
     rank = models.IntegerField(null=True, blank=True)
     tournaments_played = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = ('list', 'category','player',)
 
     def __str__(self):
         return 'ranking list: : %s , category: %s , player:%s  ,rank : %s ,points : %s' % (

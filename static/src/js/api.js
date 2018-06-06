@@ -82,6 +82,12 @@ export function getCategoriesByRankingList(rankingListId) {
   ).then(response => response.json());
 }
 
+export function getCategoriesByOrganization(organizationId) {
+  return fetch(
+    `/api/catagories/?organization=${organizationId}`
+  ).then(response => response.json());
+}
+
 export const getGradesByRankingList = rankingListId =>
   fetch(`/api/Grades/?ranking_lists=${rankingListId}`).then(response =>
     response.json()

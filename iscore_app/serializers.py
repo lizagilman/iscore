@@ -2,7 +2,7 @@ from iscore_app.models import RankingListCategories, Players, Money_Distribution
 from rest_framework import serializers
 
 
-class CatagoriesSerializer(serializers.HyperlinkedModelSerializer):
+class CatagoriesSerializer(serializers.ModelSerializer):
     class Meta:
         model = RankingListCategories
         fields = '__all__'
@@ -83,7 +83,7 @@ class RankedPlayersReaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = RankedPlayers
         fields = ('player', 'nationality', 'category', 'list', 'rank',
-                  'points')
+                  'points','tournaments_played')
 
 
 

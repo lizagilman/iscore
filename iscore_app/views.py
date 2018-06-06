@@ -23,7 +23,7 @@ class CatagoriesViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend, SearchFilter)
     filter_fields = (
         'rankedplayers__list',
-        'name',
+        'name','organization'
     )
 
 
