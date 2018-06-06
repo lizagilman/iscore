@@ -221,6 +221,9 @@ class Entries(models.Model):
     is_seeded = models.BooleanField(default=False)
     rank = models.IntegerField(null=True, blank=True)
 
+    class Meta:
+        unique_together = ('tournament_category', 'player',)
+
     def __str__(self):
         return 'category: : %s , player: %s , rank:%d  ,seeded : %s ' % (
             self.tournament_category.category, self.player.name, self.rank, self.is_seeded)

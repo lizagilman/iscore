@@ -108,7 +108,6 @@ export default class TournamentsTable extends React.Component {
 
   componentWillMount() {
     const { TournamentsStore } = this.props.stores;
-
     TournamentsStore.fetchAllTournaments();
   }
 
@@ -144,7 +143,7 @@ export default class TournamentsTable extends React.Component {
             />
             <MenuItem
               key={3}
-              value={'Draw Published'}
+              value={'Registration Closed'}
               primaryText="Registration Closed"
             />
             <MenuItem

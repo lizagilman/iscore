@@ -202,7 +202,7 @@ class CoachsReaderViewSet(viewsets.ModelViewSet):
     queryset = Coach.objects.all()
     serializer_class = serializers.CoachReaderSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
-    filter_fields = ('name', )
+    filter_fields = ('name','user' )
 
 class UmpiresReaderViewSet(viewsets.ModelViewSet):
 
@@ -249,6 +249,14 @@ class EntriesViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.EntriesSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter]
 
+    def perform_create(self, serializer):
+
+        instance=serializer.save()
+        ranking_list=instance.tournament_category.tournamet.ranking_list
+        player_ranking=RankedPlayers.objects.filter(list=ranking_list).filter(category__name=instance.tournament_category.category).filter(player=instance.player)
+        if(player_ranking!=None):
+            instance.rank=player_ranking[0].rank
+            instance.save()
 
 class MatchesReaderViewSet(viewsets.ModelViewSet):
 

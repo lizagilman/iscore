@@ -2,10 +2,14 @@ import React from 'react';
 import AppBar from 'material-ui/AppBar';
 
 const SelectStyle = {
-  fontSize: '50px',
-  height: '4em',
+  height: '10em',
+};
+const titleStyle = {
+  marginTop: '1em',
+  fontSize: '3em',
 };
 
-const CoachHeader = () => <AppBar style={SelectStyle} title="Welcom Dani" />;
+
+const CoachHeader = props => <AppBar showMenuIconButton={false} titleStyle={titleStyle} style={SelectStyle} title={`Welcome ${props.first_name} ${props.last_name}`} />;
 
 export default CoachHeader;

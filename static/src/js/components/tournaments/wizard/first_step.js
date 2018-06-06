@@ -91,7 +91,7 @@ class FirstStep extends React.Component {
         />
 
         <DatePicker
-          defaultDate={tournament ? tournament.start_date : ''}
+          defaultDate={tournament ? tournament.end_date : ''}
           floatingLabelText="End Date"
           container="inline"
           className={'formField'}
