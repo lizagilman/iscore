@@ -202,7 +202,7 @@ class CoachsReaderViewSet(viewsets.ModelViewSet):
     queryset = Coach.objects.all()
     serializer_class = serializers.CoachReaderSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
-    filter_fields = ('name', )
+    filter_fields = ('name','user' )
 
 class UmpiresReaderViewSet(viewsets.ModelViewSet):
 

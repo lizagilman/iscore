@@ -108,7 +108,6 @@ export default class TournamentsTable extends React.Component {
 
   componentWillMount() {
     const { TournamentsStore } = this.props.stores;
-
     TournamentsStore.fetchAllTournaments();
   }
 

@@ -1,16 +1,20 @@
 import React from 'react';
 import ReactResponsiveSelect from 'react-responsive-select';
 import { inject, observer } from 'mobx-react';
+import { teal500 } from 'material-ui/styles/colors';
 import styled from 'styled-components';
 import RaisedButton from 'material-ui/RaisedButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import MyCheckbox from './checkbox/myCheckbox';
 import { registerCoachPlayerToTournament } from '../../api';
-import { teal500 } from 'material-ui/styles/colors';
+import CoachHeader from '../coach/header/header';
 
 const mobx = require('mobx');
 
+const pickTour = {
+  fontSize: '4em',
+};
 const styles = {
   list: {
     listStyleType: 'none',
@@ -43,12 +47,15 @@ const styles = {
   hintText: {
     bottom: '1.2em',
   },
+  flatStyle: {
+    height: '5em',
+  },
   dialogButton: {
     width: '100%',
   },
   dialogButtonLabel: {
     width: '100%',
-    fontSize: '3em',
+    fontSize: '5em',
     fontWeight: '600',
 
     marginBottom: '1em',
@@ -105,6 +112,8 @@ export default class CoachPage extends React.Component {
     this.registerPlayers = this.registerPlayers.bind(this);
     this.state = {
       coach_name: 'Haim',
+      first_name: '',
+      last_name: '',
       tournaments: [],
       optionsPlayers: [],
       optionsTournaments: [],
@@ -117,6 +126,9 @@ export default class CoachPage extends React.Component {
       open: false,
       dialog: '',
       playersSelection: {},
+      userId: null,
+      is_tour: false,
+      is_cat: false,
     };
   }
 
@@ -127,6 +139,7 @@ export default class CoachPage extends React.Component {
   handleClose = () => {
     this.setState({ open: false });
   };
+
   handleOptionsSubmit(event) {
     const selected = [...this.state.selectedOptions];
     selected.push(event.target.value);
@@ -137,10 +150,29 @@ export default class CoachPage extends React.Component {
 
   componentWillMount() {
     const { TournamentsStore, CoachEnterPlayersStore } = this.props.stores;
-
+    console.log('this.props.location.state.id', this.props.location.state.id);
     const self = this;
-    CoachEnterPlayersStore.fetchPlayers(this.state.coach_name).then((storedPlayers) => {
-      self.setState({ players: mobx.toJS(storedPlayers) });
+    CoachEnterPlayersStore.fetchPlayers(this.props.location.state.id).then((storedPlayers) => {
+      self.setState({ players: mobx.toJS(storedPlayers) }, () => {
+        console.log('Players', this.state.players);
+      });
+
+      console.log('first_name', mobx.toJS(CoachEnterPlayersStore.firstName));
+      console.log('last_name', mobx.toJS(CoachEnterPlayersStore.lastName));
+      this.setState({
+        first_name: mobx.toJS(CoachEnterPlayersStore.firstName),
+      });
+      this.setState({
+        last_name: mobx.toJS(CoachEnterPlayersStore.lastName),
+      });
+      console.log(
+        'this.props.location.state.first_name ',
+        this.props.location.state.first_name,
+      );
+      console.log(
+        'this.props.location.state.last_name ',
+        this.props.location.state.last_name,
+      );
     });
 
     TournamentsStore.fetchAllTournaments().then((storedTournaments) => {
@@ -148,8 +180,6 @@ export default class CoachPage extends React.Component {
         this.createTournamentOptions();
       });
     });
-
-    this.createPlayerOptions();
   }
   createTournamentOptions() {
     if (this.state.tournaments) {
@@ -176,33 +206,33 @@ export default class CoachPage extends React.Component {
   }
 
   createPlayerOptions() {
-    if (this.state.players) {
+    if (this.state.players && this.state.is_cat === true) {
+      console.log('in createPlayerOptions', this.state.players);
       const self = this;
-
       const playdoc = [];
-      this.state.players.map((player, index) =>
-        playdoc.push(<MyCheckbox
-            contentEditable={true}
-            ref={(instance) => {
-              this.child = instance;
-            }}
-            label={player.name}
-            value={player.id}
-            changed={(o) => {
-              const playersSelection = self.state.playersSelection;
-              playersSelection[o.playerId] = o.isChecked;
-              self.setState({ playersSelection });
-            }}
-            submit={false}
-          />));
-
+      this.state.players
+        ? this.state.players.map((player, index) =>
+          playdoc.push(<MyCheckbox
+                contentEditable={true}
+                ref={(instance) => {
+                  this.child = instance;
+                }}
+                label={player.name}
+                value={player.id}
+                changed={(o) => {
+                  const playersSelection = self.state.playersSelection;
+                  playersSelection[o.playerId] = o.isChecked;
+                  self.setState({ playersSelection });
+                }}
+                submit={false}
+              />))
+        : false;
       self.setState({ optionsPlayers: playdoc });
     }
   }
 
   handleChangeTour = (value) => {
     this.setState({ tournamentSelected: value });
-
     const { CoachEnterPlayersStore } = this.props.stores;
     const self = this;
     CoachEnterPlayersStore.receiveCategoriesByTournament(value).then((storedCategories) => {
@@ -214,6 +244,7 @@ export default class CoachPage extends React.Component {
 
   handleChangeCat = (value) => {
     this.setState({ categorySelected: value }, () => {
+      this.setState({ is_cat: true });
       this.createPlayerOptions();
     });
   };
@@ -256,10 +287,32 @@ export default class CoachPage extends React.Component {
         onClick={this.handleClose}
         buttonStyle={styles.dialogButton}
         labelStyle={styles.dialogButtonLabel}
+        style={styles.flatStyle}
       />,
     ];
     return (
       <div style={styles.conteinerStyle}>
+        <Row>
+          <Column span="12">
+            <CoachHeader
+              first_name={
+                this.props.location.state.first_name === this.state.first_name
+                  ? this.props.location.state.first_name
+                  : ''
+              }
+              last_name={
+                this.props.location.state.last_name === this.state.last_name
+                  ? this.props.location.state.last_name
+                  : ''
+              }
+            />
+          </Column>
+        </Row>
+        <Row>
+          <Column span="12">
+            <p style={pickTour}>Please select tournament:</p>
+          </Column>
+        </Row>
         <Row>
           <Column span="12">
             <ReactResponsiveSelect
@@ -270,8 +323,7 @@ export default class CoachPage extends React.Component {
                   ? this.state.optionsTournaments
                   : ''
               }
-              // caretIcon={caretIcon}
-              prefix="Select tounarment "
+              prefix=""
               selectedValue={this.state.tournamentSelected}
               onChange={(newValue) => {
                 this.handleChangeTour(newValue.value);
@@ -279,22 +331,36 @@ export default class CoachPage extends React.Component {
             />
           </Column>
         </Row>
-        <Row>
-          <Column span="12">
-            <ReactResponsiveSelect
-              name="select category"
-              options={
-                this.state.optionsCategories ? this.state.optionsCategories : ''
-              }
-              // caretIcon={caretIcon}
-              prefix="Select category "
-              selectedValue={this.state.categorySelected}
-              onChange={(newValue) => {
-                this.handleChangeCat(newValue.value);
-              }}
-            />
-          </Column>
-        </Row>
+
+        {this.state.categories ? (
+          <div>
+            <Row>
+              <Column span="12">
+                <p style={pickTour}>Please select category:</p>
+              </Column>
+            </Row>
+            <Row>
+              <Column span="12">
+                <ReactResponsiveSelect
+                  name="Select category"
+                  options={
+                    this.state.optionsCategories
+                      ? this.state.optionsCategories
+                      : ''
+                  }
+                  prefix=""
+                  selectedValue={this.state.categorySelected}
+                  onChange={(newValue) => {
+                    this.handleChangeCat(newValue.value);
+                  }}
+                />
+              </Column>
+            </Row>
+          </div>
+        ) : (
+          ''
+        )}
+
         <div style={{ display: 'block' }}>
           <ul style={styles.list}>
             {this.state.optionsPlayers ? this.state.optionsPlayers : ''}
@@ -309,7 +375,6 @@ export default class CoachPage extends React.Component {
                 primary={true}
                 label="Submit"
                 labelStyle={styles.label}
-                // fullWidth={true}
                 onClick={() => this.buttonClicked(event)}
               />
             </Column>

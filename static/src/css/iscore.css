@@ -60,11 +60,11 @@
 }
 
 .rrs--options-visible .rrs__options {
-  height: auto;
+  height: max-content;
   visibility: visible;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
-  max-height: 230px;
+  max-height: max-content;
 }
 
 .rrs__option {

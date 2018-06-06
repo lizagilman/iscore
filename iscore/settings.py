@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -89,7 +90,10 @@ WSGI_APPLICATION = 'iscore.wsgi.application'
 DATABASES = {
     'default': {
 
-    }
+
+
+
+}
 }
 
 # Password validation

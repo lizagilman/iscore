@@ -119,13 +119,20 @@ export const getRankingList = rankingListId =>
 
 //////////////////////////////////////////
 ////////////////Coach/////////////////////
-export function getAllCoachPlayersApi(name) {
-  return fetch(`/api/Coachs/?name=${name}`).then(response => response.json());
+export function getAllCoachPlayersApi(id) {
+  return fetch(`/api/Coachs/${id}/`).then(function (response){
+    return response.json();
+  } );
+}
+export function getAllCoachByUser(id) {
+  return fetch(`/api/Coachs/?user=${id}`).then(function (response){
+    return response.json();
+  } );
 }
 ///////////////////////////////////
 /////////////////Umpire//////////////////
 export function getUmpireApi(id) {
-  return fetch(`/api/Coachs/${name}/`).then(response => response.json());
+  return fetch(`/api/Umpires/${id}/`).then(response => response.json());
 }
 //////////////////////////////////////////
 /////////////////Entries////////////////
@@ -286,9 +293,10 @@ export const deleteScheduleApi = tournament_id => {
     response => response
   );
 };
+
 export const generateDraws = categoryid =>
   fetch(`/generate_draws/?category_id=${categoryid}`).then(response =>
-    response.json()
+    response
   );
 
 export const deleteDraws = categoryid => {
@@ -307,8 +315,7 @@ export function loginUser(user){
     },
     body: JSON.stringify(user)
   }).then(function (response) {
-      console.log(response);
-        return response;
+        return response.json();
   })
 }
 export function RegisterUser(user){
@@ -321,8 +328,35 @@ export function RegisterUser(user){
     },
     body: JSON.stringify(user)
   }).then(function (response) {
-      console.log(response);
-      return response;
+      return response.json();
   })
 }
 
+export function GetUser(token){
+
+  return fetch("/auth/me/",{
+    method: "GET",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+        "Authorization": "Token "+token
+    },
+  }).then(function (response) {
+      return response.json();
+  })
+}
+export const getRegisteredUser = (id) =>
+  fetch(`/api/Users/${id}/`).then(function (response) {
+      return response.json();
+  });
+
+export function editUserApi(user) {
+  return fetch(`/api/Users/${user.id}/`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(user)
+  }).then(response => response);
+}

@@ -1,8 +1,15 @@
 import React from 'react';
 import Checkbox from 'material-ui/Checkbox';
 import styled from 'styled-components';
+import CheckCircle from 'material-ui/svg-icons/action/check-circle';
+import Done from 'material-ui/svg-icons/action/done';
 
 const styles = {
+  checkbox: {
+    height: '1.1em',
+    width: '1.1em',
+    marginTop: '-17px',
+  },
   checkboxDiv: {
     margin: '0',
     paddingTop: '.5em',
@@ -16,7 +23,6 @@ const styles = {
     fontSize: '4em',
     marginBottom: '16',
   },
-
 };
 const Row = styled.div`
   &::after {
@@ -47,14 +53,7 @@ export default class MyChackbox extends React.Component {
     };
   }
 
-  updateSubmit() {
-    this.setState(oldState => ({
-      submit: !oldState.submit,
-    }), () => {
-      this.state.submit === true
-        ? console.log('player id :', this.state.value) : false;
-    });
-  }
+
   updateCheck(evt, isChecked) {
     console.log(`update check player id${this.state.value}`);
 
@@ -76,11 +75,13 @@ export default class MyChackbox extends React.Component {
           <Column span="12">
             <div style={styles.checkboxDiv}>
               <Checkbox
+                 checkedIcon={<CheckCircle/>}
+                  uncheckedIcon={<Done/>}
+                 iconStyle={styles.checkbox}
                 label={this.props.label}
                 checked={this.state.checked}
                 value={this.state.value}
                 onCheck={(e, i) => this.updateCheck(e, i)}
-                style={this.props.style}
               />
             </div>
           </Column>

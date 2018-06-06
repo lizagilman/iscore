@@ -26,7 +26,7 @@ class Header extends React.Component {
   render() {
     return (
       <AppBar
-        title="iSCORE"
+        title={`iSCORE    Welcome ${this.props.first_name} ${this.props.last_name}`}
         style={styles.appBar}
         iconClassNameRight="muidocs-icon-navigation-expand-more"
       >
