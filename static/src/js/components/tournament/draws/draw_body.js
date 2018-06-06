@@ -17,6 +17,7 @@ export const Match = (playerA, playerB, winner) => (
         ...drawStyles.basicBlockStyle,
         ...drawStyles.stageStyle,
         ...drawStyles.matchStyle,
+        ...drawStyles.playerAStyle,
       }}
     >
       {playerA === winner ? (
@@ -35,11 +36,13 @@ export const Match = (playerA, playerB, winner) => (
         {playerA}
       </span>
     </div>
+
     <div
       style={{
         ...drawStyles.basicBlockStyle,
         ...drawStyles.stageStyle,
         ...drawStyles.matchStyle,
+        ...drawStyles.playerBStyle,
       }}
     >
       {playerB === winner ? (
@@ -80,6 +83,7 @@ export const NextMatch = (playerA, playerB, winner, nextStage) => (
       style={{
         ...drawStyles.basicBlockStyle,
         ...drawStyles.nextMatchStyle,
+        ...drawStyles.playerAStyle,
       }}
     >
       {playerA === winner ? (
@@ -102,6 +106,7 @@ export const NextMatch = (playerA, playerB, winner, nextStage) => (
       style={{
         ...drawStyles.basicBlockStyle,
         ...drawStyles.nextMatchStyle,
+        ...drawStyles.playerBStyle,
       }}
     >
       {playerB === winner ? (

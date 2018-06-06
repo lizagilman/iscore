@@ -77,31 +77,47 @@ export default class Draws extends React.Component {
     let nextMatches = [];
 
     if (draw) {
+      let nextMatchCounter = 0;
+
       if (this.state.currentStage === 'R16') {
         matches = DrawsStore.matchesR16.map(matchR16 =>
           Match(matchR16.player1, matchR16.player2, matchR16.winner));
-        nextMatches = DrawsStore.matchesQF.map((matchQF, index) =>
-          NextMatch(
-            matchQF.player1 ? matchQF.player1 : `Winner of R16 ${index + 1}`,
-            matchQF.player2 ? matchQF.player2 : `Winner of R16 ${index + 1}`,
-            matchQF.winner,
-            this.state.nextStage,
-          ));
+        nextMatches = DrawsStore.matchesQF.map((matchQF) => NextMatch(
+          matchQF.player1
+            ? matchQF.player1
+            : `Winner of R16 ${++nextMatchCounter}`,
+          matchQF.player2
+            ? matchQF.player2
+            : `Winner of R16 ${++nextMatchCounter}`,
+          matchQF.winner,
+          this.state.nextStage,
+        ));
       } else {
-        matches = DrawsStore.matchesSF.map((matchSF, index) =>
+        matches = DrawsStore.matchesSF.map((matchSF) =>
           Match(
-            matchSF.player1 ? matchSF.player1 : `Winner of QF ${index + 1}`,
-            matchSF.player2 ? matchSF.player2 : `Winner of QF ${index + 1}`,
+            matchSF.player1
+              ? matchSF.player1
+              : `Winner of QF ${++nextMatchCounter}`,
+            matchSF.player2
+              ? matchSF.player2
+              : `Winner of QF ${++nextMatchCounter}`,
             matchSF.winner,
             this.state.nextStage,
           ));
-        nextMatches = DrawsStore.matchesF.map((matchF, index) =>
-          NextMatch(
-            matchF.player1 ? matchF.player1 : `Winner of SF ${index + 1}`,
-            matchF.player2 ? matchF.player2 : `Winner of SF ${index + 1}`,
+        nextMatches = DrawsStore.matchesF.map((matchF) => {
+          nextMatchCounter = 0;
+
+          return NextMatch(
+            matchF.player1
+              ? matchF.player1
+              : `Winner of SF ${++nextMatchCounter}`,
+            matchF.player2
+              ? matchF.player2
+              : `Winner of SF ${++nextMatchCounter}`,
             matchF.winner,
             this.state.nextStage,
-          ));
+          );
+        });
       }
     }
 
