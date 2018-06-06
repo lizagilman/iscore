@@ -22,6 +22,21 @@ export const basicBlockStyle = {
   fontSize: '30px',
 };
 
+export const playerAStyle = {
+  margin: '10px 10px 0px 10px',
+  borderTop: '1px solid #ecda40',
+  borderRight: '1px solid #ecda40',
+  borderLeft: '1px solid #ecda40',
+  borderBottom: '2px solid #ffffff',
+};
+
+export const playerBStyle = {
+  margin: '0 10px 10px 10px',
+  borderLeft: '1px solid #ecda40',
+  borderBottom: '1px solid #ecda40',
+  borderRight: '1px solid #ecda40',
+};
+
 export const nextMatchStyle = {
   width: '50%',
 };
