@@ -1,6 +1,7 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react/index';
 import Paper from 'material-ui/Paper';
+import UmpireHeader from './umpire_header';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -353,6 +354,18 @@ toggleServing=() => {
 
     return (
       <div>
+         {/*<UmpireHeader*/}
+              {/*first_name={this.props.location.state.first_name}*/}
+              {/*//   this.props.location.state.first_name === this.state.first_name*/}
+              {/*//     ? this.props.location.state.first_name*/}
+              {/*//     : ''*/}
+              {/*// }*/}
+              {/*last_name={this.props.location.state.last_name}*/}
+              {/*//   this.props.location.state.last_name === this.state.last_name*/}
+              {/*//     ? this.props.location.state.last_name*/}
+              {/*//     : ''*/}
+              {/*// }*/}
+            {/*/>*/}
         <MainCard
           title={'Matches'}
           content={Match}

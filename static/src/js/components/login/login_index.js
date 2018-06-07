@@ -95,6 +95,7 @@ export default class LogIn extends React.Component {
       userType: null,
       userId: null,
     };
+    this.setUserId=this.setUserId.bind(this);
     this.setToken = this.setToken.bind(this);
     this.setRegisterType = this.setRegisterType.bind(this);
     this.submitRegister = this.submitRegister.bind(this);
@@ -122,7 +123,7 @@ export default class LogIn extends React.Component {
         } else {
           console.log('res:', res);
           console.log('res.auth_token:', res.auth_token);
-          this.setToken(res.auth_token);
+          this.setToken(res.auth_toke);
           GetUser(res.auth_token).then((data) => {
             console.log('GetUser data:', data);
             getRegisteredUser(data.id).then((user) => {
@@ -142,6 +143,7 @@ export default class LogIn extends React.Component {
                 this.setState({ userId: user.id });
                 this.setState({ loginFirstName: user.first_name });
                 this.setState({ loginLastName: user.last_name });
+                this.setUserId(user.id);
               }
             });
           });
@@ -149,8 +151,11 @@ export default class LogIn extends React.Component {
       });
     }
   };
-  setToken(idToken) {
+  setToken(idToken,id) {
     localStorage.setItem('id_token', idToken);
+  }
+  setUserId(id){
+      localStorage.setItem('id_user', id);
   }
   setRegisterType = (event, value) => {
     this.setState({ selectedType: value });
@@ -253,15 +258,17 @@ export default class LogIn extends React.Component {
           />
         );
       } else if (this.state.userType === 'umpire') {
+          debugger;
         return (
           <Redirect
             to={{
-              pathname: '/umpire',
+              pathname: '/umpire/index',
               state: {
                   id: this.state.userId,
                 first_name: this.state.loginFirstName,
                 last_name: this.state.loginLastName,
               },
+
             }}
           />
         );

@@ -93,7 +93,7 @@ export default class UmpireMatches extends React.Component {
     return formateDate;
   }
 
-  onLinkClick(id) {
+  onLinkClick(id,e) {
     console.log('id:', id);
     const { UmpireStore } = this.props.stores;
 
@@ -105,6 +105,8 @@ export default class UmpireMatches extends React.Component {
     const singleMatch = mobx.toJS(storedMatches)[0].find(match => match.id === id);
     UmpireStore.setSingleMatch(singleMatch);
     console.log('singleMatch', singleMatch);
+
+    this.props.setUrlContent(e, '/match', `/umpire/match/${id}`, 'Match');
   }
 
   updateMatch(e, matchId, winner) {
@@ -136,7 +138,7 @@ export default class UmpireMatches extends React.Component {
       <TableRow class={'row'} key={index}>
           <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleStart}>
                <Link to={`/umpire/match/${match.id}`}>
-                    <div onClick={() => this.onLinkClick(match.id)}>
+                    <div onClick={(e) => this.onLinkClick(match.id,e)}>
                         <h3>START</h3>
                     </div>
                </Link>
