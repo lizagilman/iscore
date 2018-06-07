@@ -42,6 +42,7 @@ def update_player_score(player_ranking, grade, stage):
     points_distribution = grade.points.distribution
     index = find_stage_index(stage)
     player_ranking.points += points_distribution[index]
+    player_ranking.tournaments_played+=1
     player_ranking.save()
 
 
