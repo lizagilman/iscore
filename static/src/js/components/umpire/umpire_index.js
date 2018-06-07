@@ -1,7 +1,6 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react/index';
 import Paper from 'material-ui/Paper';
-import UmpireHeader from './umpire_header';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -69,11 +68,11 @@ class Match extends React.Component {
     this.startMatch = this.startMatch.bind(this);
   }
 
-toggleServing=() => {
-  this.setState(prevState => ({
-    serving: !prevState.serving,
-  }));
-};
+  toggleServing = () => {
+    this.setState(prevState => ({
+      serving: !prevState.serving,
+    }));
+  };
   startMatch = () => {
     const set = {
       set_num: '1',
@@ -218,13 +217,15 @@ toggleServing=() => {
                   </Paper>
                 </div>
                 <div class="col-md-12">
-                     <FloatingActionButton
-                        backgroundColor={this.state.serving === true ? 'yellow' : 'white'}
-                        style={styles.serveButton}
-                        onClick={() => this.toggleServing()}
-                     >
-                         {this.state.serving === true ? <h5>🎾</h5> : ''}
-                     </FloatingActionButton>
+                  <FloatingActionButton
+                    backgroundColor={
+                      this.state.serving === true ? 'yellow' : 'white'
+                    }
+                    style={styles.serveButton}
+                    onClick={() => this.toggleServing()}
+                  >
+                    {this.state.serving === true ? <h5>🎾</h5> : ''}
+                  </FloatingActionButton>
                 </div>
               </div>
             </Paper>
@@ -261,15 +262,16 @@ toggleServing=() => {
                   </Paper>
                 </div>
                 <div className="col-md-12">
-                    <FloatingActionButton
-                        backgroundColor={this.state.serving === true ? 'white' : 'yellow'}
-                        style={styles.serveButton}
-                        onClick={() => this.toggleServing()}
-                     >
-                         {this.state.serving === true ? '' : <h5>🎾</h5>}
-                     </FloatingActionButton>
-
-              </div>
+                  <FloatingActionButton
+                    backgroundColor={
+                      this.state.serving === true ? 'white' : 'yellow'
+                    }
+                    style={styles.serveButton}
+                    onClick={() => this.toggleServing()}
+                  >
+                    {this.state.serving === true ? '' : <h5>🎾</h5>}
+                  </FloatingActionButton>
+                </div>
               </div>
             </Paper>
           </div>
@@ -354,22 +356,7 @@ toggleServing=() => {
 
     return (
       <div>
-         {/*<UmpireHeader*/}
-              {/*first_name={this.props.location.state.first_name}*/}
-              {/*//   this.props.location.state.first_name === this.state.first_name*/}
-              {/*//     ? this.props.location.state.first_name*/}
-              {/*//     : ''*/}
-              {/*// }*/}
-              {/*last_name={this.props.location.state.last_name}*/}
-              {/*//   this.props.location.state.last_name === this.state.last_name*/}
-              {/*//     ? this.props.location.state.last_name*/}
-              {/*//     : ''*/}
-              {/*// }*/}
-            {/*/>*/}
-        <MainCard
-          title={'Matches'}
-          content={Match}
-        />
+        <MainCard title={'Matches'} content={Match} />
       </div>
     );
   }

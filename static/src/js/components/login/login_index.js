@@ -95,7 +95,7 @@ export default class LogIn extends React.Component {
       userType: null,
       userId: null,
     };
-    this.setUserId=this.setUserId.bind(this);
+    this.setUserId = this.setUserId.bind(this);
     this.setToken = this.setToken.bind(this);
     this.setRegisterType = this.setRegisterType.bind(this);
     this.submitRegister = this.submitRegister.bind(this);
@@ -151,11 +151,11 @@ export default class LogIn extends React.Component {
       });
     }
   };
-  setToken(idToken,id) {
+  setToken(idToken, id) {
     localStorage.setItem('id_token', idToken);
   }
-  setUserId(id){
-      localStorage.setItem('id_user', id);
+  setUserId(id) {
+    localStorage.setItem('id_user', id);
   }
   setRegisterType = (event, value) => {
     this.setState({ selectedType: value });
@@ -258,7 +258,6 @@ export default class LogIn extends React.Component {
           />
         );
       } else if (this.state.userType === 'umpire') {
-          debugger;
         return (
           <Redirect
             to={{

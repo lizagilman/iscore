@@ -18,7 +18,6 @@ const scheduleTableStyleStart = {
   paddingLeft: '4em',
   paddingRight: '0px',
   width: '12.5%',
-
 };
 const scheduleTableStylePlayer1 = {
   display: 'inline-block',
@@ -93,16 +92,17 @@ export default class UmpireMatches extends React.Component {
     return formateDate;
   }
 
-  onLinkClick(id,e) {
+  onLinkClick(id, e) {
     console.log('id:', id);
     const { UmpireStore } = this.props.stores;
-
 
     const storedMatches = UmpireStore.matches;
 
     console.log('matches:', mobx.toJS(storedMatches)[0]);
 
-    const singleMatch = mobx.toJS(storedMatches)[0].find(match => match.id === id);
+    const singleMatch = mobx
+      .toJS(storedMatches)[0]
+      .find(match => match.id === id);
     UmpireStore.setSingleMatch(singleMatch);
     console.log('singleMatch', singleMatch);
 
@@ -136,17 +136,26 @@ export default class UmpireMatches extends React.Component {
     console.log('data: ', data);
     const createRow = (match, index) => (
       <TableRow class={'row'} key={index}>
-          <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleStart}>
-               <Link to={`/umpire/match/${match.id}`}>
-                    <div onClick={(e) => this.onLinkClick(match.id,e)}>
-                        <h3>START</h3>
-                    </div>
-               </Link>
-          </TableRowColumn>
-        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleStage}>
+        <TableRowColumn
+          class={'col-lg-1.5 col-md-1.5 col-sm-1.5'}
+          style={scheduleTableStyleStart}
+        >
+          <Link to={`/umpire/match/${match.id}`}>
+            <div onClick={e => this.onLinkClick(match.id, e)}>
+              <h3>START</h3>
+            </div>
+          </Link>
+        </TableRowColumn>
+        <TableRowColumn
+          class={'col-lg-1.5 col-md-1.5 col-sm-1.5'}
+          style={scheduleTableStyleStage}
+        >
           {match.stage ? match.stage : ''}
         </TableRowColumn>
-        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStylePlayer1}>
+        <TableRowColumn
+          class={'col-lg-1.5 col-md-1.5 col-sm-1.5'}
+          style={scheduleTableStylePlayer1}
+        >
           <a
             title={'update match winner'}
             href={'#'}
@@ -155,7 +164,10 @@ export default class UmpireMatches extends React.Component {
             {match.player1 ? match.player1 : ''}
           </a>
         </TableRowColumn>
-        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStylePlayer2}>
+        <TableRowColumn
+          class={'col-lg-1.5 col-md-1.5 col-sm-1.5'}
+          style={scheduleTableStylePlayer2}
+        >
           <a
             href={'#'}
             title={'update match winner'}
@@ -164,16 +176,28 @@ export default class UmpireMatches extends React.Component {
             {match.player2 ? match.player2 : ''}
           </a>
         </TableRowColumn>
-        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleTime}>
+        <TableRowColumn
+          class={'col-lg-1.5 col-md-1.5 col-sm-1.5'}
+          style={scheduleTableStyleTime}
+        >
           {match ? this.setDateTime(match.time) : ''}
         </TableRowColumn>
-        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleCourt}>
+        <TableRowColumn
+          class={'col-lg-1.5 col-md-1.5 col-sm-1.5'}
+          style={scheduleTableStyleCourt}
+        >
           {match.court ? match.court : ''}
         </TableRowColumn>
-        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleCategory}>
+        <TableRowColumn
+          class={'col-lg-1.5 col-md-1.5 col-sm-1.5'}
+          style={scheduleTableStyleCategory}
+        >
           {match.category ? match.category : ''}
         </TableRowColumn>
-        <TableRowColumn class={'col-lg-1.5 col-md-1.5 col-sm-1.5'} style={scheduleTableStyleWinner}>
+        <TableRowColumn
+          class={'col-lg-1.5 col-md-1.5 col-sm-1.5'}
+          style={scheduleTableStyleWinner}
+        >
           {match.winner ? match.winner : ''}
         </TableRowColumn>
       </TableRow>
@@ -184,7 +208,7 @@ export default class UmpireMatches extends React.Component {
         <Table style={scheduleTableStyle}>
           <TableHeader class={'row'} displaySelectAll={false}>
             <TableRow class={'col-lg-12 col-md-12 col-sm-12'}>
-                <TableHeaderColumn></TableHeaderColumn>
+              <TableHeaderColumn />
               <TableHeaderColumn>Stage</TableHeaderColumn>
               <TableHeaderColumn style={scheduleTableHeader}>
                 Player
@@ -214,7 +238,6 @@ export default class UmpireMatches extends React.Component {
         </Table>
       </div>
     );
-
 
     return (
       <div>

@@ -9,7 +9,8 @@ import LogIn from '../login/login_index';
 import Match from '../umpire/umpire_index';
 import UmpireMatches from '../umpire/umpire_matches';
 import UmpireTournaments from '../umpire/umpire_tournaments';
-import UmpireIndex from '../umpire/u_index'
+import UmpireIndex from '../umpire/u_index';
+
 const AppRouter = () => (
   <Router>
     <div>
