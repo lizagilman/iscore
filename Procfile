@@ -1,4 +1,4 @@
 release: python manage.py makemigrations iscore_app
 release: python manage.py migrate
-web: gunicorn iscore.wsgi
-channelsworker: daphne iscore.asgi:application
+channelsworker:python manage.py runworker 
+web: daphne iscore.asgi:application
