@@ -30,6 +30,7 @@ class UmpireStore {
   setSingleMatch(match) {
     this.match = match;
   }
+
   @action
   setCurrentTournament = (tournament) => {
     this.tournament = tournament;

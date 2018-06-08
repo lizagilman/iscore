@@ -183,6 +183,7 @@ export function createSetApi(set) {
     body: JSON.stringify(set)
   }).then(response => response);
 }
+
 export function createGameApi(game) {
   return fetch("/api/Games/", {
     method: "POST",
@@ -253,6 +254,8 @@ export const getAllMatchesByTournamentIDApi = tournID =>
 
 ////////////////////////////////////////////
 
+
+
 //////////////////////////////tournament categories
 export const getTournamentCategoriesByTournament = tournamentId =>
   fetch(`/api/TournamentCategories/?tournamet=${tournamentId}`).then(response =>
@@ -278,6 +281,65 @@ export const createTournamentCategoryApi = TournamentCategory =>
   }).then(response => response);
 
 /////////////////////////////
+
+//////////////games///////////
+export function editGameApi(game) {
+  return fetch(`/api/Games/${game.id}/`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(tournament)
+  }).then(response => response);
+}
+
+
+export function deleteGameApi(id) {
+  return fetch(`/api/Games/${id}/`, {
+    method: "Delete",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    }
+  }).then(response => response);
+}
+
+export function getAllGamesBySetIdApi(setId) {
+  return fetch(`/api/Games/?set=${setId}`).then(response =>
+    response.json()
+  );
+}
+
+//////////////////////////////
+/////////////sets/////////////
+export function editSetApi(set) {
+  return fetch(`/api/ModifyTournaments/${set.id}/`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(set)
+  }).then(response => response);
+}
+
+export function deletesetApi(id) {
+  return fetch(`/api/Tournaments/${id}/`, {
+    method: "Delete",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json"
+    }
+  }).then(response => response);
+}
+
+export function getAllsetsByMatchApi(managerId) {
+  return fetch(`/api/Tournaments/?manager=${managerId}`).then(response =>
+    response.json()
+  );
+}
+//////////////////////////////
 
 /////////////////////////////functions in api
 
