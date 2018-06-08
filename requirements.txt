@@ -22,3 +22,4 @@ channels==2.1.1
 channels-redis==2.2.1
 django-redis-cache==1.7.1
 
+
