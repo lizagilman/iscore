@@ -1,15 +1,19 @@
 import { observable, action } from 'mobx';
-import { getAllTournamentsApi, editTournamentApi } from '../api';
+import { getAllTournamentsApi, editTournamentApi, getAllTournamentsByManagerApi } from '../api';
 
 class TournamentsStore {
   @observable allTournaments = [];
-
+  @observable TournamentsByManager = [];
   @action
   fetchAllTournaments = () => getAllTournamentsApi().then((tournamentsJson) => {
     this.allTournaments = tournamentsJson;
     return this.allTournaments;
   });
-
+  @action
+ fetchTournamentsByManagerId = id => getAllTournamentsByManagerApi(id).then((tournamentsJson) => {
+   this.TournamentsByManager = tournamentsJson;
+   return this.TournamentsByManager;
+ });
   @action
   updateTournament = (tournament) => {
     const newTournament = tournament;

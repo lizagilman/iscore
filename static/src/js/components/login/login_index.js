@@ -18,6 +18,7 @@ import {
   getRegisteredUser,
   editUserApi,
 } from '../../api';
+import Spinner from '../spinner/spinner';
 
 const styles = {
   button: {
@@ -62,7 +63,7 @@ const styles = {
   },
   paper: {
     margin: '0 auto',
-    width: '30%',
+    width: '50%',
     height: '100%',
     textAlign: 'center',
     display: 'block',
@@ -94,13 +95,21 @@ export default class LogIn extends React.Component {
       isAuthenticated: null,
       userType: null,
       userId: null,
+      errorConfirmPass: null,
+      errorPass: null,
+        is_loading:false,
+        loginEmailError:null,
+        loginPassError:null,
     };
     this.setUserId = this.setUserId.bind(this);
     this.setToken = this.setToken.bind(this);
+    this.setType = this.setType.bind(this);
     this.setRegisterType = this.setRegisterType.bind(this);
     this.submitRegister = this.submitRegister.bind(this);
     this.submitLogin = this.submitLogin.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.setLocalSFirstName = this.setLocalSFirstName.bind(this);
+    this.setLocalSLastName = this.setLocalSLastName.bind(this);
   }
 
   handleChange = () => {
@@ -110,53 +119,88 @@ export default class LogIn extends React.Component {
   };
 
   submitLogin = (event) => {
+      console.log('this.state.password',this.state.password);
+      console.log('this.state.userName',this.state.userName);
     if (this.state.password && this.state.userName) {
-      console.log('this.state.password ', this.state.password);
-      console.log('this.state.userName ', this.state.userName);
       const payload = {
         password: this.state.password,
         username: this.state.userName,
       };
+      this.setState({is_loading:true});
       loginUser(payload).then((res) => {
-        if (res.status >= 400) {
-          alert('Failed to login ');
-        } else {
-          console.log('res:', res);
-          console.log('res.auth_token:', res.auth_token);
-          this.setToken(res.auth_toke);
-          GetUser(res.auth_token).then((data) => {
-            console.log('GetUser data:', data);
-            getRegisteredUser(data.id).then((user) => {
-              if (res.status >= 400) {
-                alert('Failed to getRegisteredUser ');
-              } else {
-                console.log('user: ', user);
-                if (user.is_coach === true) {
-                  this.setState({ userType: 'coach' });
-                } else if (user.is_manager === true) {
-                  this.setState({ userType: 'manager' });
-                } else if (user.is_organization === true) {
-                  this.setState({ userType: 'organization' });
-                } else if (user.is_umpire === true) {
-                  this.setState({ userType: 'umpire' });
-                }
-                this.setState({ userId: user.id });
-                this.setState({ loginFirstName: user.first_name });
-                this.setState({ loginLastName: user.last_name });
-                this.setUserId(user.id);
-              }
-            });
-          });
+        if (res.non_field_errors) {
+                alert('Failed to login. ',res.non_field_errors[0]);
+               this.setState({is_loading:false});
+
+         }
+         else{
+                console.log('res:', res);
+                console.log('res.auth_token:', res.auth_token);
+                this.setToken(res.auth_token);
+                GetUser(res.auth_token).then((data) => {
+
+                    console.log('GetUser data:', data);
+                    if (data.detail) {
+                        alert('Failed to login. ',data.detail);
+                       this.setState({is_loading:false});
+
+                    }
+                    else{
+
+                        getRegisteredUser(data.id).then((user) => {
+                          if (user.detail) {
+                            alert('Failed to login. ',user.detail);
+                            this.setState({is_loading:false});
+                          }
+                          else{
+                                console.log('user: ', user);
+                                if (user.is_coach === true) {
+                                  this.setType('coach');
+                                  this.setState({ userType: 'coach' });
+                                } else if (user.is_manager === true) {
+                                  this.setType('manager');
+                                  this.setState({ userType: 'manager' });
+                                } else if (user.is_organization === true) {
+                                  this.setType('organization');
+                                  this.setState({ userType: 'organization' });
+                                } else if (user.is_umpire === true) {
+                                  this.setType('umpire');
+                                  this.setState({ userType: 'umpire' });
+                                }
+                                this.setUserId(user.id);
+                                this.setLocalSFirstName(user.first_name);
+                                this.setLocalSLastName(user.last_name);
+                                this.setState({ userId: user.id });
+                                this.setState({ loginFirstName: user.first_name });
+                                this.setState({ loginLastName: user.last_name });
+                          }
+
+                      });
+                    }
+
+                });
         }
+
+
+
       });
     }
   };
-  setToken(idToken, id) {
+  setToken=(idToken) => {
     localStorage.setItem('id_token', idToken);
-  }
-  setUserId(id) {
+  };
+  setUserId=(id) => {
     localStorage.setItem('id_user', id);
-  }
+  };
+  setType=(type) => {
+    localStorage.setItem('type', type);
+  };
+  setLocalSFirstName=(name) => {
+    localStorage.setItem('first_name', name);
+  };
+  setLocalSLastName=(name) => {
+    localStorage.setItem('last_name', name);
+  };
   setRegisterType = (event, value) => {
     this.setState({ selectedType: value });
   };
@@ -237,10 +281,6 @@ export default class LogIn extends React.Component {
           <Redirect
             to={{
               pathname: '/tournaments',
-              state: {
-                first_name: this.state.loginFirstName,
-                last_name: this.state.loginLastName,
-              },
             }}
           />
         );
@@ -249,11 +289,6 @@ export default class LogIn extends React.Component {
           <Redirect
             to={{
               pathname: '/coach',
-              state: {
-                  id: this.state.userId,
-                first_name: this.state.loginFirstName,
-                last_name: this.state.loginLastName,
-              },
             }}
           />
         );
@@ -261,13 +296,7 @@ export default class LogIn extends React.Component {
         return (
           <Redirect
             to={{
-              pathname: '/umpire/index',
-              state: {
-                  id: this.state.userId,
-                first_name: this.state.loginFirstName,
-                last_name: this.state.loginLastName,
-              },
-
+              pathname: '/umpire/tournaments',
             }}
           />
         );
@@ -276,11 +305,6 @@ export default class LogIn extends React.Component {
           <Redirect
             to={{
               pathname: '/rankings',
-              state: {
-                  id: this.state.userId,
-                first_name: this.state.loginFirstName,
-                last_name: this.state.loginLastName,
-              },
             }}
           />
         );
@@ -293,31 +317,54 @@ export default class LogIn extends React.Component {
           <TextField
             floatingLabelText="Please enter email"
             type="text"
+            errorText={this.state.loginEmailError? this.state.loginEmailError:''}
             onChange={(event, newValue) => {
-               this.setState({ userName: newValue });
+                if(newValue.length<1){
+                   this.setState({loginEmailError:'Required fild'});
+                }else if(newValue.length>0){
+                     this.setState({loginEmailError:''});
+                }
+
+                    this.setState({ userName: newValue });
+
             }}
           />
         </div>
         <br />
         <div className={styles.frame}>
           <TextField
+              errorText={this.state.loginPassError? this.state.loginPassError:''}
             floatingLabelText="Please enter password"
             type="password"
             onChange={(event, newValue) => {
-                this.setState({ password: newValue });
+                if(newValue.length<8){
+                    this.setState({loginPassError:'password must contain at least 8 characters'});
+                }
+                else if(newValue.length>7){
+                     this.setState({loginPassError:''});
+                }
+
+                    this.setState({ password: newValue });
+
+
             }}
           />
         </div>
         <br />
-        <div className={styles.button}>
-          <RaisedButton
-            label="Login"
-            labelColor={'white'}
-            backgroundColor={'darkcyan'}
-            buttonStyle={styles.button}
-            onClick={event => this.submitLogin(event)}
-          />
-        </div>
+
+          {this.state.is_loading ? <div>{Spinner(50)}</div> :
+
+              <div className={styles.button}>
+                  <RaisedButton
+                      label="Login"
+                      labelColor={'white'}
+                      backgroundColor={'darkcyan'}
+                      buttonStyle={styles.button}
+                      onClick={event => this.submitLogin(event)}
+                  />
+              </div>
+          }
+
       </div>
     );
 
@@ -350,7 +397,7 @@ export default class LogIn extends React.Component {
         <TextField
           hintText="Email Field"
           floatingLabelText="Email"
-          type="text"
+          type="email"
           onChange={(event, newValue) =>
             this.setState({ registerEmail: newValue })
           }
@@ -380,19 +427,43 @@ export default class LogIn extends React.Component {
         <TextField
           hintText="Password Field"
           floatingLabelText="Password"
+          errorText={this.state.errorPass ? this.state.errorPass : ''}
           type="password"
-          onChange={(event, newValue) =>
-            this.setState({ registerPass1: newValue })
-          }
+          onChange={(event, newValue) => {
+            if (newValue.length < 8) {
+              this.setState({
+                errorPass: 'password must contain at least 8 characters',
+              });
+            } else {
+              this.setState({ errorPass: '' });
+            }
+            this.setState({ registerPass1: newValue });
+          }}
         />
         <br />
         <TextField
           hintText="Confirm Password Field"
+          errorText={
+            this.state.errorConfirmPass ? this.state.errorConfirmPass : ''
+          }
           floatingLabelText="Confirm Password"
           type="password"
-          onChange={(event, newValue) =>
-            this.setState({ registerPass2: newValue })
-          }
+          onChange={(event, newValue) => {
+            if (newValue.length < 8) {
+              this.setState({
+                errorConfirmPass: 'password must contain at least 8 characters',
+              });
+            } else if (
+              newValue.length === 8 &&
+              newValue !== this.state.registerPass1
+            ) {
+              this.setState({ errorConfirmPass: 'Password does not match' });
+            } else {
+              this.setState({ errorConfirmPass: '' });
+            }
+
+            this.setState({ registerPass2: newValue });
+          }}
         />
         <br />
         <RaisedButton
@@ -410,8 +481,9 @@ export default class LogIn extends React.Component {
       <div>
         <Toolbar>
           <ToolbarGroup firstChild={true} style={styles.toolbar}>
-            <ToolbarTitle text="WELCOME" style={styles.toolbartitle} />
+            <ToolbarTitle style={styles.toolbartitle} text="WELCOME" />
           </ToolbarGroup>
+
           <ToolbarGroup>
             <FlatButton
               label="Login"
@@ -434,6 +506,7 @@ export default class LogIn extends React.Component {
             />
           </ToolbarGroup>
         </Toolbar>
+
         <Paper style={styles.paper} zDepth={2}>
           {this.state.login ? cardLogin() : cardSignUp()}
         </Paper>

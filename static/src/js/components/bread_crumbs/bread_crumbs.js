@@ -1,9 +1,9 @@
 import React from 'react';
 import MainCard from '../main_card/main_card_index';
-import UmpireHeader from './umpire_header';
-import UmpireTournaments from './umpire_tournaments';
-import Match from './umpire_index';
-import UmpireMatches from './umpire_matches';
+import UmpireHeader from '../umpire/umpire_header';
+import UmpireTournaments from '../umpire/umpire_tournaments';
+import Match from '../umpire/umpire_index';
+import UmpireMatches from '../umpire/umpire_matches';
 
 class UmpireIndex extends React.Component {
   constructor(props) {
@@ -19,12 +19,12 @@ class UmpireIndex extends React.Component {
       content: 'UmpireTournaments',
       act: 'add',
       url: '/umpire',
-      title: '/tournaments',
+      title: 'tournaments',
     };
   }
 
   setUrlContent(e, title, url, content) {
-    e.preventDefault();
+    // e.preventDefault();
     this.setState({
       title, url, act: 'add', content,
     });

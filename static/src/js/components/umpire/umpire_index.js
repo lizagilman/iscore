@@ -89,6 +89,12 @@ class Match extends React.Component {
     this.startMatch = this.startMatch.bind(this);
     this.updateLiveScore = this.updateLiveScore.bind(this);
   }
+  componentWillMount() {
+    console.log('in willmount');
+    const { UmpireStore } = this.props.stores;
+    const match = mobx.toJS(UmpireStore.getSingleMatch());
+    console.log('match_id: ', match.id);
+  }
 
   toggleServing = () => {
     this.setState(prevState => ({
@@ -104,6 +110,7 @@ class Match extends React.Component {
     createSetApi(set);
     this.setState({ startDisabled: true });
   };
+
 
   update_state = (data) => {
     this.setState(data);
@@ -135,6 +142,7 @@ class Match extends React.Component {
   updateLiveScore(newScore) {
     this.socket.send(JSON.stringify(newScore));
   }
+
 
   addScore = (num) => {
     let newPoints = null;

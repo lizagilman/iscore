@@ -1,8 +1,5 @@
 import React from 'react';
-import AppBar from 'material-ui/AppBar';
-import Tabs from 'material-ui/Tabs/Tabs';
-import Tab from 'material-ui/Tabs/Tab';
-import { withRouter } from 'react-router-dom';
+import ManagerHeader from '../tournaments_header/tournaments_header';
 
 const styles = {
   appBar: {
@@ -13,36 +10,36 @@ const styles = {
   },
 };
 
-class Header extends React.Component {
+export default class Header extends React.Component {
   constructor(props) {
     super(props);
-    this.handleCallToRouter = this.handleCallToRouter.bind(this);
   }
-
-  handleCallToRouter = (value) => {
-    this.props.history.push(value);
-  };
-
   render() {
-    return (
-      <AppBar
-        title={`iSCORE    Welcome ${this.props.first_name} ${this.props.last_name}`}
-        style={styles.appBar}
-        iconClassNameRight="muidocs-icon-navigation-expand-more"
-      >
-        <Tabs
-          style={styles.tabs}
-          value={this.props.history.location.pathname}
-          onChange={this.handleCallToRouter}
-        >
-          <Tab label="Tournaments" value={'/tournaments'} />
-          <Tab label="Rankings" value={'/rankings'} />
-          <Tab label="Points Distribution Methods" />
-          <Tab label="Money Distribution Methods" />
-        </Tabs>
-      </AppBar>
-    );
+    const first_name = localStorage.first_name;
+    const last_name = localStorage.last_name;
+
+    const coachHeader = <ManagerHeader is_manager={false} is_coach={true} first_name={first_name} last_name={last_name} />;
+    const managerHeader = <ManagerHeader is_manager={true} is_coach={false} first_name={first_name} last_name={last_name} />;
+    const notManagerHeader = <ManagerHeader is_manager={false} is_coach={false} first_name={first_name} last_name={last_name} />;
+
+
+    const choose_header = () => {
+      console.log('header');
+      switch (localStorage.type) {
+        case 'coach':
+          return coachHeader;
+        case 'manager':
+          return managerHeader;
+        case 'umpire':
+          return notManagerHeader;
+        case 'organization':
+          return notManagerHeader;
+        default:
+          return false;
+      }
+    };
+
+    return <div>{choose_header()}</div>;
   }
 }
 
-export default withRouter(Header);

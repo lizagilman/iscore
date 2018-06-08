@@ -219,6 +219,7 @@ export default class TournamentsTable extends React.Component {
 
     return (
       <div>
+        <div>{this.props.children}</div>
         {tournamentsTable}
         {modal}
       </div>
