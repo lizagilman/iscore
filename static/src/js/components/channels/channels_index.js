@@ -23,7 +23,7 @@ export default class ChannelsTest extends React.Component {
     //
     //
     let exampleSocket = new WebSocket(
-      "ws://localhost:8000/ws/iscore/match/168/"
+      "ws://iscore-app.herokuapp.com/ws/iscore/match/168/"
     );
     exampleSocket.onmessage = function(event,that=self) {
       console.log(event.data);
@@ -36,7 +36,7 @@ export default class ChannelsTest extends React.Component {
  {
         id: 1,
         current_set: 5,
-        current_game: 5,
+        current_game: 10,
         p1_set1: 0,
         p2_set1: 0,
         p1_set2: 0,
