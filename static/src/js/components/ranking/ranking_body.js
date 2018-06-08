@@ -35,17 +35,17 @@ const getFlagIcon = (countryCode) => {
       return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Austria.png';
     case 'SWE':
       return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Sweden.png';
-     case 'ROM':
+    case 'ROM':
       return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Romania.png';
-      case 'SWI':
+    case 'SWI':
       return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Switzerland.png';
-     case 'UK':
+    case 'UK':
       return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_United_Kingdom.png';
-      case 'UKR':
+    case 'UKR':
       return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Ukraine.png';
-      case 'LAT':
+    case 'LAT':
       return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Latvia.png';
-       case 'CHA':
+    case 'CHA':
       return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Chad.png';
     default:
       return false;

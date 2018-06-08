@@ -5,6 +5,7 @@ import {
   createTournamentApi,
 } from '../api';
 
+// TO-DO: move to dynamic manager id
 const initialState = {
   organization: null,
   is_ranked: false,
@@ -81,8 +82,7 @@ class WizardStore {
   getGrades() {
     const selectedRankingList = this.tournament.ranking_list;
     if (selectedRankingList && this.rankingLists) {
-      this.grades = this.rankingLists.filter(rankingList =>
-        rankingList.id === selectedRankingList)[0].grades;
+      this.grades = this.rankingLists.filter(rankingList => rankingList.id === selectedRankingList)[0].grades;
     }
   }
 
@@ -91,8 +91,7 @@ class WizardStore {
     const selectedRankingList = this.tournament.ranking_list;
 
     if (selectedRankingList && this.rankingLists) {
-      this.rankingListCategories = this.rankingLists.filter(rankingLists =>
-        rankingLists.id === selectedRankingList)[0].categories;
+      this.rankingListCategories = this.rankingLists.filter(rankingLists => rankingLists.id === selectedRankingList)[0].categories;
     }
   }
 

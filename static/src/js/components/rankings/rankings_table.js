@@ -11,9 +11,12 @@ import {
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import DeleteForever from 'material-ui/svg-icons/action/delete-forever';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
 import { inject, observer } from 'mobx-react';
 import { Link } from 'react-router-dom';
 import Spinner from '../spinner/spinner';
+import RankingListForm from './rankings_modal';
 
 const nameStyle = {
   paddingRight: '100px',
@@ -26,14 +29,24 @@ export default class RankingsTable extends React.Component {
     super(props);
 
     this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.saveNewRankingList = this.saveNewRankingList.bind(this);
     this.deleteRanking = this.deleteRanking.bind(this);
 
-    this.state = {};
+    this.state = { displayModal: false };
   }
 
-  openModal(e) {
-    e.preventDefault();
-    // TO-DO: implement create new ranking list ui
+  openModal() {
+    this.setState({ displayModal: true });
+  }
+
+  closeModal() {
+    this.setState({ displayModal: false });
+  }
+
+  saveNewRankingList() {
+    const { RankingsStore } = this.props.stores;
+    RankingsStore.createNewRankingList();
   }
 
   deleteRanking(e, id) {
@@ -101,6 +114,31 @@ export default class RankingsTable extends React.Component {
       </div>
     );
 
-    return <div>{rankingsTable}</div>;
+    const actions = [
+      <FlatButton label="Cancel" primary={true} onClick={this.closeModal} />,
+      <FlatButton
+        label="Submit"
+        primary={true}
+        onClick={this.saveNewRankingList}
+      />,
+    ];
+
+    const modal = (
+      <Dialog
+        title="Create Ranking List"
+        actions={actions}
+        modal={true}
+        open={this.state.displayModal}
+      >
+        <RankingListForm />
+      </Dialog>
+    );
+
+    return (
+      <div>
+        {rankingsTable}
+        {modal}
+      </div>
+    );
   }
 }

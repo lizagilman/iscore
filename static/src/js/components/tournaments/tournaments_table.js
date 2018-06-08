@@ -50,6 +50,7 @@ export default class TournamentsTable extends React.Component {
     const formateDate = dateFormat(date);
     return formateDate;
   }
+
   openModal() {
     this.setState({ displayModal: true });
   }

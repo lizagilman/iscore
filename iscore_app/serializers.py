@@ -42,7 +42,7 @@ class GradesSerializer(serializers.ModelSerializer):
 class GradesReaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Grades
-        fields = ['name', 'points', 'money']
+        fields = ['name', 'points', 'money','id']
         depth = 1
 
 
