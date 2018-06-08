@@ -90,7 +90,6 @@ WSGI_APPLICATION = 'iscore.wsgi.application'
 DATABASES = {
     'default': {
 
-
 }
 }
 

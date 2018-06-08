@@ -12,6 +12,7 @@ import {
 } from 'material-ui/Table';
 import Spinner from '../spinner/spinner';
 import MainCard from '../main_card/main_card_index';
+import UmpireMatches from './umpire_matches';
 
 const nameStyle = {
   paddingRight: '100px',
@@ -37,13 +38,19 @@ export default class UmpireTournaments extends React.Component {
     return formateDate;
   }
 
-  onLinkClick(id) {
+  onLinkClick(id, e) {
     const { UmpireStore } = this.props.stores;
 
     const selectedTournament = UmpireStore.getSingleTournament(id);
     UmpireStore.setCurrentTournament(selectedTournament);
-  }
 
+    this.props.setUrlContent(
+      e,
+      '/schedule',
+      `/umpire/tournament/${id}/matches`,
+      'UmpireMatches',
+    );
+  }
 
   componentWillMount() {
     const { UmpireStore } = this.props.stores;
@@ -59,55 +66,52 @@ export default class UmpireTournaments extends React.Component {
     const data = storedData ? mobx.toJS(storedData) : false;
 
     const createRow = (item, index) => (
-            <TableRow key={index}>
-                <TableRowColumn>
-                    <Link to={`/umpire/tournament/${item.id}/matches`}>
-                        <div style={nameStyle} onClick={() => this.onLinkClick(item.id)}>
-                            {item.name}
-                        </div>
-                    </Link>
-                </TableRowColumn>
-                <TableRowColumn>{item.field_of_sport}</TableRowColumn>
-                <TableRowColumn>{item.status}</TableRowColumn>
-                <TableRowColumn>{this.setDateTime(item.start_date)}</TableRowColumn>
-
-            </TableRow>
+      <TableRow key={index}>
+        <TableRowColumn>
+          <Link to={`/umpire/tournament/${item.id}/matches`}>
+            <div style={nameStyle} onClick={e => this.onLinkClick(item.id, e)}>
+              {item.name}
+            </div>
+          </Link>
+        </TableRowColumn>
+        <TableRowColumn>{item.field_of_sport}</TableRowColumn>
+        <TableRowColumn>{item.status}</TableRowColumn>
+        <TableRowColumn>{this.setDateTime(item.start_date)}</TableRowColumn>
+      </TableRow>
     );
 
     const tournamentsTable = (
-            <div>
-                <Table style={{ backgroundColor: '#ffffff' }}>
-                    <TableHeader displaySelectAll={false}>
-                        <TableRow>
-                            <TableHeaderColumn>Name</TableHeaderColumn>
-                            <TableHeaderColumn>Field Of Sport</TableHeaderColumn>
-                            <TableHeaderColumn>Status</TableHeaderColumn>
-                            <TableHeaderColumn>Dates</TableHeaderColumn>
-                            <TableHeaderColumn>Published</TableHeaderColumn>
-                            <TableHeaderColumn>Actions</TableHeaderColumn>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody displayRowCheckbox={false}>
-                        {data.length ? (
-                            data.map((tournament, index) => createRow(tournament, index))
-                        ) : (
-                            <div>{Spinner(70)}</div>
-                        )}
-                    </TableBody>
-                </Table>
-
-            </div>
+      <div>
+        <Table style={{ backgroundColor: '#ffffff' }}>
+          <TableHeader displaySelectAll={false}>
+            <TableRow>
+              <TableHeaderColumn>Name</TableHeaderColumn>
+              <TableHeaderColumn>Field Of Sport</TableHeaderColumn>
+              <TableHeaderColumn>Status</TableHeaderColumn>
+              <TableHeaderColumn>Dates</TableHeaderColumn>
+              <TableHeaderColumn>Published</TableHeaderColumn>
+              <TableHeaderColumn>Actions</TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody displayRowCheckbox={false}>
+            {data.length ? (
+              data.map((tournament, index) => createRow(tournament, index))
+            ) : (
+              <div>{Spinner(70)}</div>
+            )}
+          </TableBody>
+        </Table>
+      </div>
     );
 
     return (
-            <div>
-                <MainCard
-                    title={'Tournaments'}
-                    content={tournamentsTable}
-                    style={{ flex: 1, margin: '1vw 2vw 0 2vw' }}
-                />
-            </div>
+      <div>
+        <MainCard
+          title={'Tournaments'}
+          content={tournamentsTable}
+          style={{ flex: 1, margin: '1vw 2vw 0 2vw' }}
+        />
+      </div>
     );
   }
 }
-
