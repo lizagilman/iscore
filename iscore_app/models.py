@@ -247,6 +247,7 @@ class Score(models.Model):
 
 
 
+
 class Tournament_Managers(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(db_index=True, max_length=300)

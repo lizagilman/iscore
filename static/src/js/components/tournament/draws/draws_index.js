@@ -82,17 +82,16 @@ export default class Draws extends React.Component {
       if (this.state.currentStage === 'R16') {
         matches = DrawsStore.matchesR16.map(matchR16 =>
           Match(matchR16.player1, matchR16.player2, matchR16.winner));
-        nextMatches = DrawsStore.matchesQF.map(matchQF =>
-          NextMatch(
-            matchQF.player1
-              ? matchQF.player1
-              : `Winner of R16 ${++nextMatchCounter}`,
-            matchQF.player2
-              ? matchQF.player2
-              : `Winner of R16 ${++nextMatchCounter}`,
-            matchQF.winner,
-            this.state.nextStage,
-          ));
+        nextMatches = DrawsStore.matchesQF.map(matchQF => NextMatch(
+          matchQF.player1
+            ? matchQF.player1
+            : `Winner of R16 ${++nextMatchCounter}`,
+          matchQF.player2
+            ? matchQF.player2
+            : `Winner of R16 ${++nextMatchCounter}`,
+          matchQF.winner,
+          this.state.nextStage,
+        ));
       } else {
         matches = DrawsStore.matchesSF.map(matchSF =>
           Match(

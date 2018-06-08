@@ -82,16 +82,15 @@ class Match extends React.Component {
     this.setState({ startDisabled: true });
   };
 
-   componentWillMount(){
-    console.log("in willmount")
+  componentWillMount() {
+    console.log('in willmount');
     const { UmpireStore } = this.props.stores;
 
     const storedMatches = UmpireStore.matches;
 
-    const match=mobx.toJS(storedMatches.getSingleMatch());
-      console.log("match_id: ",match.id);
+    const match = mobx.toJS(storedMatches.getSingleMatch());
+    console.log('match_id: ', match.id);
   //  let websocket=new WebSocket(`ws://localhost:8000/ws/iscore/match/${match.id}/`);
-
   }
 
   addScore = (num) => {

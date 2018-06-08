@@ -74,7 +74,7 @@ class FirstStep extends React.Component {
           }
           floatingLabelText="Field of Sport"
         >
-          <MenuItem key={1} value={'Tennis'} primaryText={'Tennis'} />
+          <MenuItem key={1} value={'Tennis'} primaryText='Tennis' />
           <MenuItem key={2} value={'Judo'} primaryText="Judo" />
           <MenuItem key={3} value={'Badminton'} primaryText="Badminton" />
           <MenuItem key={4} value={'Table Tennis'} primaryText="Table Tennis" />
