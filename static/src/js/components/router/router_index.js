@@ -10,7 +10,8 @@ import Match from '../umpire/umpire_index';
 import UmpireMatches from '../umpire/umpire_matches';
 import UmpireTournaments from '../umpire/umpire_tournaments';
 import Header from '../header/header_index';
-
+import ScheduleCoach from '../coach/schedulePhone';
+import ScheduleCoachTournaments from '../coach/tournamentsPhone';
 
 const AppRouter = () => (
   <BrowserRouter>
@@ -32,6 +33,8 @@ const AppRouter = () => (
       <Route exact path="/tournament/:id" component={Tournament} />
       <Route exact path="/ranking/:id" component={Ranking} />
       <Route exact path="/coach" component={CoachPage} />
+      <Route exact path="/coach/tournaments" component={ScheduleCoachTournaments} />
+      <Route exact path="/coach/tournaments/:id" component={ScheduleCoach} />
     </div>
   </BrowserRouter>
 );
