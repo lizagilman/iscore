@@ -120,7 +120,7 @@ class Match extends React.Component {
     this.setState({ match_id: match.id });
     this.setState({ score: { ...this.state.score, match_id: match.id } });
 
-    this.socket = new WebSocket(`ws://iscore-app.herokuapp.com/ws/iscore/match/${match.id}/`);
+    this.socket = new WebSocket(`wss://iscore-app.herokuapp.com/ws/iscore/match/${match.id}/`);
 
     // recieve
 
