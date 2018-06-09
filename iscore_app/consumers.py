@@ -29,19 +29,22 @@ class MatchConsumer(WebsocketConsumer):
 
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
-        info=Score.objects.get(match_id=self.match_id)
-        new_score=ScoresSerializer(info,data=text_data_json)
+
+        data = text_data_json
+        data.pop('serving', None)
+        info = Score.objects.get(match_id=self.match_id)
+        new_score = ScoresSerializer(info, data=data)
         new_score.is_valid()
         new_score.save()
-
 
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
             {
                 'type': "score.info",
-                'message': new_score.data
+                'message': text_data_json
             },
         )
+
 
     # Receive message from room group
     def score_info(self, event):

@@ -77,6 +77,7 @@ class Match extends React.Component {
         p1_points: 0,
         p2_points: 0,
         match_id: null,
+        serving: null,
       },
     };
 
@@ -292,7 +293,7 @@ class Match extends React.Component {
                 <div class="col-md-12">
                   <FloatingActionButton
                     backgroundColor={
-                      this.state.serving === true ? 'yellow' : 'white'
+                      this.state.serving === true ? '#90ec2e' : '#ffffff'
                     }
                     style={styles.serveButton}
                     onClick={() => this.toggleServing()}
@@ -341,7 +342,7 @@ class Match extends React.Component {
                 <div className="col-md-12">
                   <FloatingActionButton
                     backgroundColor={
-                      this.state.serving === true ? 'white' : 'yellow'
+                      this.state.serving === true ? '#ffffff' : '#90ec2e'
                     }
                     style={styles.serveButton}
                     onClick={() => this.toggleServing()}
