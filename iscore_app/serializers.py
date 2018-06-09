@@ -8,7 +8,7 @@ class CatagoriesSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class PlayersSerializer(serializers.HyperlinkedModelSerializer):
+class PlayersSerializer(serializers.ModelSerializer):
     class Meta:
         model = Players
         fields = '__all__'

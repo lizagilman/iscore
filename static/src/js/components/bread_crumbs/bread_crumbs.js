@@ -34,7 +34,7 @@ class UmpireIndex extends React.Component {
       return <UmpireTournaments setUrlContent={this.setUrlContent} />;
     } else if (this.state.content === 'UmpireMatches') {
       return <UmpireMatches setUrlContent={this.setUrlContent} />;
-    } else if (this.state.content === 'Match') {
+    } else if (this.state.content === 'LiveMatch') {
       return (
         <MainCard
           content={<Match setUrlContent={this.setUrlContent} />}

@@ -11,6 +11,7 @@ import {
 } from 'material-ui/Table';
 import MainCard from '../main_card/main_card_index';
 import Spinner from '../spinner/spinner';
+import FlatButton from 'material-ui/FlatButton';
 
 const mobx = require('mobx');
 
@@ -93,20 +94,16 @@ export default class UmpireMatches extends React.Component {
   }
 
   onLinkClick(id, e) {
-    console.log('id:', id);
     const { UmpireStore } = this.props.stores;
 
     const storedMatches = UmpireStore.matches;
-
-    console.log('matches:', mobx.toJS(storedMatches)[0]);
 
     const singleMatch = mobx
       .toJS(storedMatches)[0]
       .find(match => match.id === id);
     UmpireStore.setSingleMatch(singleMatch);
-    console.log('singleMatch', singleMatch);
 
-    // this.props.setUrlContent(e, '/match', `/umpire/match/${id}`, 'Match');
+    this.props.setUrlContent(e, '/match', `/umpire/match/${id}`, 'LiveMatch');
   }
 
   updateMatch(e, matchId, winner) {
@@ -127,13 +124,12 @@ export default class UmpireMatches extends React.Component {
   render() {
     const { UmpireStore } = this.props.stores;
     const storedMatches = UmpireStore.matches;
-    console.log('matches:', mobx.toJS(storedMatches));
 
     const data =
       storedMatches && storedMatches.length > 0
         ? mobx.toJS(storedMatches)[0]
         : false;
-    console.log('data: ', data);
+
     const createRow = (match, index) => (
       <TableRow class={'row'} key={index}>
         <TableRowColumn
@@ -142,7 +138,7 @@ export default class UmpireMatches extends React.Component {
         >
           <Link to={`/umpire/match/${match.id}`}>
             <div onClick={e => this.onLinkClick(match.id, e)}>
-              <h3>START</h3>
+              <FlatButton label="Start Match" primary={true} />
             </div>
           </Link>
         </TableRowColumn>

@@ -4,54 +4,15 @@ import Paper from 'material-ui/Paper';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import RaisedButton from 'material-ui/RaisedButton';
-import { createSetApi } from '../../api';
 import MainCard from '../main_card/main_card_index';
+import * as LiveScore from './liveScore_consts';
+import { getPlayerIdByPlayerName, updateMatchWinnerApi } from '../../api';
 
 const mobx = require('mobx');
 
-const styles = {
-  serveButton: {
-    marginTop: '4%',
-  },
-  start: {
-    fontSize: '2em',
-  },
-  sets: {
-    margin: '2%',
-    color: 'white',
-    fontSize: '4em',
-    textAlign: 'center',
-  },
-  paperSetsSquares: {
-    height: '100%',
-    width: '100%',
-    backgroundColor: 'black',
-    margin: 'auto',
-  },
-  paperScore: {
-    height: '100%',
-    width: '40%',
-    backgroundColor: 'black',
-    margin: 'auto',
-  },
-
-  score: {
-    margin: '2%',
-    color: 'white',
-    fontSize: '6em',
-  },
-  addButton: {
-    height: '20%',
-    width: '20%',
-  },
-  minusButton: {
-    height: '10%',
-    width: '10%',
-  },
-};
 @inject('stores')
 @observer
-class Match extends React.Component {
+class LiveMatch extends React.Component {
   constructor(props) {
     super(props);
 
@@ -77,40 +38,31 @@ class Match extends React.Component {
         p1_points: 0,
         p2_points: 0,
         match_id: null,
-        serving: null,
+        serving: LiveScore.PLAYER_1,
+        winner: null,
       },
     };
 
     this.socket = null;
 
     this.toggleServing = this.toggleServing.bind(this);
-    this.addScore = this.addScore.bind(this);
-    this.subtractScore = this.subtractScore.bind(this);
+    this.updateScore = this.updateScore.bind(this);
     this.startMatch = this.startMatch.bind(this);
     this.updateLiveScore = this.updateLiveScore.bind(this);
-  }
-  componentWillMount() {
-    console.log('in willmount');
-    const { UmpireStore } = this.props.stores;
-    const match = mobx.toJS(UmpireStore.getSingleMatch());
-    console.log('match_id: ', match.id);
+    this.updateWinner = this.updateWinner.bind(this);
   }
 
   toggleServing = () => {
-    this.setState(prevState => ({
-      serving: !prevState.serving,
-    }));
+    const serving = this.state.score.serving;
+    const newScore = this.state.score;
+    newScore.serving =
+      serving === LiveScore.PLAYER_1 ? LiveScore.PLAYER_2 : LiveScore.PLAYER_1;
+    this.setState({ score: newScore });
   };
 
   startMatch = () => {
-    const set = {
-      set_num: '1',
-      Matches: '1',
-    };
-    createSetApi(set);
     this.setState({ startDisabled: true });
   };
-
 
   update_state = (data) => {
     this.setState(data);
@@ -123,10 +75,18 @@ class Match extends React.Component {
 
     const match = mobx.toJS(UmpireStore.getSingleMatch());
 
-    console.log('match_id: ', match.id);
+    getPlayerIdByPlayerName(match.player1).then((response) => {
+      LiveScore.PLAYER_1 = response[0].id;
+    });
+
+    getPlayerIdByPlayerName(match.player2).then((response) => {
+      LiveScore.PLAYER_2 = response[0].id;
+    });
 
     this.setState({ match_id: match.id });
     this.setState({ score: { ...this.state.score, match_id: match.id } });
+
+    console.log('gonna create new websocket');
 
     this.socket = new WebSocket(`wss://iscore-app.herokuapp.com/ws/iscore/match/${match.id}/`);
 
@@ -143,45 +103,84 @@ class Match extends React.Component {
     this.socket.send(JSON.stringify(newScore));
   }
 
-
-  addScore = (num) => {
+  updateScore = (player, current_points, operation) => {
     let newPoints = null;
-    let myScore = null;
-    if (num === 1) {
-      myScore = this.state.score.p1_points;
-    } else if (num === 2) {
-      myScore = this.state.score.p2_points;
-    }
-    switch (myScore) {
+    let endOfGame = null;
+
+    switch (current_points) {
       case 0: {
-        newPoints = 15;
+        newPoints = operation === LiveScore.ADD ? 15 : 0;
         break;
       }
       case 15: {
-        newPoints = 30;
+        newPoints = operation === LiveScore.ADD ? 30 : 0;
         break;
       }
       case 30: {
-        newPoints = 40;
+        newPoints = operation === LiveScore.ADD ? 40 : 15;
         break;
       }
       case 40: {
-        if (this.state.score.p1_points === this.state.score.p2_points) {
-          newPoints = 100;
-        } else {
-          newPoints = 60;
+        // 40 : 15
+
+        if (
+          (this.state.score.p1_points > this.state.score.p2_points ||
+            this.state.score.p1_points < this.state.score.p2_points) &&
+          (this.state.score.p1_points !== LiveScore.ADVANTAGE &&
+            this.state.score.p2_points !== LiveScore.ADVANTAGE)
+        ) {
+          if (operation === LiveScore.ADD) {
+            newPoints = 60;
+            endOfGame = true;
+          } else {
+            newPoints = 30;
+          }
         }
+
+        //  40 - 40
+
+        if (this.state.score.p1_points === this.state.score.p2_points) {
+          newPoints = operation === LiveScore.ADD ? LiveScore.ADVANTAGE : 30;
+        }
+
+        // 40 - AD
+
+        if (
+          player === LiveScore.PLAYER_1 &&
+          this.state.score.p2_points === LiveScore.ADVANTAGE
+        ) {
+          if (operation === LiveScore.ADD) {
+            player = LiveScore.PLAYER_2; // remove advantage from the other player (go back to 40 - 40)
+            newPoints = 40;
+          } else {
+            newPoints = 30;
+          }
+        } else if (
+          player === LiveScore.PLAYER_2 &&
+          this.state.score.p1_points === LiveScore.ADVANTAGE
+        ) {
+          if (operation === LiveScore.ADD) {
+            newPoints = 40; // remove advantage from the other player (go back to 40 - 40)
+            player = LiveScore.PLAYER_1;
+          } else {
+            newPoints = 30;
+          }
+        }
+
         break;
       }
 
-      case 100: {
-        newPoints = 60;
-        break;
-      }
+      case LiveScore.ADVANTAGE: {
+        // AD : 40
+        if (operation === LiveScore.ADD) {
+          // if +
+          endOfGame = true;
+          newPoints = 60;
+        } else {
+          // -
+          newPoints = 40;
+        }
 
-      case 60: {
-        newPoints = 60;
-        // TO-DO: update sets
         break;
       }
 
@@ -191,88 +190,121 @@ class Match extends React.Component {
       }
     }
 
-    let newScore = this.state.score;
+    const newScore = this.state.score;
 
-    if (newPoints && num === 1) {
-      newScore = { ...this.state.score, p1_points: newPoints };
-    } else if (newPoints && num === 2) {
-      newScore = { ...this.state.score, p2_points: newPoints };
+    if (!(newPoints == null)) {
+      // update player's points
+      player === LiveScore.PLAYER_1
+        ? (newScore.p1_points = newPoints)
+        : (newScore.p2_points = newPoints);
     }
+
+    if (!(endOfGame == null)) {
+      // if end of game
+      newScore.current_game = newScore.current_game += 1; // increase game counter
+
+      player === LiveScore.PLAYER_1
+        ? (newScore.p1_games += 1)
+        : (newScore.p2_games += 1); // increase player's game
+
+      newScore.p1_points = 0; // reset points
+      newScore.p2_points = 0;
+
+      if (this.state.score.serving === LiveScore.PLAYER_1) {
+        // toggle serving;
+        newScore.serving = LiveScore.PLAYER_2;
+      } else {
+        newScore.serving = LiveScore.PLAYER_1;
+      }
+
+      if (newScore.p1_games === 6 || this.state.score.p2_games === 6) {
+        // if end of set
+
+        // update final set score
+
+        switch (this.state.score.current_set) {
+          case 1:
+            newScore.p1_set1 = this.state.score.p1_games;
+            newScore.p2_set1 = this.state.score.p2_games;
+            break;
+          case 2:
+            newScore.p1_set2 = this.state.score.p1_games;
+            newScore.p2_set2 = this.state.score.p2_games;
+            break;
+          case 3:
+            newScore.p1_set3 = this.state.score.p1_games;
+            newScore.p2_set3 = this.state.score.p2_games;
+            break;
+        }
+
+        player === LiveScore.PLAYER_1
+          ? (newScore.p1_sets += 1)
+          : (newScore.p2_sets += 1); // increase player's set
+
+        if (newScore.p1_sets === 2) {
+          // if match ended
+          newScore.winner = LiveScore.PLAYER_1;
+          // api update match
+          this.updateWinner(LiveScore.PLAYER_1);
+        } else if (newScore.p2_sets === 2) {
+          newScore.winner = LiveScore.PLAYER_2;
+          // api update match
+          this.updateWinner(LiveScore.PLAYER_2);
+        } else {
+          newScore.current_set += 1; // init new set
+          newScore.p1_games = 0;
+          newScore.p2_games = 0;
+        }
+      }
+    }
+
+    console.log('n sc', newScore);
 
     this.setState({ score: newScore });
 
     this.updateLiveScore(newScore);
   };
 
-  subtractScore = (num) => {
-    let newPoints = null;
-    let myScore = null;
-
-    if (num === 1) {
-      myScore = this.state.score.p1_points;
-    } else if (num === 2) {
-      myScore = this.state.score.p2_points;
-    }
-
-    switch (myScore) {
-      case 0: {
-        newPoints = 0;
-        break;
-      }
-      case 15: {
-        newPoints = 0;
-        break;
-      }
-      case 30: {
-        newPoints = 15;
-        break;
-      }
-      case 40: {
-        newPoints = 30;
-        break;
-      }
-      case 100: {
-        newPoints = 40;
-        break;
-      }
-      case 60: {
-        newPoints = 60;
-        break;
-      }
-      default: {
-        break;
-      }
-    }
-
-    let newScore = this.state.score;
-
-    if (newPoints && num === 1) {
-      newScore = { ...this.state.score, p1_points: newPoints };
-    } else if (newPoints && num === 2) {
-      newScore = { ...this.state.score, p2_points: newPoints };
-    }
-
-    this.setState({ score: newScore });
-
-    this.updateLiveScore(newScore);
-  };
+  updateWinner(playerId) {
+    updateMatchWinnerApi(this.state.score.match_id, playerId).then((responseUpdate) => {
+      responseUpdate.status > 400
+        ? alert('Winner Update failed')
+        : alert('Winner Updated');
+    });
+  }
 
   render() {
     const { UmpireStore } = this.props.stores;
     const match = mobx.toJS(UmpireStore.getSingleMatch());
 
-    const Match = (
+    const liveMatch = (
       <div>
         <div className="row">
+          {/* players points */}
+
           <div className="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-            <Paper className={'paper'} id={'player1Score'} zDepth={2}>
+            {/* player 1 points */}
+
+            <Paper
+              className={`paper ${
+                this.state.score.winner === LiveScore.PLAYER_1 ? 'win' : ''
+              }`}
+              id={'player1Score'}
+              zDepth={2}
+            >
               <div class="row">
                 <div className="col-md-3">
                   <FloatingActionButton
                     backgroundColor={'red'}
                     mini={true}
-                    className={styles.minusButton}
-                    onClick={() => this.subtractScore(1)}
+                    className={LiveScore.styles.minusButton}
+                    onClick={() =>
+                      this.updateScore(
+                        LiveScore.PLAYER_1,
+                        this.state.score.p1_points,
+                        LiveScore.SUBTRACT,
+                      )
+                    }
                   >
                     <h1>-</h1>
                   </FloatingActionButton>
@@ -283,45 +315,73 @@ class Match extends React.Component {
                 <div className="col-md-3">
                   <FloatingActionButton
                     backgroundColor={'rgb(0, 150, 136)'}
-                    className={styles.addButton}
-                    onClick={() => this.addScore(1)}
+                    className={LiveScore.styles.addButton}
+                    onClick={() =>
+                      this.updateScore(
+                        LiveScore.PLAYER_1,
+                        this.state.score.p1_points,
+                        LiveScore.ADD,
+                      )
+                    }
                   >
                     <ContentAdd />
                   </FloatingActionButton>
                 </div>
                 <div class="col-md-12">
-                  <Paper style={styles.paperScore}>
-                    <h1 style={styles.score}>
-                      {this.state.score.p1_points === 100
+                  <Paper style={LiveScore.styles.paperScore}>
+                    <h1 style={LiveScore.styles.score}>
+                      {this.state.score.p1_points === LiveScore.ADVANTAGE
                         ? 'AD'
                         : this.state.score.p1_points}
                     </h1>
                   </Paper>
                 </div>
                 <div class="col-md-12">
-                  <FloatingActionButton
-                    backgroundColor={
-                      this.state.serving === true ? '#90ec2e' : '#ffffff'
-                    }
-                    style={styles.serveButton}
-                    onClick={() => this.toggleServing()}
-                  >
-                    {this.state.serving === true ? <h5>🎾</h5> : ''}
-                  </FloatingActionButton>
+                  {/* player 1 serving button */}
+
+                  {this.state.score.serving === LiveScore.PLAYER_1 ? (
+                    <FloatingActionButton
+                      backgroundColor={'#90ec2e'}
+                      style={LiveScore.styles.serveButton}
+                      onClick={() => this.toggleServing()}
+                    >
+                      <h5>🎾</h5>
+                    </FloatingActionButton>
+                  ) : (
+                    <FloatingActionButton
+                      backgroundColor={'#ffffff'}
+                      style={LiveScore.styles.serveButton}
+                      onClick={() => this.toggleServing()}
+                    />
+                  )}
                 </div>
               </div>
             </Paper>
           </div>
 
+          {/* player 2 points */}
+
           <div className="col-lg-6 col-md-12 col-sm-12 col-xs-12">
-            <Paper className={'paper'} id={'player2Score'} zDepth={2}>
+            <Paper
+              className={`paper ${
+                this.state.score.winner === LiveScore.PLAYER_2 ? 'win' : ''
+              }`}
+              id={'player2Score'}
+              zDepth={2}
+            >
               <div class="row">
                 <div className="col-md-3">
                   <FloatingActionButton
                     backgroundColor={'red'}
                     mini={true}
-                    className={styles.minusButton}
-                    onClick={() => this.subtractScore(2)}
+                    className={LiveScore.styles.minusButton}
+                    onClick={() =>
+                      this.updateScore(
+                        LiveScore.PLAYER_2,
+                        this.state.score.p2_points,
+                        LiveScore.SUBTRACT,
+                      )
+                    }
                   >
                     <h1>-</h1>
                   </FloatingActionButton>
@@ -332,36 +392,50 @@ class Match extends React.Component {
                 <div className="col-md-3">
                   <FloatingActionButton
                     backgroundColor={'rgb(0, 150, 136)'}
-                    className={styles.addButton}
-                    onClick={() => this.addScore(2)}
+                    className={LiveScore.styles.addButton}
+                    onClick={() =>
+                      this.updateScore(
+                        LiveScore.PLAYER_2,
+                        this.state.score.p2_points,
+                        LiveScore.ADD,
+                      )
+                    }
                   >
                     <ContentAdd />
                   </FloatingActionButton>
                 </div>
                 <div class="col-md-12">
-                  <Paper style={styles.paperScore}>
-                    <h1 style={styles.score}>
-                      {this.state.score.p2_points === 100
+                  <Paper style={LiveScore.styles.paperScore}>
+                    <h1 style={LiveScore.styles.score}>
+                      {this.state.score.p2_points === LiveScore.ADVANTAGE
                         ? 'AD'
                         : this.state.score.p2_points}
                     </h1>
                   </Paper>
                 </div>
                 <div className="col-md-12">
-                  <FloatingActionButton
-                    backgroundColor={
-                      this.state.serving === true ? '#ffffff' : '#90ec2e'
-                    }
-                    style={styles.serveButton}
-                    onClick={() => this.toggleServing()}
-                  >
-                    {this.state.serving === true ? '' : <h5>🎾</h5>}
-                  </FloatingActionButton>
+                  {this.state.score.serving === LiveScore.PLAYER_2 ? (
+                    <FloatingActionButton
+                      backgroundColor={'#90ec2e'}
+                      style={LiveScore.styles.serveButton}
+                      onClick={() => this.toggleServing()}
+                    >
+                      <h5>🎾</h5>
+                    </FloatingActionButton>
+                  ) : (
+                    <FloatingActionButton
+                      backgroundColor={'#ffffff'}
+                      style={LiveScore.styles.serveButton}
+                      onClick={() => this.toggleServing()}
+                    />
+                  )}
                 </div>
               </div>
             </Paper>
           </div>
         </div>
+
+        {/* sets */}
 
         <Paper className={'setsMatch'} id={'sets'} zDepth={2}>
           <div className="row">
@@ -373,65 +447,96 @@ class Match extends React.Component {
                     <div className="col-md-4">
                       <div className="row">
                         <div className="col-md-12">
-                          <Paper style={styles.paperSetsSquares}>
-                            <h1 style={styles.sets}>
-                              {this.state.score.p1_set1}
+                          {/* set 1 */}
+
+                          <Paper style={LiveScore.styles.paperSetsSquares}>
+                            <h1 style={LiveScore.styles.sets}>
+                              {this.state.score.current_set === 1
+                                ? this.state.score.p1_games
+                                : this.state.score.p1_set1}
                             </h1>
                           </Paper>
                         </div>
                         <div className="col-md-12">
-                          <Paper style={styles.paperSetsSquares}>
-                            <h1 style={styles.sets}>
-                              {this.state.score.p2_set1}
+                          <Paper style={LiveScore.styles.paperSetsSquares}>
+                            <h1 style={LiveScore.styles.sets}>
+                              {this.state.score.current_set === 1
+                                ? this.state.score.p2_games
+                                : this.state.score.p2_set1}
                             </h1>
                           </Paper>
                         </div>
                       </div>
                     </div>
-                    <div className="col-md-4">
-                      <div className="row">
-                        <div className="col-md-12">
-                          <Paper style={styles.paperSetsSquares}>
-                            <h1 style={styles.sets}>
-                              {this.state.score.p1_set2}
-                            </h1>
-                          </Paper>
-                        </div>
-                        <div className="col-md-12">
-                          <Paper style={styles.paperSetsSquares}>
-                            <h1 style={styles.sets}>
-                              {this.state.score.p1_set2}
-                            </h1>
-                          </Paper>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-4">
-                      <div className="row">
-                        <div className="col-md-12">
-                          <Paper style={styles.paperSetsSquares}>
-                            <h1 style={styles.sets}>
-                              {this.state.score.p1_set3}
-                            </h1>
-                          </Paper>
-                        </div>
-                        <div className="col-md-12">
-                          <Paper style={styles.paperSetsSquares}>
-                            <h1 style={styles.sets}>
-                              {this.state.score.p2_set3}
-                            </h1>
-                          </Paper>
+
+                    {/* set 2 */}
+
+                    {this.state.score.current_set > 1 ? (
+                      <div className="col-md-4">
+                        <div className="row">
+                          <div className="col-md-12">
+                            <Paper style={LiveScore.styles.paperSetsSquares}>
+                              <h1 style={LiveScore.styles.sets}>
+                                {this.state.score.current_set === 2
+                                  ? this.state.score.p1_games
+                                  : this.state.score.p1_set2}
+                              </h1>
+                            </Paper>
+                          </div>
+                          <div className="col-md-12">
+                            <Paper style={LiveScore.styles.paperSetsSquares}>
+                              <h1 style={LiveScore.styles.sets}>
+                                {this.state.score.current_set === 2
+                                  ? this.state.score.p2_games
+                                  : this.state.score.p2_set2}
+                              </h1>
+                            </Paper>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    ) : (
+                      false
+                    )}
+
+                    {/* set 3 */}
+
+                    {this.state.score.current_set > 2 ? (
+                      <div className="col-md-4">
+                        <div className="row">
+                          <div className="col-md-12">
+                            <Paper style={LiveScore.styles.paperSetsSquares}>
+                              <h1 style={LiveScore.styles.sets}>
+                                {this.state.score.current_set === 3
+                                  ? this.state.score.p1_games
+                                  : this.state.score.p1_set3}
+                              </h1>
+                            </Paper>
+                          </div>
+                          <div className="col-md-12">
+                            <Paper style={LiveScore.styles.paperSetsSquares}>
+                              <h1 style={LiveScore.styles.sets}>
+                                {this.state.score.current_set === 3
+                                  ? this.state.score.p2_games
+                                  : this.state.score.p2_set3}
+                              </h1>
+                            </Paper>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      false
+                    )}
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* match duration */}
+
             <div className="col-lg-4 col-md-12 col-sm-12 col-xs-12">
               <div className={'row'}>
                 <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  <h2>time:</h2>
+                  <h2>Match Duration:</h2>
                 </div>
                 <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                   <h3>1:56</h3>
@@ -441,7 +546,7 @@ class Match extends React.Component {
                     label="Start Match"
                     secondary={true}
                     disabled={this.state.startDisabled}
-                    labelStyle={styles.start}
+                    labelStyle={LiveScore.styles.start}
                     onClick={() => this.startMatch()}
                   />
                 </div>
@@ -454,10 +559,10 @@ class Match extends React.Component {
 
     return (
       <div>
-        <MainCard title={'Matches'} content={Match} />
+        <MainCard title={'Matches'} content={liveMatch} />
       </div>
     );
   }
 }
 
-export default Match;
+export default LiveMatch;

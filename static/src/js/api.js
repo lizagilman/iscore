@@ -78,9 +78,7 @@ export function createRankingListApi(rankingList) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(rankingList)
-  }).then(response => {
-    return response.json();
-  });
+  }).then(response => response);
 }
 
 export const getOrganizationBySports = fieldOfSports =>
@@ -270,6 +268,9 @@ export const getAllMatchesByTournamentIDApi = tournID =>
   fetch(`/api/Matches/?category__tournamet=${tournID}`).then(response =>
     response.json()
   );
+
+export const getPlayerIdByPlayerName = playerName =>
+  fetch(`/api/Players/?name=${playerName}`).then(response => response.json());
 
 ////////////////////////////////////////////
 
