@@ -29,9 +29,9 @@ class MatchConsumer(WebsocketConsumer):
 
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
-
         data = text_data_json
         data.pop('serving', None)
+        print(data)
         info = Score.objects.get(match_id=self.match_id)
         new_score = ScoresSerializer(info, data=data)
         new_score.is_valid()
