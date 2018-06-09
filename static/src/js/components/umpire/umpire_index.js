@@ -56,16 +56,37 @@ class Match extends React.Component {
     super(props);
 
     this.state = {
-      player1Score: 0,
-      player2Score: 0,
       startDisabled: false,
       serving: false,
+      score: {
+        current_set: 1,
+        current_game: 1,
+        p1_set1: 0,
+        p2_set1: 0,
+        p1_set2: 0,
+        p2_set2: 0,
+        p1_set3: 0,
+        p2_set3: 0,
+        p1_set4: 0,
+        p1_set5: 0,
+        p2_set5: 0,
+        p1_sets: 0,
+        p2_sets: 0,
+        p1_games: 0,
+        p2_games: 0,
+        p1_points: 0,
+        p2_points: 0,
+        match_id: null,
+      },
     };
+
+    this.socket = null;
 
     this.toggleServing = this.toggleServing.bind(this);
     this.addScore = this.addScore.bind(this);
     this.subtractScore = this.subtractScore.bind(this);
     this.startMatch = this.startMatch.bind(this);
+    this.updateLiveScore = this.updateLiveScore.bind(this);
   }
 
   toggleServing = () => {
@@ -73,6 +94,7 @@ class Match extends React.Component {
       serving: !prevState.serving,
     }));
   };
+
   startMatch = () => {
     const set = {
       set_num: '1',
@@ -82,119 +104,154 @@ class Match extends React.Component {
     this.setState({ startDisabled: true });
   };
 
+  update_state = (data) => {
+    this.setState(data);
+  };
+
   componentWillMount() {
-    console.log('in willmount');
+    const self = this;
+
     const { UmpireStore } = this.props.stores;
 
-    const storedMatches = UmpireStore.matches;
+    const match = mobx.toJS(UmpireStore.getSingleMatch());
 
-    const match = mobx.toJS(storedMatches.getSingleMatch());
     console.log('match_id: ', match.id);
-  //  let websocket=new WebSocket(`ws://localhost:8000/ws/iscore/match/${match.id}/`);
+
+    this.setState({ match_id: match.id });
+    this.setState({ score: { ...this.state.score, match_id: match.id } });
+
+    this.socket = new WebSocket(`ws://iscore-app.herokuapp.com/ws/iscore/match/${match.id}/`);
+
+    // recieve
+
+    this.socket.onmessage = function (event, that = self) {
+      const score = JSON.parse(event.data).message;
+
+      that.update_state({ score });
+    };
+  }
+
+  updateLiveScore(newScore) {
+    this.socket.send(JSON.stringify(newScore));
   }
 
   addScore = (num) => {
-    let newScore = null;
+    let newPoints = null;
     let myScore = null;
     if (num === 1) {
-      myScore = this.state.player1Score;
+      myScore = this.state.score.p1_points;
     } else if (num === 2) {
-      myScore = this.state.player2Score;
+      myScore = this.state.score.p2_points;
     }
     switch (myScore) {
       case 0: {
-        newScore = 15;
-        break;
-      }
-      case '0': {
-        newScore = 15;
+        newPoints = 15;
         break;
       }
       case 15: {
-        newScore = 30;
+        newPoints = 30;
         break;
       }
       case 30: {
-        newScore = 40;
+        newPoints = 40;
         break;
       }
       case 40: {
-        newScore = 'AD';
+        if (this.state.score.p1_points === this.state.score.p2_points) {
+          newPoints = 100;
+        } else {
+          newPoints = 60;
+        }
         break;
       }
-      case 'AD': {
-        newScore = 60;
+
+      case 100: {
+        newPoints = 60;
         break;
       }
+
       case 60: {
-        newScore = 60;
+        newPoints = 60;
+        // TO-DO: update sets
         break;
       }
+
       default: {
         console.log('Invalid choice');
         break;
       }
     }
-    if (newScore && num === 1) {
-      this.setState({ player1Score: newScore });
-    } else if (newScore && num === 2) {
-      this.setState({ player2Score: newScore });
+
+    let newScore = this.state.score;
+
+    if (newPoints && num === 1) {
+      newScore = { ...this.state.score, p1_points: newPoints };
+    } else if (newPoints && num === 2) {
+      newScore = { ...this.state.score, p2_points: newPoints };
     }
+
+    this.setState({ score: newScore });
+
+    this.updateLiveScore(newScore);
   };
 
   subtractScore = (num) => {
-    let newScore = null;
+    let newPoints = null;
     let myScore = null;
+
     if (num === 1) {
-      myScore = this.state.player1Score;
+      myScore = this.state.score.p1_points;
     } else if (num === 2) {
-      myScore = this.state.player2Score;
+      myScore = this.state.score.p2_points;
     }
+
     switch (myScore) {
       case 0: {
-        newScore = '0';
-        break;
-      }
-      case '0': {
-        newScore = '0';
+        newPoints = 0;
         break;
       }
       case 15: {
-        newScore = '0';
+        newPoints = 0;
         break;
       }
       case 30: {
-        newScore = 15;
+        newPoints = 15;
         break;
       }
       case 40: {
-        newScore = 30;
+        newPoints = 30;
         break;
       }
-      case 'AD': {
-        newScore = 40;
+      case 100: {
+        newPoints = 40;
         break;
       }
       case 60: {
-        newScore = 60;
+        newPoints = 60;
         break;
       }
       default: {
-        console.log('Invalid choice');
         break;
       }
     }
-    if (newScore && num === 1) {
-      this.setState({ player1Score: newScore });
-    } else if (newScore && num === 2) {
-      this.setState({ player2Score: newScore });
+
+    let newScore = this.state.score;
+
+    if (newPoints && num === 1) {
+      newScore = { ...this.state.score, p1_points: newPoints };
+    } else if (newPoints && num === 2) {
+      newScore = { ...this.state.score, p2_points: newPoints };
     }
+
+    this.setState({ score: newScore });
+
+    this.updateLiveScore(newScore);
   };
+
   render() {
     const { UmpireStore } = this.props.stores;
     const match = mobx.toJS(UmpireStore.getSingleMatch());
 
-    console.log('match :', match);
     const Match = (
       <div>
         <div className="row">
@@ -225,7 +282,11 @@ class Match extends React.Component {
                 </div>
                 <div class="col-md-12">
                   <Paper style={styles.paperScore}>
-                    <h1 style={styles.score}>{this.state.player1Score}</h1>
+                    <h1 style={styles.score}>
+                      {this.state.score.p1_points === 100
+                        ? 'AD'
+                        : this.state.score.p1_points}
+                    </h1>
                   </Paper>
                 </div>
                 <div class="col-md-12">
@@ -251,7 +312,7 @@ class Match extends React.Component {
                     backgroundColor={'red'}
                     mini={true}
                     className={styles.minusButton}
-                    onClick={() => this.subtractScore(1)}
+                    onClick={() => this.subtractScore(2)}
                   >
                     <h1>-</h1>
                   </FloatingActionButton>
@@ -270,7 +331,11 @@ class Match extends React.Component {
                 </div>
                 <div class="col-md-12">
                   <Paper style={styles.paperScore}>
-                    <h1 style={styles.score}>{this.state.player2Score}</h1>
+                    <h1 style={styles.score}>
+                      {this.state.score.p2_points === 100
+                        ? 'AD'
+                        : this.state.score.p2_points}
+                    </h1>
                   </Paper>
                 </div>
                 <div className="col-md-12">
@@ -300,26 +365,16 @@ class Match extends React.Component {
                       <div className="row">
                         <div className="col-md-12">
                           <Paper style={styles.paperSetsSquares}>
-                            <h1 style={styles.sets}>6</h1>
+                            <h1 style={styles.sets}>
+                              {this.state.score.p1_set1}
+                            </h1>
                           </Paper>
                         </div>
                         <div className="col-md-12">
                           <Paper style={styles.paperSetsSquares}>
-                            <h1 style={styles.sets}>4</h1>
-                          </Paper>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="col-md-4">
-                      <div className="row">
-                        <div className="col-md-12">
-                          <Paper style={styles.paperSetsSquares}>
-                            <h1 style={styles.sets}>6</h1>
-                          </Paper>
-                        </div>
-                        <div className="col-md-12">
-                          <Paper style={styles.paperSetsSquares}>
-                            <h1 style={styles.sets}>4</h1>
+                            <h1 style={styles.sets}>
+                              {this.state.score.p2_set1}
+                            </h1>
                           </Paper>
                         </div>
                       </div>
@@ -328,12 +383,34 @@ class Match extends React.Component {
                       <div className="row">
                         <div className="col-md-12">
                           <Paper style={styles.paperSetsSquares}>
-                            <h1 style={styles.sets}>6</h1>
+                            <h1 style={styles.sets}>
+                              {this.state.score.p1_set2}
+                            </h1>
                           </Paper>
                         </div>
                         <div className="col-md-12">
                           <Paper style={styles.paperSetsSquares}>
-                            <h1 style={styles.sets}>4</h1>
+                            <h1 style={styles.sets}>
+                              {this.state.score.p1_set2}
+                            </h1>
+                          </Paper>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="col-md-4">
+                      <div className="row">
+                        <div className="col-md-12">
+                          <Paper style={styles.paperSetsSquares}>
+                            <h1 style={styles.sets}>
+                              {this.state.score.p1_set3}
+                            </h1>
+                          </Paper>
+                        </div>
+                        <div className="col-md-12">
+                          <Paper style={styles.paperSetsSquares}>
+                            <h1 style={styles.sets}>
+                              {this.state.score.p2_set3}
+                            </h1>
                           </Paper>
                         </div>
                       </div>

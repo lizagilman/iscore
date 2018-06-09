@@ -9,16 +9,12 @@ import LogIn from '../login/login_index';
 import Match from '../umpire/umpire_index';
 import UmpireMatches from '../umpire/umpire_matches';
 import UmpireTournaments from '../umpire/umpire_tournaments';
-
 import UmpireIndex from '../umpire/u_index';
-
-import ChannelsTest from '../channels/channels_index';
-
 
 const AppRouter = () => (
   <Router>
     <div>
-         <Route exact path="/umpire/index" component={UmpireIndex} />
+      <Route exact path="/umpire/index" component={UmpireIndex} />
       <Route exact path="/umpire/tournaments" component={UmpireTournaments} />
       <Route
         exact
@@ -32,7 +28,6 @@ const AppRouter = () => (
       <Route exact path="/tournament/:id" component={Tournament} />
       <Route exact path="/ranking/:id" component={Ranking} />
       <Route exact path="/coach" component={CoachPage} />
-      <Route exact path="/channels" component={ChannelsTest} />
     </div>
   </Router>
 );
