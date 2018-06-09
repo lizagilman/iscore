@@ -23,12 +23,18 @@ export default class ChannelsTest extends React.Component {
     //
     //
     const exampleSocket = new WebSocket('ws://iscore-app.herokuapp.com/ws/iscore/match/168/');
+
+    // recieve
+
     exampleSocket.onmessage = function (event, that = self) {
       console.log(event.data);
       const score = JSON.parse(event.data).message;
 
       that.update_state({ set: score.current_set, game: score.current_game });
     };
+
+
+    // send
 
     const msg =
  {
