@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db.models import Q
 from iscore_app.serializers import RankedPlayersReaderSerializer
+import pandas as pd
 
 
 @api_view(['GET'])
@@ -131,6 +132,43 @@ def retrieve_ranking_list(request):
         data["list"][category.name] = list.data
 
     return Response(data)
+
+
+@api_view(['POST'])
+def import_ranking_list_from_file(request):
+
+    req_file = request.FILES["ranking_list"]
+    list=Ranking_Lists.objects.get(pk=request.data['id'])
+    categories=list.categories.all()
+
+    ranked_players=RankedPlayers.objects.filter(list=list)
+
+    if(ranked_players!=None):
+        ranked_players.delete()
+
+    for category in categories:
+        wb = pd.read_excel(req_file,sheet_name=category.name)
+        for i in range (len(wb['rank'])):
+            player_name=wb['name'][i]
+            if(Players.objects.filter(name=player_name).exists()):
+                player=Players.objects.filter(name=player_name)[0]
+            else:
+                nationality = wb['nationality'][i]
+                gender=wb['gender'][i]
+                player=Players(name=player_name,nationality=nationality,gender=gender)
+                player.save()
+
+            rank=wb['rank'][i]
+            points=wb['points'][i]
+            tournaments_played=wb['tournament_played'][i]
+            new_ranked_player=RankedPlayers(list=list,player=player,category=category,points=points,rank=rank,tournaments_played=tournaments_played)
+            new_ranked_player.save()
+
+
+    data=RankedPlayers.objects.filter(list=list).order_by('category','rank')
+    send_data=RankedPlayersReaderSerializer(data=data,many=True)
+    send_data.is_valid()
+    return Response(send_data.data)
 
 
 class List_Category():

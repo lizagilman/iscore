@@ -2,6 +2,7 @@ import React from 'react';
 import SelectField from 'material-ui/SelectField';
 import TextField from 'material-ui/TextField';
 import MenuItem from 'material-ui/MenuItem';
+import FlatButton from 'material-ui/FlatButton';
 import { inject, observer } from 'mobx-react';
 import * as mobx from 'mobx';
 
@@ -13,6 +14,7 @@ class RankingListForm extends React.Component {
     this.handleRankingListNameChange = this.handleRankingListNameChange.bind(this);
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
     this.handleGradesChange = this.handleGradesChange.bind(this);
+    this.handleFileChange = this.handleFileChange.bind(this);
 
     this.state = {
       rankingListCategories: [],
@@ -37,6 +39,13 @@ class RankingListForm extends React.Component {
     this.setState({ rankingListGrades });
     const { RankingsStore } = this.props.stores;
     RankingsStore.setRankingListGrades(rankingListGrades);
+  }
+
+  handleFileChange(e) {
+    console.log('up');
+    e.preventDefault();
+    const { RankingsStore } = this.props.stores;
+    RankingsStore.setFileToUpload(e.target.files[0]);
   }
 
   // eslint-disable-next-line
@@ -119,6 +128,15 @@ class RankingListForm extends React.Component {
             />
           )}
         </SelectField>
+        <div>
+          <FlatButton
+            label="Import from file"
+            labelPosition="before"
+            containerElement="label"
+          >
+            <input type="file" onChange={e => this.handleFileChange(e)} />
+          </FlatButton>
+        </div>
       </div>
     );
   }
