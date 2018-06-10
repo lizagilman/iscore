@@ -91,6 +91,7 @@ WSGI_APPLICATION = 'iscore.wsgi.application'
 
 DATABASES = {
     'default': {
+        'CONN_MAX_H': 500,
     }
 }
 
