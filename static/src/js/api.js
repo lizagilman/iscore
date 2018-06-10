@@ -78,7 +78,9 @@ export function createRankingListApi(rankingList) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(rankingList)
-  }).then(response => response);
+  }).then(response => {
+    return response.json();
+  });
 }
 
 export const getOrganizationBySports = fieldOfSports =>
@@ -271,8 +273,6 @@ export const getAllMatchesByTournamentIDApi = tournID =>
 
 ////////////////////////////////////////////
 
-
-
 //////////////////////////////tournament categories
 export const getTournamentCategoriesByTournament = tournamentId =>
   fetch(`/api/TournamentCategories/?tournamet=${tournamentId}`).then(response =>
@@ -311,7 +311,6 @@ export function editGameApi(game) {
   }).then(response => response);
 }
 
-
 export function deleteGameApi(id) {
   return fetch(`/api/Games/${id}/`, {
     method: "Delete",
@@ -323,9 +322,7 @@ export function deleteGameApi(id) {
 }
 
 export function getAllGamesBySetIdApi(setId) {
-  return fetch(`/api/Games/?set=${setId}`).then(response =>
-    response.json()
-  );
+  return fetch(`/api/Games/?set=${setId}`).then(response => response.json());
 }
 
 //////////////////////////////
@@ -441,4 +438,21 @@ export function editUserApi(user) {
     },
     body: JSON.stringify(user)
   }).then(response => response);
+}
+
+export function uploadRankingListFileApi(rankingListId, file) {
+  let data = new FormData();
+  data.append("ranking_list", file);
+  data.append("id", rankingListId);
+
+  return fetch("/import_ranking_list/", {
+    method: "POST",
+    mode: "cors",
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Headers":
+        "Origin, X-Requested-With, Content-Type, Accept"
+    },
+    body: data
+  }).then(response => response.json());
 }

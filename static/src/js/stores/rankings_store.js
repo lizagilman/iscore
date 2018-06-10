@@ -4,6 +4,7 @@ import {
   createRankingListApi,
   getGradesByOrganization,
   getCategoriesByOrganization,
+  uploadRankingListFileApi,
 } from '../api';
 
 // TO-DO: move to dynamic organization id
@@ -21,6 +22,7 @@ class RankingsStore {
   @observable rankingListGrades = null;
   @observable organizationCategories = null;
   @observable organizationGrades = null;
+  @observable fileToUpload = null;
 
   @action
   // TO-DO: move to fully dynamic id
@@ -38,10 +40,12 @@ class RankingsStore {
   createNewRankingList() {
     const newRankingList = this.rankingListToCreate;
     createRankingListApi(newRankingList).then((response) => {
-      if (response.status >= 400) {
-        alert('failed');
-      } else {
+      if (response) {
+        // TO-DO: handle then
+        uploadRankingListFileApi(response.id, this.fileToUpload);
         alert('success');
+      } else {
+        alert('fail');
       }
     });
   }
@@ -84,6 +88,8 @@ class RankingsStore {
       }
     });
   };
+
+  @action setFileToUpload = file => (this.fileToUpload = file);
 }
 
 const rankingsStore = new RankingsStore();

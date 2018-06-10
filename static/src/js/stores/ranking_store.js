@@ -22,8 +22,7 @@ class RankingStore {
     this.rankingListMetaData = rankingList;
   };
 
-  @action
-  getPlayersRankings = () => this.playersRankings;
+  @action getPlayersRankings = () => this.playersRankings;
 }
 
 const rankingStore = new RankingStore();
