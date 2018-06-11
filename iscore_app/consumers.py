@@ -49,10 +49,8 @@ class MatchConsumer(AsyncWebsocketConsumer):
                 "p2_points": text_data_json["p2_points"],
                 "match_id": self.match_id,
                  }
-        new_score=ScoresSerializer(info,data=data)
-        new_score.is_valid()
-        new_score.save()
 
+        database_sync_to_async(self.save_to_db(data,info))
 
         await self.channel_layer.group_send(
             self.match_group_name,
@@ -74,5 +72,11 @@ class MatchConsumer(AsyncWebsocketConsumer):
 
     def get_score(self):
         return Score.objects.get(match_id=self.match_id)
+
+    def save_to_db(self,data,instance):
+
+        new_score=ScoresSerializer(instance,data=data)
+        new_score.is_valid()
+        new_score.save()
 
 
