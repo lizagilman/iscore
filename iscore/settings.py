@@ -92,7 +92,8 @@ WSGI_APPLICATION = 'iscore.wsgi.application'
 DATABASES = {
 
     'default': {
-       "DISABLE_SERVER_SIDE_CURSORS":True
+       "DISABLE_SERVER_SIDE_CURSORS":True,
+       "CONN_MAX_AGE":0
     }
 
 }
