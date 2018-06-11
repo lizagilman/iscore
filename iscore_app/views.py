@@ -34,7 +34,9 @@ class PlayersViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.PlayersSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ['name', 'age', 'nationality', 'gender']
-
+    filter_fields = (
+        'name',
+    )
 
 class MoneyDistributionMethodsViewSet(viewsets.ModelViewSet):
 
