@@ -6,7 +6,7 @@ from channels.db import database_sync_to_async
 from iscore_app.models import Matches,Score
 from django.core import serializers
 from iscore_app.serializers import ScoresSerializer
-
+from django.db import close_old_connections
 
 class MatchConsumer(AsyncWebsocketConsumer):
 
@@ -51,7 +51,7 @@ class MatchConsumer(AsyncWebsocketConsumer):
                  }
 
         database_sync_to_async(self.save_to_db(data,info))
-
+        close_old_connections()
         await self.channel_layer.group_send(
             self.match_group_name,
             {
@@ -78,5 +78,6 @@ class MatchConsumer(AsyncWebsocketConsumer):
         new_score=ScoresSerializer(instance,data=data)
         new_score.is_valid()
         new_score.save()
+        close_old_connections()
 
 
