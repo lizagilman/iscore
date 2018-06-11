@@ -44,12 +44,12 @@ export default class UmpireTournaments extends React.Component {
     const selectedTournament = UmpireStore.getSingleTournament(id);
     UmpireStore.setCurrentTournament(selectedTournament);
 
-    this.props.setUrlContent(
-      e,
-      '/schedule',
-      `/umpire/tournament/${id}/matches`,
-      'UmpireMatches',
-    );
+    // this.props.setUrlContent(
+    //   e,
+    //   '/schedule',
+    //   `/umpire/tournament/${id}/matches`,
+    //   'UmpireMatches',
+    // );
   }
 
   componentWillMount() {

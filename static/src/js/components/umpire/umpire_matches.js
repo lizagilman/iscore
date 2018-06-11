@@ -106,7 +106,7 @@ export default class UmpireMatches extends React.Component {
     UmpireStore.setSingleMatch(singleMatch);
     console.log('singleMatch', singleMatch);
 
-    this.props.setUrlContent(e, '/match', `/umpire/match/${id}`, 'Match');
+    // this.props.setUrlContent(e, '/match', `/umpire/match/${id}`, 'Match');
   }
 
   updateMatch(e, matchId, winner) {

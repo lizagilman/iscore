@@ -90,9 +90,11 @@ WSGI_APPLICATION = 'iscore.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
+
     'default': {
         "CONN_MAX_AGE": 60
     }
+
 }
 
 # Password validation

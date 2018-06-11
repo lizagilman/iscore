@@ -8,7 +8,6 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import MyCheckbox from './checkbox/myCheckbox';
 import { registerCoachPlayerToTournament } from '../../api';
-import CoachHeader from '../coach/header/header';
 
 const mobx = require('mobx');
 
@@ -150,9 +149,9 @@ export default class CoachPage extends React.Component {
 
   componentWillMount() {
     const { TournamentsStore, CoachEnterPlayersStore } = this.props.stores;
-    console.log('this.props.location.state.id', this.props.location.state.id);
+    console.log('localStorage.id_user', localStorage.id_user);
     const self = this;
-    CoachEnterPlayersStore.fetchPlayers(this.props.location.state.id).then((storedPlayers) => {
+    CoachEnterPlayersStore.fetchPlayers(localStorage.id_user).then((storedPlayers) => {
       self.setState({ players: mobx.toJS(storedPlayers) }, () => {
         console.log('Players', this.state.players);
       });
@@ -165,14 +164,6 @@ export default class CoachPage extends React.Component {
       this.setState({
         last_name: mobx.toJS(CoachEnterPlayersStore.lastName),
       });
-      console.log(
-        'this.props.location.state.first_name ',
-        this.props.location.state.first_name,
-      );
-      console.log(
-        'this.props.location.state.last_name ',
-        this.props.location.state.last_name,
-      );
     });
 
     TournamentsStore.fetchAllTournaments().then((storedTournaments) => {
@@ -294,18 +285,6 @@ export default class CoachPage extends React.Component {
       <div style={styles.conteinerStyle}>
         <Row>
           <Column span="12">
-            <CoachHeader
-              first_name={
-                this.props.location.state.first_name === this.state.first_name
-                  ? this.props.location.state.first_name
-                  : ''
-              }
-              last_name={
-                this.props.location.state.last_name === this.state.last_name
-                  ? this.props.location.state.last_name
-                  : ''
-              }
-            />
           </Column>
         </Row>
         <Row>
