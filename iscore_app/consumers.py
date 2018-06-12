@@ -50,7 +50,7 @@ class MatchConsumer(AsyncWebsocketConsumer):
                 "match_id": self.match_id,
                  }
 
-        database_sync_to_async(self.save_to_db(data,info))
+        await database_sync_to_async(self.save_to_db(data,info)).save()
         close_old_connections()
         await self.channel_layer.group_send(
             self.match_group_name,
@@ -77,7 +77,7 @@ class MatchConsumer(AsyncWebsocketConsumer):
 
         new_score=ScoresSerializer(instance,data=data)
         new_score.is_valid()
-        new_score.save()
-        close_old_connections()
+        return new_score
+      
 
 
