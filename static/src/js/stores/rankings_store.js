@@ -41,9 +41,7 @@ class RankingsStore {
     const newRankingList = this.rankingListToCreate;
     createRankingListApi(newRankingList).then((response) => {
       if (response) {
-        // TO-DO: handle then
-        uploadRankingListFileApi(response.id, this.fileToUpload);
-        alert('success');
+        uploadRankingListFileApi(response.id, this.fileToUpload).then( response => alert('success'));
       } else {
         alert('fail');
       }
@@ -69,7 +67,7 @@ class RankingsStore {
 
   @action
   getGrades = (id) => {
-    getGradesByOrganization(1).then((response) => {
+    getGradesByOrganization(id || 1).then((response) => {
       if (response.status >= 400) {
         alert('Failed to save');
       } else {

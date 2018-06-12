@@ -78,7 +78,7 @@ export function createRankingListApi(rankingList) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(rankingList)
-  }).then(response => response);
+  }).then(response => response.status < 400 ? response.json() : false);
 }
 
 export const getOrganizationBySports = fieldOfSports =>
@@ -484,5 +484,5 @@ export function uploadRankingListFileApi(rankingListId, file) {
         "Origin, X-Requested-With, Content-Type, Accept"
     },
     body: data
-  }).then(response => response.json());
+  }).then(response => response);
 }
