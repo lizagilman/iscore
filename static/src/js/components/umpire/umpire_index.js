@@ -88,7 +88,7 @@ class LiveMatch extends React.Component {
 
     console.log('gonna create new websocket');
 
-    this.socket = new WebSocket(`/ws/iscore/match/${match.id}/`);
+    this.socket = new WebSocket(`wss://iscore-app.herokuapp.com/ws/iscore/match/${match.id}/`);
 
     // recieve
 
