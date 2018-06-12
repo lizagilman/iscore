@@ -51,7 +51,7 @@ class MatchConsumer(AsyncWebsocketConsumer):
                  }
 
         await self.save_to_db(data,info)
-        await close_old_connections()
+        close_old_connections()
         await self.channel_layer.group_send(
             self.match_group_name,
             {
