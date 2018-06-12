@@ -93,7 +93,7 @@ DATABASES = {
 
     'default': {
        'DISABLE_SERVER_SIDE_CURSORS':True,
-       'CONN_MAX_AGE':0,
+       'CONN_MAX_AGE':None,
 
     }
 
