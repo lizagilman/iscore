@@ -78,7 +78,7 @@ class MatchConsumer(AsyncWebsocketConsumer):
         new_score=ScoresSerializer(instance,data=data)
         new_score.is_valid()
         new_score.save()
-        close_old_connections()
+
       
 
 
