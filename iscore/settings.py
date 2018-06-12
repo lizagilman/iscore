@@ -92,8 +92,9 @@ WSGI_APPLICATION = 'iscore.wsgi.application'
 DATABASES = {
 
     'default': {
-       "DISABLE_SERVER_SIDE_CURSORS":True,
-       "CONN_MAX_AGE":0
+       'DISABLE_SERVER_SIDE_CURSORS':True,
+       'CONN_MAX_AGE':0,
+
     }
 
 }
@@ -156,8 +157,8 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-       #     "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
             "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
+        #    "hosts": [('127.0.0.1', 6379)],
         },
     },
 }
