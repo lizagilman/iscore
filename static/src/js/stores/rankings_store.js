@@ -1,18 +1,18 @@
-import { observable, action } from 'mobx';
+import { observable, action } from "mobx";
 import {
   getRankingListByOrganization,
   createRankingListApi,
   getGradesByOrganization,
   getCategoriesByOrganization,
-  uploadRankingListFileApi,
-} from '../api';
+  uploadRankingListFileApi
+} from "../api";
 
 // TO-DO: move to dynamic organization id
 const initialState = {
   name: null,
   organization: 1,
   grades: null,
-  categories: [],
+  categories: []
 };
 
 class RankingsStore {
@@ -27,27 +27,35 @@ class RankingsStore {
   @action
   // TO-DO: move to fully dynamic id
   fetchAllRankings = id =>
-    getRankingListByOrganization(id || 1).then((rankingsJson) => {
+    getRankingListByOrganization(id || 1).then(rankingsJson => {
       this.allRankings = rankingsJson;
     });
 
   @action
   deleteRanking = () => {
-    console.log('delete ranking api');
+    console.log("delete ranking api");
   };
 
   @action
   createNewRankingList() {
     const newRankingList = this.rankingListToCreate;
-    createRankingListApi(newRankingList).then((response) => {
-      if (response) {
-        // TO-DO: handle then
-        uploadRankingListFileApi(response.id, this.fileToUpload);
-        alert('success');
-      } else {
-        alert('fail');
-      }
-    });
+    return Promise.resolve(
+      createRankingListApi(newRankingList).then(response => {
+        if (response) {
+          return Promise.resolve(uploadRankingListFileApi(response.id, this.fileToUpload).then(
+            response => {
+              if (response.status < 400){
+                 return true;
+              } else {
+                return false;
+              }
+            }
+          ));
+        } else {
+          return false;
+        }
+      })
+    );
   }
 
   @action
@@ -56,22 +64,22 @@ class RankingsStore {
   };
 
   @action
-  setRankingListCategories = (categories) => {
+  setRankingListCategories = categories => {
     this.rankingListCategories = categories;
     this.rankingListToCreate.categories = categories;
   };
 
   @action
-  setRankingListGrades = (grades) => {
+  setRankingListGrades = grades => {
     this.rankingListGrades = grades;
     this.rankingListToCreate.grades = grades;
   };
 
   @action
-  getGrades = (id) => {
-    getGradesByOrganization(1).then((response) => {
+  getGrades = id => {
+    getGradesByOrganization(id || 1).then(response => {
       if (response.status >= 400) {
-        alert('Failed to save');
+        alert("Failed to save");
       } else {
         this.organizationGrades = response;
       }
@@ -79,10 +87,10 @@ class RankingsStore {
   };
 
   @action
-  getCategories = (id) => {
-    getCategoriesByOrganization(1).then((response) => {
+  getCategories = id => {
+    getCategoriesByOrganization(1).then(response => {
       if (response.status >= 400) {
-        alert('Failed to save');
+        alert("Failed to save");
       } else {
         this.organizationCategories = response;
       }

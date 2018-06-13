@@ -12,7 +12,6 @@ import UmpireTournaments from '../umpire/umpire_tournaments';
 import Header from '../header/header_index';
 
 
-
 const AppRouter = () => (
   <BrowserRouter>
     <div>
