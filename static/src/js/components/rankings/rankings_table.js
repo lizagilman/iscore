@@ -17,6 +17,7 @@ import { inject, observer } from 'mobx-react';
 import { Link } from 'react-router-dom';
 import Spinner from '../spinner/spinner';
 import RankingListForm from './rankings_modal';
+import FeedBack from '../feeback_dialog/feeback_modal';
 
 const nameStyle = {
   paddingRight: '100px',
@@ -33,7 +34,11 @@ export default class RankingsTable extends React.Component {
     this.saveNewRankingList = this.saveNewRankingList.bind(this);
     this.deleteRanking = this.deleteRanking.bind(this);
 
-    this.state = { displayModal: false };
+    this.state = {
+      displayModal: false,
+      displayFeedbackModal: false,
+      feedbackText: '',
+    };
   }
 
   openModal() {
@@ -45,8 +50,15 @@ export default class RankingsTable extends React.Component {
   }
 
   saveNewRankingList() {
+    this.setState({ displayModal: false, displayFeedbackModal: true });
     const { RankingsStore } = this.props.stores;
-    RankingsStore.createNewRankingList();
+    RankingsStore.createNewRankingList().then((feedback) => {
+      if (feedback) {
+        this.setState({ feedbackText: 'Ranking list created Successfully!' });
+      } else {
+        this.setState({ feedbackText: 'Failed to create ranking list!' });
+      }
+    });
   }
 
   deleteRanking(e, id) {
@@ -134,10 +146,13 @@ export default class RankingsTable extends React.Component {
       </Dialog>
     );
 
+    const FeedbackModal = <FeedBack text={this.state.feedbackText} />;
+
     return (
       <div>
         {rankingsTable}
         {modal}
+        {this.state.displayFeedbackModal ? FeedbackModal : false}
       </div>
     );
   }
