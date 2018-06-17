@@ -42,7 +42,6 @@ class RankingListForm extends React.Component {
   }
 
   handleFileChange(e) {
-    console.log('up');
     e.preventDefault();
     const { RankingsStore } = this.props.stores;
     RankingsStore.setFileToUpload(e.target.files[0]);
@@ -51,13 +50,13 @@ class RankingListForm extends React.Component {
   // eslint-disable-next-line
   menuItems(items, values) {
     return items.map(item => (
-        <MenuItem
-          key={item.name}
-          insetChildren={true}
-          checked={values && values.indexOf(item) > -1}
-          value={item.id}
-          primaryText={item.name}
-        />
+      <MenuItem
+        key={item.name}
+        insetChildren={true}
+        checked={values && values.indexOf(item) > -1}
+        value={item.id}
+        primaryText={item.name}
+      />
     ));
   }
 

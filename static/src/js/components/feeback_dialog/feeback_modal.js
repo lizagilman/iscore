@@ -4,22 +4,18 @@ import FlatButton from 'material-ui/FlatButton';
 import Spinner from '../spinner/spinner';
 
 export default class FeedBack extends React.Component {
-  state = {
-    open: true,
-  };
-
-  handleClose = () => {
-    this.setState({ open: false });
-  };
-
   render() {
     const actions = [
-      <FlatButton label="Close" primary={true} onClick={this.handleClose} />,
+      <FlatButton
+        label="Close"
+        primary={true}
+        onClick={e => this.props.handleClose(e)}
+      />,
     ];
 
     return (
       <div>
-        <Dialog title="" actions={actions} modal={true} open={this.state.open}>
+        <Dialog title="" actions={actions} modal={true} open={true}>
           {this.props.text ? this.props.text : Spinner(50)}
         </Dialog>
       </div>

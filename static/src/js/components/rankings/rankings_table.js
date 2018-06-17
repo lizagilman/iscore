@@ -31,6 +31,7 @@ export default class RankingsTable extends React.Component {
 
     this.openModal = this.openModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.closeFeedbackModal = this.closeFeedbackModal.bind(this);
     this.saveNewRankingList = this.saveNewRankingList.bind(this);
     this.deleteRanking = this.deleteRanking.bind(this);
 
@@ -47,6 +48,11 @@ export default class RankingsTable extends React.Component {
 
   closeModal() {
     this.setState({ displayModal: false });
+  }
+
+  closeFeedbackModal(e) {
+    e.preventDefault();
+    this.setState({ displayFeedbackModal: false });
   }
 
   saveNewRankingList() {
@@ -146,7 +152,12 @@ export default class RankingsTable extends React.Component {
       </Dialog>
     );
 
-    const FeedbackModal = <FeedBack text={this.state.feedbackText} />;
+    const FeedbackModal = (
+      <FeedBack
+        text={this.state.feedbackText}
+        handleClose={this.closeFeedbackModal}
+      />
+    );
 
     return (
       <div>
