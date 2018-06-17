@@ -52,7 +52,7 @@ export default class RankingsTable extends React.Component {
 
   closeFeedbackModal(e) {
     e.preventDefault();
-    this.setState({ displayFeedbackModal: false });
+    this.setState({ displayFeedbackModal: false, feedbackText: '' });
   }
 
   saveNewRankingList() {
