@@ -18,11 +18,10 @@ export default class Header extends React.Component {
     const first_name = localStorage.first_name;
     const last_name = localStorage.last_name;
 
-    const coachHeader = <ManagerHeader  type={'Coach'} first_name={first_name} last_name={last_name} />;
+    const coachHeader = <ManagerHeader type={'Coach'} first_name={first_name} last_name={last_name} />;
     const managerHeader = <ManagerHeader type={'Tournament Manager'} first_name={first_name} last_name={last_name} />;
-    const umpireHeader = <ManagerHeader  type={'Umpire'} first_name={first_name} last_name={last_name} />;
-    const orgHeader = <ManagerHeader  type={'Organization Manager'} first_name={first_name} last_name={last_name} />;
-
+    const umpireHeader = <ManagerHeader type={'Umpire'} first_name={first_name} last_name={last_name} />;
+    const orgHeader = <ManagerHeader type={'Organization Manager'} first_name={first_name} last_name={last_name} />;
 
 
     const choose_header = () => {

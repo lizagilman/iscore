@@ -1,54 +1,99 @@
-import React from "react";
-import AppBar from "material-ui/AppBar";
-import Tabs from "material-ui/Tabs/Tabs";
-import IconMenu from "material-ui/IconMenu";
-import MenuItem from "material-ui/MenuItem";
-import IconButton from "material-ui/IconButton";
-import MoreVertIcon from "material-ui/svg-icons/navigation/more-vert";
-import FlatButton from "material-ui/FlatButton";
-import Tab from "material-ui/Tabs/Tab";
-import { withRouter, Route } from "react-router-dom";
+import React from 'react';
+import AppBar from 'material-ui/AppBar';
+import Tabs from 'material-ui/Tabs/Tabs';
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import Menu from 'material-ui/svg-icons/navigation/menu';
+import Close from 'material-ui/svg-icons/navigation/close';
+import FlatButton from 'material-ui/FlatButton';
+import Tab from 'material-ui/Tabs/Tab';
+import { withRouter, Route } from 'react-router-dom';
 import { Redirect } from 'react-router';
-import { GetUser, logOut } from "../../api";
+import { GetUser, logOut } from '../../api';
+import Drawer from 'material-ui/Drawer';
+import FeedBack from '../feeback_dialog/feeback_modal';
 
 const styles = {
+  iscore: {
+    fontSize: '3em',
+    color: 'white',
+    height: '70px',
+    display: 'block',
+    display: 'block',
+  },
+
+  drawerElementsLabel: {
+    fontSize: '3em',
+    color: 'rgb(0, 150, 136)',
+  },
+  drawerElementsStyle: {
+    display: 'block',
+    lineHeight: '5em',
+    height: '5em',
+    weight: '100%',
+    marginTop: '1%',
+    marginBottom: '1%',
+    paddingTop: '2%',
+    paddingBottom: '2%',
+  },
+  menuButton: {
+    marginRight: '10px',
+    height: '7em',
+    width: '3em',
+  },
+  menuIcon: {
+    padding: '-12px',
+    color: 'white',
+    width: '53px',
+    height: '55px',
+    marginRight: '20px',
+  },
+
   coachTitleStyle: {
-    marginTop: "1em",
-    fontSize: "3em",
-    marginLeft: "1%"
+    fontSize: '3em',
+    marginBottom: '1%',
+    color: 'white',
+    display: 'block',
+    height: '40px',
   },
   titleStyle: {
-    marginLeft: "2%"
+    marginLeft: '2%',
   },
   icon: {
-    color: "white"
+    color: 'white',
+    fontSize: '3em',
   },
   iconCoach: {
-    marginTop: "1em",
-    height: "3em",
-    width: "2em"
+    color: 'white',
+    marginTop: '1em',
+    fontSize: '3em',
   },
   coachAppBar: {
-    flexWrap: "wrap"
+    flexWrap: 'wrap',
+    lineHeight: '4em',
   },
   tabs: {
-    width: "100%"
+    width: '100%',
+    height: '20px',
+    backgroundColor: 'gray',
   },
   orgAppBar: {
-    backgroundColor: "#b841f4",
-    height: "10em"
+    backgroundColor: '#b841f4',
+    height: '10em',
   },
   managerAppBar: {
-    backgroundColor: "orange",
-    height: "10em"
+    backgroundColor: 'orange',
+    height: '10em',
   },
   umpireAppBar: {
-    backgroundColor: "#4242f4",
-    height: "10em"
+    backgroundColor: '#4242f4',
+    height: '10em',
   },
   menuItem: {
-    backgroundColor: "white"
-  }
+    backgroundColor: 'white',
+  },
 };
 
 class ManagerHeader extends React.Component {
@@ -56,33 +101,37 @@ class ManagerHeader extends React.Component {
     super(props);
     this.handleCallToRouter = this.handleCallToRouter.bind(this);
     this.logOut = this.logOut.bind(this);
-    this.goToSchedule=this.goToSchedule.bind(this);
-
+    this.goToSchedule = this.goToSchedule.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);
     this.state = {
       logged: null,
       manager: false,
       org: false,
       coach: false,
       umpire: false,
-        goToSchedule:false,
+      goToSchedule: false,
+      open: false,
     };
   }
   logOut = () => {
     logOut(localStorage.id_token);
     this.setState({ logged: false });
 
-    localStorage.removeItem("id_user");
-    localStorage.removeItem("first_name");
-    localStorage.removeItem("id_token");
-    localStorage.removeItem("last_name");
-    localStorage.removeItem("type");
-    window.location.replace("/");
+    localStorage.removeItem('id_user');
+    localStorage.removeItem('first_name');
+    localStorage.removeItem('id_token');
+    localStorage.removeItem('last_name');
+    localStorage.removeItem('type');
+    window.location.replace('/');
   };
-  handleCallToRouter = value => {
+  handleToggle = () => {
+    this.setState({ open: !this.state.open });
+  };
+  handleCallToRouter = (value) => {
     this.props.history.push(value);
   };
-  goToSchedule=()=>{
-    this.setState({goToSchedule:true});
+  goToSchedule = () => {
+    this.setState({ goToSchedule: true });
   };
   componentWillMount() {
     if (localStorage.id_user != null) {
@@ -91,6 +140,7 @@ class ManagerHeader extends React.Component {
       this.setState({ logged: false });
     }
   }
+
   render() {
     const tabs = (
       <Tabs
@@ -98,14 +148,13 @@ class ManagerHeader extends React.Component {
         value={this.props.history.location.pathname}
         onChange={this.handleCallToRouter}
       >
-        <Tab label="Tournaments" value={"/tournaments"} />
-        <Tab label="Rankings" value={"/rankings"} />
+        <Tab label="Tournaments" value={'/tournaments'} />
+        <Tab label="Rankings" value={'/rankings'} />
         <Tab label="Points Distribution Methods" />
         <Tab label="Money Distribution Methods" />
       </Tabs>
     );
-
-    const Logged = (props) => (
+    const Logged = props => (
       <div>
         <IconMenu
           iconButtonElement={
@@ -113,48 +162,126 @@ class ManagerHeader extends React.Component {
               <MoreVertIcon />
             </IconButton>
           }
-          anchorOrigin={{ horizontal: "left", vertical: "top" }}
-          targetOrigin={{ horizontal: "left", vertical: "top" }}
+          anchorOrigin={{ horizontal: 'left', vertical: 'top' }}
+          targetOrigin={{ horizontal: 'left', vertical: 'top' }}
+          iconStyle={styles.icon}
         >
           <MenuItem primaryText="Logout" onClick={this.logOut} />
-            {this.props.type==="Coach" ? <MenuItem primaryText="schedule" onClick={this.goToSchedule} />:''}
         </IconMenu>
       </div>
     );
-
+    const LoggedCoach = props => (
+      <div>
+        <FlatButton
+          icon={
+            <IconButton iconStyle={styles.menuIcon}>
+              {this.state.open ? <Close /> : <Menu />}
+            </IconButton>
+          }
+          anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+          targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+          onClick={() => this.handleToggle()}
+          style={styles.menuButton}
+        />
+        <Drawer
+          open={this.state.open}
+          disableSwipeToOpen={true}
+          width="50%"
+          style={styles.drawerStyle}
+        >
+          <FlatButton
+            style={styles.drawerElementsStyle}
+            labelStyle={styles.drawerElementsLabel}
+            label="Logout"
+            onClick={this.logOut}
+          />
+          <FlatButton
+            style={styles.drawerElementsStyle}
+            labelStyle={styles.drawerElementsLabel}
+            label="schedule"
+            onClick={this.goToSchedule}
+          />
+        </Drawer>
+      </div>
+    );
+    const Iscore = () => (
+      <div className="row">
+        <div className="col-xs-12 col-sm-12 col-md-12">
+          <FlatButton label="ISCORE" labelStyle={styles.iscore} />
+        </div>
+      </div>
+    );
     const Login = () => (
       <FlatButton
-        style={this.props.type === "Coach" ? styles.iconCoach : styles.icon}
+        style={this.props.type === 'Coach' ? styles.iconCoach : styles.icon}
         label="Login"
       />
     );
 
     return (
-      <AppBar
-        titleStyle={
-          this.props.type === "Coach"
-            ? styles.coachTitleStyle
-            : styles.titleStyle
-        }
-        title={`Welcome ${this.props.type} ${this.props.first_name} ${
-          this.props.last_name
-        }`}
-        style={
-          this.props.type === "Coach"
-            ? styles.coachAppBar
-            : this.props.type === "Organization Manager"
-              ? styles.orgAppBar
-              : this.props.type === "Tournament Manager"
-                ? styles.managerAppBar
-                : styles.umpireAppBar
-        }
-        iconElementLeft={this.state.logged ? <Logged /> : <Login />}
-      >
-        <div className="row">
-          <div class="col-md-12 ">{this.state.manager ? <tabs /> : ""}</div>
+      <div>
+        <AppBar
+          title={
+            localStorage.type != 'coach'
+              ? `Welcome ${this.props.type} ${this.props.first_name} ${
+                  this.props.last_name
+                }`
+              : ''
+          }
+          titleStyle={localStorage.type != 'coach' ? styles.titleStyle : ''}
+          style={
+            this.props.type === 'Coach'
+              ? styles.coachAppBar
+              : this.props.type === 'Organization Manager'
+                ? styles.orgAppBar
+                : this.props.type === 'Tournament Manager'
+                  ? styles.managerAppBar
+                  : styles.umpireAppBar
+          }
+          iconElementLeft={<Iscore />}
+          iconElementRight={
+            this.state.logged ? (
+              this.props.type === 'Coach' || localStorage.type === 'coach' ? (
+                <LoggedCoach />
+              ) : (
+                <Logged />
+              )
+            ) : (
+              <Login />
+            )
+          }
+        >
+          {localStorage.type === 'coach' ? (
+            <div className="row">
+              <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <FlatButton
+                  label={`Welcome ${this.props.type} ${this.props.first_name} ${
+                    this.props.last_name
+                  }`}
+                  labelStyle={
+                    this.props.type === 'Coach'
+                      ? styles.coachTitleStyle
+                      : styles.titleStyle
+                  }
+                />
+              </div>
+            </div>
+          ) : (
+            ''
+          )}
+
+          {this.state.goToSchedule ? <Redirect to="/coach/tournaments" /> : ''}
+        </AppBar>
+        <div>
+          {localStorage.type === 'manager' ? (
+            <div className="row">
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">{tabs}</div>
+            </div>
+          ) : (
+            ''
+          )};
         </div>
-          {this.state.goToSchedule ? <Redirect to="/coach/tournaments"/>:''}
-      </AppBar>
+      </div>
     );
   }
 }

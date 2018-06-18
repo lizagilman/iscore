@@ -1,9 +1,9 @@
 import { observable, action } from 'mobx';
 import {
-    getAllCoachPlayersApi,
-    getTournamentByIDApi,
-    getTournamentCategoriesByTournament,
-    getAllCoachByUser, getAllMatchesByTournamentIDApi, getAllTournamentsApi,
+  getAllCoachPlayersApi,
+  getTournamentByIDApi,
+  getTournamentCategoriesByTournament,
+  getAllCoachByUser, getAllMatchesByTournamentIDApi, getAllTournamentsApi,
 } from '../api';
 
 class CoachEnterPlayersStore {
@@ -31,10 +31,10 @@ class CoachEnterPlayersStore {
   @action
   fetchMatches = (id) => {
     if (id) {
-     return getAllMatchesByTournamentIDApi(id).then((matchesJson) => {
-         matchesJson.sort((match1, match2) => new Date(match1.time) - new Date(match2.time));
-        if(matchesJson && !matchesJson.length){
-            matchesJson=[matchesJson];
+      return getAllMatchesByTournamentIDApi(id).then((matchesJson) => {
+        matchesJson.sort((match1, match2) => new Date(match1.time) - new Date(match2.time));
+        if (matchesJson && !matchesJson.length) {
+          matchesJson = [matchesJson];
         }
         this.matches = matchesJson;
         return this.matches;
@@ -42,11 +42,11 @@ class CoachEnterPlayersStore {
     }
   };
   @action
-  setSelectedTournament(value){
-      this.tournament=value;
-}
+  setSelectedTournament(value) {
+    this.tournament = value;
+  }
 @action
-getSelectedTournament=()=>this.tournament;
+getSelectedTournament=() => this.tournament;
 
   @action
   fetchPlayers = id =>

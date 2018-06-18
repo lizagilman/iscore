@@ -97,9 +97,9 @@ export default class LogIn extends React.Component {
       userId: null,
       errorConfirmPass: null,
       errorPass: null,
-        is_loading:false,
-        loginEmailError:null,
-        loginPassError:null,
+      is_loading: false,
+      loginEmailError: null,
+      loginPassError: null,
 
     };
     this.setUserId = this.setUserId.bind(this);
@@ -120,8 +120,8 @@ export default class LogIn extends React.Component {
   };
 
   submitLogin = (event) => {
-      console.log('this.state.password',this.state.password);
-      console.log('this.state.userName',this.state.userName);
+    console.log('this.state.password', this.state.password);
+    console.log('this.state.userName', this.state.userName);
 
     if (this.state.password && this.state.userName) {
       const payload = {
@@ -129,108 +129,96 @@ export default class LogIn extends React.Component {
         username: this.state.userName,
       };
 
-//       this.setState({ is_loading: true });
-//       loginUser(payload).then((res) => {
-//         if (res.non_field_errors) {
-//           alert('Failed to login. ', res.non_field_errors[0]);
-//           this.setState({ is_loading: false });
-//         } else {
-//           console.log('res:', res);
-//           console.log('res.auth_token:', res.auth_token);
-//           this.setToken(res.auth_token);
-//           GetUser(res.auth_token).then((data) => {
-//             console.log('GetUser data:', data);
-//             if (data.detail) {
-//               alert('Failed to login. ', data.detail);
-//               this.setState({ is_loading: false });
-//             } else {
-//               getRegisteredUser(data.id).then((user) => {
-//                 if (user.detail) {
-//                   alert('Failed to login. ', user.detail);
-//                   this.setState({ is_loading: false });
-//                 } else {
-//                   console.log('user: ', user);
-//                   if (user.is_coach === true) {
-//                     this.setType('coach');
-//                     this.setState({ userType: 'coach' });
-//                   } else if (user.is_manager === true) {
-//                     this.setType('manager');
-//                     this.setState({ userType: 'manager' });
-//                   } else if (user.is_organization === true) {
-//                     this.setType('organization');
-//                     this.setState({ userType: 'organization' });
-//                   } else if (user.is_umpire === true) {
-//                     this.setType('umpire');
-//                     this.setState({ userType: 'umpire' });
-//                   }
-//                   this.setUserId(user.id);
-//                   this.setLocalSFirstName(user.first_name);
-//                   this.setLocalSLastName(user.last_name);
-//                   this.setState({ userId: user.id });
-//                   this.setState({ loginFirstName: user.first_name });
-//                   this.setState({ loginLastName: user.last_name });
-//                 }
-//               });
-//             }
-//           });
-// =======
-      this.setState({is_loading:true});
+      //       this.setState({ is_loading: true });
+      //       loginUser(payload).then((res) => {
+      //         if (res.non_field_errors) {
+      //           alert('Failed to login. ', res.non_field_errors[0]);
+      //           this.setState({ is_loading: false });
+      //         } else {
+      //           console.log('res:', res);
+      //           console.log('res.auth_token:', res.auth_token);
+      //           this.setToken(res.auth_token);
+      //           GetUser(res.auth_token).then((data) => {
+      //             console.log('GetUser data:', data);
+      //             if (data.detail) {
+      //               alert('Failed to login. ', data.detail);
+      //               this.setState({ is_loading: false });
+      //             } else {
+      //               getRegisteredUser(data.id).then((user) => {
+      //                 if (user.detail) {
+      //                   alert('Failed to login. ', user.detail);
+      //                   this.setState({ is_loading: false });
+      //                 } else {
+      //                   console.log('user: ', user);
+      //                   if (user.is_coach === true) {
+      //                     this.setType('coach');
+      //                     this.setState({ userType: 'coach' });
+      //                   } else if (user.is_manager === true) {
+      //                     this.setType('manager');
+      //                     this.setState({ userType: 'manager' });
+      //                   } else if (user.is_organization === true) {
+      //                     this.setType('organization');
+      //                     this.setState({ userType: 'organization' });
+      //                   } else if (user.is_umpire === true) {
+      //                     this.setType('umpire');
+      //                     this.setState({ userType: 'umpire' });
+      //                   }
+      //                   this.setUserId(user.id);
+      //                   this.setLocalSFirstName(user.first_name);
+      //                   this.setLocalSLastName(user.last_name);
+      //                   this.setState({ userId: user.id });
+      //                   this.setState({ loginFirstName: user.first_name });
+      //                   this.setState({ loginLastName: user.last_name });
+      //                 }
+      //               });
+      //             }
+      //           });
+      // =======
+      this.setState({ is_loading: true });
       loginUser(payload).then((res) => {
         if (res.non_field_errors) {
-                alert('Failed to login. ',res.non_field_errors[0]);
-               this.setState({is_loading:false});
-
-         }
-         else{
-                console.log('res:', res);
-                console.log('res.auth_token:', res.auth_token);
-                this.setToken(res.auth_token);
-                GetUser(res.auth_token).then((data) => {
-
-                    console.log('GetUser data:', data);
-                    if (data.detail) {
-                        alert('Failed to login. ',data.detail);
-                       this.setState({is_loading:false});
-
-                    }
-                    else{
-
-                        getRegisteredUser(data.id).then((user) => {
-                          if (user.detail) {
-                            alert('Failed to login. ',user.detail);
-                            this.setState({is_loading:false});
-                          }
-                          else{
-                                console.log('user: ', user);
-                                if (user.is_coach === true) {
-                                  this.setType('coach');
-                                  this.setState({ userType: 'coach' });
-                                } else if (user.is_manager === true) {
-                                  this.setType('manager');
-                                  this.setState({ userType: 'manager' });
-                                } else if (user.is_organization === true) {
-                                  this.setType('organization');
-                                  this.setState({ userType: 'organization' });
-                                } else if (user.is_umpire === true) {
-                                  this.setType('umpire');
-                                  this.setState({ userType: 'umpire' });
-                                }
-                                this.setUserId(user.id);
-                                this.setLocalSFirstName(user.first_name);
-                                this.setLocalSLastName(user.last_name);
-                                this.setState({ userId: user.id });
-                                this.setState({ loginFirstName: user.first_name });
-                                this.setState({ loginLastName: user.last_name });
-                          }
-
-                      });
-                    }
-
-                });
+          alert('Failed to login. ', res.non_field_errors[0]);
+          this.setState({ is_loading: false });
+        } else {
+          console.log('res:', res);
+          console.log('res.auth_token:', res.auth_token);
+          this.setToken(res.auth_token);
+          GetUser(res.auth_token).then((data) => {
+            console.log('GetUser data:', data);
+            if (data.detail) {
+              alert('Failed to login. ', data.detail);
+              this.setState({ is_loading: false });
+            } else {
+              getRegisteredUser(data.id).then((user) => {
+                if (user.detail) {
+                  alert('Failed to login. ', user.detail);
+                  this.setState({ is_loading: false });
+                } else {
+                  console.log('user: ', user);
+                  if (user.is_coach === true) {
+                    this.setType('coach');
+                    this.setState({ userType: 'coach' });
+                  } else if (user.is_manager === true) {
+                    this.setType('manager');
+                    this.setState({ userType: 'manager' });
+                  } else if (user.is_organization === true) {
+                    this.setType('organization');
+                    this.setState({ userType: 'organization' });
+                  } else if (user.is_umpire === true) {
+                    this.setType('umpire');
+                    this.setState({ userType: 'umpire' });
+                  }
+                  this.setUserId(user.id);
+                  this.setLocalSFirstName(user.first_name);
+                  this.setLocalSLastName(user.last_name);
+                  this.setState({ userId: user.id });
+                  this.setState({ loginFirstName: user.first_name });
+                  this.setState({ loginLastName: user.last_name });
+                }
+              });
+            }
+          });
         }
-
-
-
       });
     }
   };
@@ -374,7 +362,6 @@ export default class LogIn extends React.Component {
                 }
 
                     this.setState({ userName: newValue });
-
             }}
           />
         </div>
@@ -392,7 +379,6 @@ export default class LogIn extends React.Component {
                 }
 
                     this.setState({ password: newValue });
-
             }}
           />
         </div>

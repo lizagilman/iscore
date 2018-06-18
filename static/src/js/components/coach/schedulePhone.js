@@ -1,35 +1,36 @@
-import React from "react";
-import { inject, observer } from "mobx-react";
-import Spinner from "../spinner/spinner";
-import Subheader from "material-ui/Subheader";
-import { Redirect } from "react-router";
-import { List, ListItem } from "material-ui/List";
+import React from 'react';
+import { inject, observer } from 'mobx-react';
+import Spinner from '../spinner/spinner';
+import Subheader from 'material-ui/Subheader';
+import { Redirect } from 'react-router';
+import { List, ListItem } from 'material-ui/List';
 
-const mobx = require("mobx");
+const mobx = require('mobx');
+
 const styles = {
   matchStyle: {
-    fontSize: "3em",
-    height: "4em",
-    weight: "100%"
+    fontSize: '3em',
+    height: '4em',
+    weight: '100%',
   },
   matchStyleSecondary: {
-    lineHeight: "44px",
-    marginTop: "5%",
-    fontSize: "1em",
-    height: "4em",
-    weight: "100%"
+    lineHeight: '44px',
+    marginTop: '5%',
+    fontSize: '1em',
+    height: '4em',
+    weight: '100%',
   },
   header: {
-    height: "2em",
-    fontSize: "3em",
-    lineHeight: "44px",
-    weight: "100%"
-  }
+    height: '2em',
+    fontSize: '3em',
+    lineHeight: '44px',
+    weight: '100%',
+  },
 };
 
-const dateFormat = require("dateformat");
+const dateFormat = require('dateformat');
 
-@inject("stores")
+@inject('stores')
 @observer
 export default class ScheduleCoach extends React.Component {
   constructor(props) {
@@ -37,7 +38,7 @@ export default class ScheduleCoach extends React.Component {
     this.setDateTime = this.setDateTime.bind(this);
 
     this.state = {
-      matches: null
+      matches: null,
     };
 
     this.updateMatch = this.updateMatch.bind(this);
@@ -59,32 +60,30 @@ export default class ScheduleCoach extends React.Component {
 
   componentWillMount() {
     const { CoachEnterPlayersStore } = this.props.stores;
-    const tournament = mobx.toJS(
-      CoachEnterPlayersStore.getSelectedTournament()
-    );
-    let tournamentId = tournament ? tournament.id : this.props.match.params.id;
+    const tournament = mobx.toJS(CoachEnterPlayersStore.getSelectedTournament());
+    const tournamentId = tournament ? tournament.id : this.props.match.params.id;
     if (!tournamentId) {
       this.setState({ error: true });
       return;
     }
-    CoachEnterPlayersStore.fetchMatches(tournamentId).then(matches => {
+    CoachEnterPlayersStore.fetchMatches(tournamentId).then((matches) => {
       matches = mobx.toJS(matches);
-      console.log("matches ", matches);
-      this.setState({ matches: matches });
+      console.log('matches ', matches);
+      this.setState({ matches });
     });
   }
 
   render() {
     const createList = (match, index) => (
       <ListItem
-        primaryText={match.stage ? match.stage : ""}
+        primaryText={match.stage ? match.stage : ''}
         secondaryText={
           match ? (
             <p style={styles.matchStyleSecondary}>
-              {match.player1 + " against " + match.player2}
+              {`${match.player1} against ${match.player2}`}
             </p>
           ) : (
-            ""
+            ''
           )
         }
         initiallyOpen={false}
@@ -99,7 +98,7 @@ export default class ScheduleCoach extends React.Component {
               match ? (
                 <p style={styles.matchStyleSecondary}>{match.player1}</p>
               ) : (
-                ""
+                ''
               )
             }
           />,
@@ -111,7 +110,7 @@ export default class ScheduleCoach extends React.Component {
               match ? (
                 <p style={styles.matchStyleSecondary}>{match.player2}</p>
               ) : (
-                ""
+                ''
               )
             }
           />,
@@ -125,7 +124,7 @@ export default class ScheduleCoach extends React.Component {
                   {this.setDateTime(match.time)}
                 </p>
               ) : (
-                ""
+                ''
               )
             }
           />,
@@ -137,10 +136,10 @@ export default class ScheduleCoach extends React.Component {
               match ? (
                 <p style={styles.matchStyleSecondary}>{match.winner}</p>
               ) : (
-                ""
+                ''
               )
             }
-          />
+          />,
         ]}
       />
     );
@@ -157,7 +156,7 @@ export default class ScheduleCoach extends React.Component {
         </List>
       </div>
     );
-    const HomePage = <Redirect to={{ path: "/coach" }} />;
+    const HomePage = <Redirect to={{ path: '/coach' }} />;
 
     return <div>{!this.state.error ? scheduleList : HomePage}</div>;
   }
