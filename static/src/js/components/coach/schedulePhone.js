@@ -1,9 +1,9 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import Spinner from '../spinner/spinner';
 import Subheader from 'material-ui/Subheader';
 import { Redirect } from 'react-router';
 import { List, ListItem } from 'material-ui/List';
+import Spinner from '../spinner/spinner';
 
 const mobx = require('mobx');
 
@@ -68,7 +68,6 @@ export default class ScheduleCoach extends React.Component {
     }
     CoachEnterPlayersStore.fetchMatches(tournamentId).then((matches) => {
       matches = mobx.toJS(matches);
-      console.log('matches ', matches);
       this.setState({ matches });
     });
   }
@@ -80,7 +79,7 @@ export default class ScheduleCoach extends React.Component {
         secondaryText={
           match ? (
             <p style={styles.matchStyleSecondary}>
-              {`${match.player1} against ${match.player2}`}
+              {`${match.player1} VS ${match.player2}`}
             </p>
           ) : (
             ''
@@ -90,9 +89,21 @@ export default class ScheduleCoach extends React.Component {
         primaryTogglesNestedList={true}
         style={styles.matchStyle}
         nestedItems={[
-          <ListItem
+            <ListItem
             style={styles.matchStyle}
             key={1}
+            primaryText="Category:"
+            secondaryText={
+              match ? (
+                <p style={styles.matchStyleSecondary}>{match.category}</p>
+              ) : (
+                ''
+              )
+            }
+          />,
+          <ListItem
+            style={styles.matchStyle}
+            key={2}
             primaryText="Player 1:"
             secondaryText={
               match ? (
@@ -104,7 +115,7 @@ export default class ScheduleCoach extends React.Component {
           />,
           <ListItem
             style={styles.matchStyle}
-            key={2}
+            key={3}
             primaryText="Player 2:"
             secondaryText={
               match ? (
@@ -116,7 +127,7 @@ export default class ScheduleCoach extends React.Component {
           />,
           <ListItem
             style={styles.matchStyle}
-            key={3}
+            key={4}
             primaryText="Date and Time:"
             secondaryText={
               match ? (
@@ -130,7 +141,7 @@ export default class ScheduleCoach extends React.Component {
           />,
           <ListItem
             style={styles.matchStyle}
-            key={4}
+            key={5}
             primaryText="Winner:"
             secondaryText={
               match ? (

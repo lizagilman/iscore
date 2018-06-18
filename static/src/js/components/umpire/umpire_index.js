@@ -1,17 +1,17 @@
-import React from 'react';
-import { inject, observer } from 'mobx-react/index';
-import Paper from 'material-ui/Paper';
-import FloatingActionButton from 'material-ui/FloatingActionButton';
-import ContentAdd from 'material-ui/svg-icons/content/add';
-import RaisedButton from 'material-ui/RaisedButton';
-import MainCard from '../main_card/main_card_index';
-import * as LiveScore from './liveScore_consts';
-import { getPlayerIdByPlayerName, updateMatchWinnerApi } from '../../api';
-import FeedBack from '../feeback_dialog/feeback_modal';
+import React from "react";
+import { inject, observer } from "mobx-react/index";
+import Paper from "material-ui/Paper";
+import FloatingActionButton from "material-ui/FloatingActionButton";
+import ContentAdd from "material-ui/svg-icons/content/add";
+import RaisedButton from "material-ui/RaisedButton";
+import MainCard from "../main_card/main_card_index";
+import * as LiveScore from "./liveScore_consts";
+import { getPlayerIdByPlayerName, updateMatchWinnerApi } from "../../api";
+import FeedBack from "../feeback_dialog/feeback_modal";
 
-const mobx = require('mobx');
+const mobx = require("mobx");
 
-@inject('stores')
+@inject("stores")
 @observer
 class LiveMatch extends React.Component {
   constructor(props) {
@@ -20,6 +20,10 @@ class LiveMatch extends React.Component {
     this.state = {
       startDisabled: false,
       serving: false,
+      intervalId: null,
+      startTime: false,
+      currentCount: null,
+      date: null,
       score: {
         current_set: 1,
         current_game: 1,
@@ -39,11 +43,12 @@ class LiveMatch extends React.Component {
         p1_points: 0,
         p2_points: 0,
         match_id: null,
+        currentTime: null,
         serving: LiveScore.PLAYER_1,
         winner: null,
         displayFeedbackModal: false,
-        feedbackText: '',
-      },
+        feedbackText: ""
+      }
     };
 
     this.socket = null;
@@ -54,6 +59,7 @@ class LiveMatch extends React.Component {
     this.updateLiveScore = this.updateLiveScore.bind(this);
     this.updateWinner = this.updateWinner.bind(this);
     this.closeFeedbackModal = this.closeFeedbackModal.bind(this);
+    this.timer = this.timer.bind(this);
   }
 
   toggleServing = () => {
@@ -66,10 +72,37 @@ class LiveMatch extends React.Component {
   };
 
   startMatch = () => {
-    this.setState({ startDisabled: true });
+    const intervalId = setInterval(this.timer, 1000);
+    const date = new Date();
+    this.setState({ date: date });
+    this.setState({
+      intervalId: intervalId,
+      startTime: true,
+      startDisabled: true
+    });
   };
 
-  update_state = (data) => {
+  timer = () => {
+    let curr = new Date();
+    let newTime = new Date();
+    newTime.setSeconds(curr.getSeconds() - this.state.date.getSeconds());
+    newTime.setMinutes(curr.getMinutes() - this.state.date.getMinutes());
+    newTime.setHours(curr.getHours() - this.state.date.getHours());
+    let timeStr =
+      newTime.getHours() +
+      ":" +
+      newTime.getMinutes() +
+      ":" +
+      newTime.getSeconds();
+    this.setState({ currentCount: timeStr }, () => {
+      console.log("currentCount", this.state.currentCount);
+    });
+    const newTimeToSend = this.state.score;
+    newTimeToSend.currentTime = timeStr;
+    this.setState({ score: newTimeToSend });
+    this.updateLiveScore(newTimeToSend);
+  };
+  update_state = data => {
     this.setState(data);
   };
 
@@ -80,24 +113,26 @@ class LiveMatch extends React.Component {
 
     const match = mobx.toJS(UmpireStore.getSingleMatch());
 
-    getPlayerIdByPlayerName(match.player1).then((response) => {
+    getPlayerIdByPlayerName(match.player1).then(response => {
       LiveScore.PLAYER_1 = response[0].id;
     });
 
-    getPlayerIdByPlayerName(match.player2).then((response) => {
+    getPlayerIdByPlayerName(match.player2).then(response => {
       LiveScore.PLAYER_2 = response[0].id;
     });
 
     this.setState({ match_id: match.id });
     this.setState({ score: { ...this.state.score, match_id: match.id } });
 
-    console.log('gonna create new websocket');
+    console.log("gonna create new websocket");
 
-    this.socket = new WebSocket(`wss://iscore-app.herokuapp.com/ws/iscore/match/${match.id}/`);
+    this.socket = new WebSocket(
+      `wss://iscore-app.herokuapp.com/ws/iscore/match/${match.id}/`
+    );
 
     // recieve
 
-    this.socket.onmessage = function (event, that = self) {
+    this.socket.onmessage = function(event, that = self) {
       const score = JSON.parse(event.data).message;
 
       that.update_state({ score });
@@ -190,7 +225,7 @@ class LiveMatch extends React.Component {
       }
 
       default: {
-        console.log('Invalid choice');
+        console.log("Invalid choice");
         break;
       }
     }
@@ -263,27 +298,31 @@ class LiveMatch extends React.Component {
       }
     }
 
-
     this.setState({ score: newScore });
 
     this.updateLiveScore(newScore);
   };
 
   updateWinner(playerId) {
-    this.setState({ displayFeedbackModal: true });
-    updateMatchWinnerApi(this.state.score.match_id, playerId).then((responseUpdate) => {
-      responseUpdate.status > 400
-        ? this.setState({ feedbackText: 'Failed to update winner!' })
-        : this.setState({ feedbackText: 'winner updated!' });
-    });
+    this.setState({ displayFeedbackModal: true, startTime: false });
+    updateMatchWinnerApi(this.state.score.match_id, playerId).then(
+      responseUpdate => {
+        responseUpdate.status > 400
+          ? this.setState({ feedbackText: "Failed to update winner!" })
+          : this.setState({ feedbackText: "winner updated!" });
+      }
+    );
   }
 
   closeFeedbackModal(e) {
     e.preventDefault();
-    this.setState({ displayFeedbackModal: false, feedbackText: '' });
+    this.setState({ displayFeedbackModal: false, feedbackText: "" });
   }
 
   render() {
+    {
+      !this.state.startTime ? clearInterval(this.state.intervalId) : false;
+    }
     const { UmpireStore } = this.props.stores;
     const match = mobx.toJS(UmpireStore.getSingleMatch());
 
@@ -304,22 +343,22 @@ class LiveMatch extends React.Component {
 
             <Paper
               className={`paper ${
-                this.state.score.winner === LiveScore.PLAYER_1 ? 'win' : ''
+                this.state.score.winner === LiveScore.PLAYER_1 ? "win" : ""
               }`}
-              id={'player1Score'}
+              id={"player1Score"}
               zDepth={2}
             >
               <div class="row">
                 <div className="col-md-3">
                   <FloatingActionButton
-                    backgroundColor={'red'}
+                    backgroundColor={"red"}
                     mini={true}
                     className={LiveScore.styles.minusButton}
                     onClick={() =>
                       this.updateScore(
                         LiveScore.PLAYER_1,
                         this.state.score.p1_points,
-                        LiveScore.SUBTRACT,
+                        LiveScore.SUBTRACT
                       )
                     }
                   >
@@ -331,13 +370,13 @@ class LiveMatch extends React.Component {
                 </div>
                 <div className="col-md-3">
                   <FloatingActionButton
-                    backgroundColor={'rgb(0, 150, 136)'}
+                    backgroundColor={"rgb(0, 150, 136)"}
                     className={LiveScore.styles.addButton}
                     onClick={() =>
                       this.updateScore(
                         LiveScore.PLAYER_1,
                         this.state.score.p1_points,
-                        LiveScore.ADD,
+                        LiveScore.ADD
                       )
                     }
                   >
@@ -348,7 +387,7 @@ class LiveMatch extends React.Component {
                   <Paper style={LiveScore.styles.paperScore}>
                     <h1 style={LiveScore.styles.score}>
                       {this.state.score.p1_points === LiveScore.ADVANTAGE
-                        ? 'AD'
+                        ? "AD"
                         : this.state.score.p1_points}
                     </h1>
                   </Paper>
@@ -358,7 +397,7 @@ class LiveMatch extends React.Component {
 
                   {this.state.score.serving === LiveScore.PLAYER_1 ? (
                     <FloatingActionButton
-                      backgroundColor={'#90ec2e'}
+                      backgroundColor={"#90ec2e"}
                       style={LiveScore.styles.serveButton}
                       onClick={() => this.toggleServing()}
                     >
@@ -366,7 +405,7 @@ class LiveMatch extends React.Component {
                     </FloatingActionButton>
                   ) : (
                     <FloatingActionButton
-                      backgroundColor={'#ffffff'}
+                      backgroundColor={"#ffffff"}
                       style={LiveScore.styles.serveButton}
                       onClick={() => this.toggleServing()}
                     />
@@ -381,22 +420,22 @@ class LiveMatch extends React.Component {
           <div className="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <Paper
               className={`paper ${
-                this.state.score.winner === LiveScore.PLAYER_2 ? 'win' : ''
+                this.state.score.winner === LiveScore.PLAYER_2 ? "win" : ""
               }`}
-              id={'player2Score'}
+              id={"player2Score"}
               zDepth={2}
             >
               <div class="row">
                 <div className="col-md-3">
                   <FloatingActionButton
-                    backgroundColor={'red'}
+                    backgroundColor={"red"}
                     mini={true}
                     className={LiveScore.styles.minusButton}
                     onClick={() =>
                       this.updateScore(
                         LiveScore.PLAYER_2,
                         this.state.score.p2_points,
-                        LiveScore.SUBTRACT,
+                        LiveScore.SUBTRACT
                       )
                     }
                   >
@@ -408,13 +447,13 @@ class LiveMatch extends React.Component {
                 </div>
                 <div className="col-md-3">
                   <FloatingActionButton
-                    backgroundColor={'rgb(0, 150, 136)'}
+                    backgroundColor={"rgb(0, 150, 136)"}
                     className={LiveScore.styles.addButton}
                     onClick={() =>
                       this.updateScore(
                         LiveScore.PLAYER_2,
                         this.state.score.p2_points,
-                        LiveScore.ADD,
+                        LiveScore.ADD
                       )
                     }
                   >
@@ -425,7 +464,7 @@ class LiveMatch extends React.Component {
                   <Paper style={LiveScore.styles.paperScore}>
                     <h1 style={LiveScore.styles.score}>
                       {this.state.score.p2_points === LiveScore.ADVANTAGE
-                        ? 'AD'
+                        ? "AD"
                         : this.state.score.p2_points}
                     </h1>
                   </Paper>
@@ -433,7 +472,7 @@ class LiveMatch extends React.Component {
                 <div className="col-md-12">
                   {this.state.score.serving === LiveScore.PLAYER_2 ? (
                     <FloatingActionButton
-                      backgroundColor={'#90ec2e'}
+                      backgroundColor={"#90ec2e"}
                       style={LiveScore.styles.serveButton}
                       onClick={() => this.toggleServing()}
                     >
@@ -441,7 +480,7 @@ class LiveMatch extends React.Component {
                     </FloatingActionButton>
                   ) : (
                     <FloatingActionButton
-                      backgroundColor={'#ffffff'}
+                      backgroundColor={"#ffffff"}
                       style={LiveScore.styles.serveButton}
                       onClick={() => this.toggleServing()}
                     />
@@ -454,7 +493,7 @@ class LiveMatch extends React.Component {
 
         {/* sets */}
 
-        <Paper className={'setsMatch'} id={'sets'} zDepth={2}>
+        <Paper className={"setsMatch"} id={"sets"} zDepth={2}>
           <div className="row">
             <div className="col-lg-8 col-md-12 col-sm-12 col-xs-12 ">
               <h3>sets:</h3>
@@ -551,18 +590,22 @@ class LiveMatch extends React.Component {
             {/* match duration */}
 
             <div className="col-lg-4 col-md-12 col-sm-12 col-xs-12">
-              <div className={'row'}>
+              <div className={"row"}>
                 <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                   <h2>Match Duration:</h2>
                 </div>
                 <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  <h3>1:56</h3>
+                  <h3>
+                    {this.state.score.currentTime
+                      ? this.state.score.currentTime
+                      : this.state.currentCount ? this.state.currentCount : ""}
+                  </h3>
                 </div>
                 <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                   <RaisedButton
                     label="Start Match"
                     secondary={true}
-                    disabled={this.state.startDisabled}
+                    disabled={this.state.startDisabled || this.state.score.currentTime}
                     labelStyle={LiveScore.styles.start}
                     onClick={() => this.startMatch()}
                   />
@@ -576,7 +619,7 @@ class LiveMatch extends React.Component {
 
     return (
       <div>
-        <MainCard title={'Matches'} content={liveMatch} />
+        <MainCard title={"Matches"} content={liveMatch} />
         {this.state.displayFeedbackModal ? FeedbackModal : false}
       </div>
     );

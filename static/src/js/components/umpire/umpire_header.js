@@ -32,6 +32,7 @@ const styles = {
 };
 
 class UmpireHeader extends React.Component {
+
   constructor(props) {
     super(props);
 

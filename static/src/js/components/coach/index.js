@@ -1,85 +1,85 @@
-import React from 'react';
-import ReactResponsiveSelect from 'react-responsive-select';
-import { inject, observer } from 'mobx-react';
-import { teal500 } from 'material-ui/styles/colors';
-import styled from 'styled-components';
-import RaisedButton from 'material-ui/RaisedButton';
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import MyCheckbox from './checkbox/myCheckbox';
-import { registerCoachPlayerToTournament } from '../../api';
+import React from "react";
+import ReactResponsiveSelect from "react-responsive-select";
+import { inject, observer } from "mobx-react";
+import { teal500 } from "material-ui/styles/colors";
+import styled from "styled-components";
+import RaisedButton from "material-ui/RaisedButton";
+import Dialog from "material-ui/Dialog";
+import FlatButton from "material-ui/FlatButton";
+import MyCheckbox from "./checkbox/myCheckbox";
+import { registerCoachPlayerToTournament } from "../../api";
 
-const mobx = require('mobx');
+const mobx = require("mobx");
 
 const pickTour = {
-  fontSize: '4em',
+  fontSize: "4em"
 };
 const styles = {
   list: {
-    listStyleType: 'none',
-    display: 'block',
-    margin: '0',
-    padding: '0',
+    listStyleType: "none",
+    display: "block",
+    margin: "0",
+    padding: "0"
   },
   block: {
-    maxWidth: 250,
+    maxWidth: 250
   },
   conteinerStyle: {
-    height: '100%',
-    width: '100%',
+    height: "100%",
+    width: "100%"
   },
   customWidth: {
-    width: '100%',
-    fontSize: '50px',
-    marginBottom: '.5em',
-    boxShadow: '5px 10px 18px #888888',
-    backgroundColor: 'ivory',
-    height: '3em',
+    width: "100%",
+    fontSize: "50px",
+    marginBottom: ".5em",
+    boxShadow: "5px 10px 18px #888888",
+    backgroundColor: "ivory",
+    height: "3em"
   },
   menuLabel: {
-    width: '100%',
-    fontSize: '40px',
-    marginTop: '60px',
-    marginBottom: '60px',
-    height: '100%',
+    width: "100%",
+    fontSize: "40px",
+    marginTop: "60px",
+    marginBottom: "60px",
+    height: "100%"
   },
   hintText: {
-    bottom: '1.2em',
+    bottom: "1.2em"
   },
   flatStyle: {
-    height: '5em',
+    height: "5em"
   },
   dialogButton: {
-    width: '100%',
+    width: "100%"
   },
   dialogButtonLabel: {
-    width: '100%',
-    fontSize: '5em',
-    fontWeight: '600',
+    width: "100%",
+    fontSize: "5em",
+    fontWeight: "600",
 
-    marginBottom: '1em',
+    marginBottom: "1em"
   },
   dialog: {
-    width: '100%',
-    maxWidth: '100%',
+    width: "100%",
+    maxWidth: "100%"
   },
   dialogBody: {
-    fontSize: '4em',
+    fontSize: "4em"
   },
   button: {
-    display: 'block',
-    height: '100px',
-    width: '100%',
-    backgroundColor: 'teal500',
-    border: 'solid 1px teal500',
-    borderRadius: '8px',
+    display: "block",
+    height: "100px",
+    width: "100%",
+    backgroundColor: "teal500",
+    border: "solid 1px teal500",
+    borderRadius: "8px"
   },
   label: {
-    fontSize: '80px',
-    textAlign: 'center',
-    color: 'white',
-    fontWeight: '400',
-  },
+    fontSize: "80px",
+    textAlign: "center",
+    color: "white",
+    fontWeight: "400"
+  }
 };
 const Row = styled.div`
   &::after {
@@ -92,11 +92,11 @@ const Column = styled.div`
   float: left;
   width: 100%;
   @media only screen and (min-width: 768px) {
-    width: ${props => (props.span ? props.span / 12 * 100 : '8.33')}%;
+    width: ${props => (props.span ? props.span / 12 * 100 : "8.33")}%;
   }
 `;
 
-@inject('stores')
+@inject("stores")
 @observer
 export default class CoachPage extends React.Component {
   constructor(props) {
@@ -110,9 +110,9 @@ export default class CoachPage extends React.Component {
     this.buttonClicked = this.buttonClicked.bind(this);
     this.registerPlayers = this.registerPlayers.bind(this);
     this.state = {
-      coach_name: 'Haim',
-      first_name: '',
-      last_name: '',
+      coach_name: "Haim",
+      first_name: this.props.location.firstName,
+      last_name: this.props.location.lastName,
       tournaments: [],
       optionsPlayers: [],
       optionsTournaments: [],
@@ -123,15 +123,16 @@ export default class CoachPage extends React.Component {
       players: [],
       selectedOptions: [],
       open: false,
-      dialog: '',
+      dialog: "",
       playersSelection: {},
       userId: null,
       is_tour: false,
       is_cat: false,
+      user: null
     };
   }
 
-  handleOpen = (str) => {
+  handleOpen = str => {
     this.setState({ open: true, dialog: str });
   };
 
@@ -143,35 +144,29 @@ export default class CoachPage extends React.Component {
     const selected = [...this.state.selectedOptions];
     selected.push(event.target.value);
     this.setState({
-      selectedOptions: selected,
+      selectedOptions: selected
     });
   }
 
   componentWillMount() {
     const { TournamentsStore, CoachEnterPlayersStore } = this.props.stores;
-    console.log('localStorage.id_user', localStorage.id_user);
     const self = this;
-    CoachEnterPlayersStore.fetchPlayers(localStorage.id_user).then((storedPlayers) => {
-      self.setState({ players: mobx.toJS(storedPlayers) }, () => {
-        console.log('Players', this.state.players);
+    if (this.state.user === null && localStorage.id_user) {
+      this.setState({ user: localStorage.id_user }, () => {
+        CoachEnterPlayersStore.fetchPlayers(this.state.user).then(
+          storedPlayers => {
+            self.setState({ players: mobx.toJS(storedPlayers) }, () => {});
+          }
+        );
       });
-
-      console.log('first_name', mobx.toJS(CoachEnterPlayersStore.firstName));
-      console.log('last_name', mobx.toJS(CoachEnterPlayersStore.lastName));
-      this.setState({
-        first_name: mobx.toJS(CoachEnterPlayersStore.firstName),
-      });
-      this.setState({
-        last_name: mobx.toJS(CoachEnterPlayersStore.lastName),
-      });
-    });
-
-    TournamentsStore.fetchAllTournaments().then((storedTournaments) => {
+    }
+    TournamentsStore.fetchAllTournaments().then(storedTournaments => {
       self.setState({ tournaments: mobx.toJS(storedTournaments) }, () => {
         this.createTournamentOptions();
       });
     });
   }
+
   createTournamentOptions() {
     if (this.state.tournaments) {
       const self = this;
@@ -179,7 +174,8 @@ export default class CoachPage extends React.Component {
       const tourdoc = [];
 
       this.state.tournaments.map((tournament, index) =>
-        tourdoc.push({ value: tournament.id, text: tournament.name }));
+        tourdoc.push({ value: tournament.id, text: tournament.name })
+      );
 
       self.setState({ optionsTournaments: tourdoc });
     }
@@ -190,7 +186,8 @@ export default class CoachPage extends React.Component {
 
       const catdoc = [];
       this.state.categories.map((category, index) =>
-        catdoc.push({ value: category.id, text: category.category }));
+        catdoc.push({ value: category.id, text: category.category })
+      );
 
       self.setState({ optionsCategories: catdoc });
     }
@@ -198,50 +195,56 @@ export default class CoachPage extends React.Component {
 
   createPlayerOptions() {
     if (this.state.players && this.state.is_cat === true) {
-      console.log('in createPlayerOptions', this.state.players);
+      console.log("in createPlayerOptions", this.state.players);
       const self = this;
       const playdoc = [];
       this.state.players
         ? this.state.players.map((player, index) =>
-          playdoc.push(<MyCheckbox
+            playdoc.push(
+              <MyCheckbox
                 contentEditable={true}
-                ref={(instance) => {
+                ref={instance => {
                   this.child = instance;
                 }}
                 label={player.name}
                 value={player.id}
-                changed={(o) => {
+                changed={o => {
                   const playersSelection = self.state.playersSelection;
                   playersSelection[o.playerId] = o.isChecked;
                   self.setState({ playersSelection });
                 }}
                 submit={false}
-              />))
+              />
+            )
+          )
         : false;
       self.setState({ optionsPlayers: playdoc });
     }
   }
 
-  handleChangeTour = (value) => {
+  handleChangeTour = value => {
+    console.log("tour selected: ", value);
     this.setState({ tournamentSelected: value });
     const { CoachEnterPlayersStore } = this.props.stores;
     CoachEnterPlayersStore.setSelectedTournament(value);
     const self = this;
-    CoachEnterPlayersStore.receiveCategoriesByTournament(value).then((storedCategories) => {
-      self.setState({ categories: mobx.toJS(storedCategories) }, () => {
-        this.createCategoriesOptions();
-      });
-    });
+    CoachEnterPlayersStore.receiveCategoriesByTournament(value).then(
+      storedCategories => {
+        self.setState({ categories: mobx.toJS(storedCategories) }, () => {
+          this.createCategoriesOptions();
+        });
+      }
+    );
   };
 
-  handleChangeCat = (value) => {
+  handleChangeCat = value => {
     this.setState({ categorySelected: value }, () => {
       this.setState({ is_cat: true });
       this.createPlayerOptions();
     });
   };
 
-  buttonClicked = (event) => {
+  buttonClicked = event => {
     const selectedPlayers = [];
     let res;
     for (const x in this.state.playersSelection) {
@@ -251,21 +254,21 @@ export default class CoachPage extends React.Component {
       }
     }
     if (selectedPlayers.length === 0) {
-      return this.handleOpen('No players were selected.');
+      return this.handleOpen("No players were selected.");
     }
   };
 
   registerPlayers(playerId) {
     const entry = {
       tournament_category: this.state.categorySelected,
-      player: playerId,
+      player: playerId
     };
 
-    registerCoachPlayerToTournament(entry).then((response) => {
+    registerCoachPlayerToTournament(entry).then(response => {
       if (response.status > 400) {
-        this.handleOpen('Error. Check your connection.');
+        this.handleOpen("Error.");
       } else {
-        this.handleOpen('Registration has been done successfully.');
+        this.handleOpen("Registration has been done successfully.");
       }
     });
   }
@@ -280,13 +283,12 @@ export default class CoachPage extends React.Component {
         buttonStyle={styles.dialogButton}
         labelStyle={styles.dialogButtonLabel}
         style={styles.flatStyle}
-      />,
+      />
     ];
     return (
       <div style={styles.conteinerStyle}>
         <Row>
-          <Column span="12">
-          </Column>
+          <Column span="12" />
         </Row>
         <Row>
           <Column span="12">
@@ -301,11 +303,11 @@ export default class CoachPage extends React.Component {
               options={
                 this.state.optionsTournaments
                   ? this.state.optionsTournaments
-                  : ''
+                  : ""
               }
               prefix=""
               selectedValue={this.state.tournamentSelected}
-              onChange={(newValue) => {
+              onChange={newValue => {
                 this.handleChangeTour(newValue.value);
               }}
             />
@@ -326,11 +328,11 @@ export default class CoachPage extends React.Component {
                   options={
                     this.state.optionsCategories
                       ? this.state.optionsCategories
-                      : ''
+                      : ""
                   }
                   prefix=""
                   selectedValue={this.state.categorySelected}
-                  onChange={(newValue) => {
+                  onChange={newValue => {
                     this.handleChangeCat(newValue.value);
                   }}
                 />
@@ -338,16 +340,16 @@ export default class CoachPage extends React.Component {
             </Row>
           </div>
         ) : (
-          ''
+          ""
         )}
 
-        <div style={{ display: 'block' }}>
+        <div style={{ display: "block" }}>
           <ul style={styles.list}>
-            {this.state.optionsPlayers ? this.state.optionsPlayers : ''}
+            {this.state.optionsPlayers ? this.state.optionsPlayers : ""}
           </ul>
         </div>
 
-        <div style={{ display: 'block' }}>
+        <div style={{ display: "block" }}>
           <Row>
             <Column span="12">
               <RaisedButton

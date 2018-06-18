@@ -309,6 +309,6 @@ class Entries(models.Model):
         )
 
     def __str__(self):
-        return 'category: : %s , player: %s , rank:%d  ,seeded : %s ' % (
+        return 'category: : %s , player: %s , rank:%s  ,seeded : %s ' % (
             self.tournament_category.category, self.player.name, self.rank,
             self.is_seeded)

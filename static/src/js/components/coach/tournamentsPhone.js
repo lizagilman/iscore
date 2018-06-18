@@ -45,7 +45,7 @@ export default class ScheduleCoachTournaments extends React.Component {
       const { CoachEnterPlayersStore } = this.props.stores;
       CoachEnterPlayersStore.setSelectedTournament(tour);
       this.setState({ selectedTournament: tour });
-    }
+    };
     render() {
       const createTournamentButton = tour => (
 
