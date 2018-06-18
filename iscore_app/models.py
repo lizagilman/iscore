@@ -148,6 +148,7 @@ class Tournaments(models.Model):
     status = models.CharField(max_length=300, null=True, blank=True)
     manager = models.ForeignKey(
         'Tournament_Managers', on_delete=models.CASCADE)
+    has_schedule = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -162,6 +163,7 @@ class TournamentCategories(models.Model):
         through_fields=('tournament_category', 'player'),
     )
     max_players = models.IntegerField(default=0)
+    has_draw = models.BooleanField(default=False)
 
     def __str__(self):
         return self.category
