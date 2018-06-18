@@ -225,6 +225,7 @@ export default class CoachPage extends React.Component {
   handleChangeTour = (value) => {
     this.setState({ tournamentSelected: value });
     const { CoachEnterPlayersStore } = this.props.stores;
+    CoachEnterPlayersStore.setSelectedTournament(value);
     const self = this;
     CoachEnterPlayersStore.receiveCategoriesByTournament(value).then((storedCategories) => {
       self.setState({ categories: mobx.toJS(storedCategories) }, () => {
