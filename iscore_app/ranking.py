@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-from iscore_app.models import Matches, RankedPlayers, Grades, Ranking_Lists, TournamentCategories, Entries, Tournaments, Players, RankingListCategories
+from iscore_app.models import Matches, RankedPlayers, Coach, Ranking_Lists, TournamentCategories, Entries, Tournaments, Players, RankingListCategories
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.db.models import Q
@@ -157,6 +157,11 @@ def import_ranking_list_from_file(request):
                 gender=wb['gender'][i]
                 player=Players(name=player_name,nationality=nationality,gender=gender)
                 player.save()
+
+            if(pd.isnull(wb['coach_id'][i])==False):
+                coach=Coach.objects.get(pk=int(wb['coach_id'][i]))
+                coach.player_list.add(player)
+                coach.save()
 
             rank=wb['rank'][i]
             points=wb['points'][i]
