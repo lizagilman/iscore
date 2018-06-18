@@ -90,11 +90,14 @@ WSGI_APPLICATION = 'iscore.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
-
     'default': {
-
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'db4uu486n3qqlp',
+        'USER': 'iojpzyfmwubgfo',
+        'PASSWORD': '96dbe14db880eb7bec0518c787837d0cdc6cac3dc84e8649fbfe076747ed53e1',
+        'HOST': 'ec2-23-23-247-222.compute-1.amazonaws.com',
+        'PORT': '5432',
     }
-
 }
 
 # Password validation
@@ -103,19 +106,19 @@ DATABASES = {
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME':
-        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+            'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
         'NAME':
-        'django.contrib.auth.password_validation.MinimumLengthValidator',
+            'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
         'NAME':
-        'django.contrib.auth.password_validation.CommonPasswordValidator',
+            'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
         'NAME':
-        'django.contrib.auth.password_validation.NumericPasswordValidator',
+            'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
@@ -156,11 +159,11 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             "hosts": [os.environ.get('REDIS_URL', 'redis://localhost:6379')],
-        #    "hosts": [('127.0.0.1', 6379)],
+            #    "hosts": [('127.0.0.1', 6379)],
         },
     },
 }
 # Configure Django App for Heroku.
 django_heroku.settings(locals())
-DATABASES['default'] = dj_database_url.config(conn_max_age=0)
+# DATABASES['default'] = dj_database_url.config(conn_max_age=0)
 TEST_RUNNER = 'django_heroku.HerokuDiscoverRunner'
