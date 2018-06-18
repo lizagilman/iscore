@@ -7,6 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import MainCard from '../main_card/main_card_index';
 import * as LiveScore from './liveScore_consts';
 import { getPlayerIdByPlayerName, updateMatchWinnerApi } from '../../api';
+import FeedBack from '../feeback_dialog/feeback_modal';
 
 const mobx = require('mobx');
 
@@ -40,6 +41,8 @@ class LiveMatch extends React.Component {
         match_id: null,
         serving: LiveScore.PLAYER_1,
         winner: null,
+        displayFeedbackModal: false,
+        feedbackText: '',
       },
     };
 
@@ -50,6 +53,7 @@ class LiveMatch extends React.Component {
     this.startMatch = this.startMatch.bind(this);
     this.updateLiveScore = this.updateLiveScore.bind(this);
     this.updateWinner = this.updateWinner.bind(this);
+    this.closeFeedbackModal = this.closeFeedbackModal.bind(this);
   }
 
   toggleServing = () => {
@@ -58,6 +62,7 @@ class LiveMatch extends React.Component {
     newScore.serving =
       serving === LiveScore.PLAYER_1 ? LiveScore.PLAYER_2 : LiveScore.PLAYER_1;
     this.setState({ score: newScore });
+    this.updateLiveScore(newScore)
   };
 
   startMatch = () => {
@@ -258,7 +263,6 @@ class LiveMatch extends React.Component {
       }
     }
 
-    console.log('n sc', newScore);
 
     this.setState({ score: newScore });
 
@@ -266,16 +270,29 @@ class LiveMatch extends React.Component {
   };
 
   updateWinner(playerId) {
+    this.setState({ displayFeedbackModal: true });
     updateMatchWinnerApi(this.state.score.match_id, playerId).then((responseUpdate) => {
       responseUpdate.status > 400
-        ? alert('Winner Update failed')
-        : alert('Winner Updated');
+        ? this.setState({ feedbackText: 'Failed to update winner!' })
+        : this.setState({ feedbackText: 'winner updated!' });
     });
+  }
+
+  closeFeedbackModal(e) {
+    e.preventDefault();
+    this.setState({ displayFeedbackModal: false, feedbackText: '' });
   }
 
   render() {
     const { UmpireStore } = this.props.stores;
     const match = mobx.toJS(UmpireStore.getSingleMatch());
+
+    const FeedbackModal = (
+      <FeedBack
+        text={this.state.feedbackText}
+        handleClose={this.closeFeedbackModal}
+      />
+    );
 
     const liveMatch = (
       <div>
@@ -560,6 +577,7 @@ class LiveMatch extends React.Component {
     return (
       <div>
         <MainCard title={'Matches'} content={liveMatch} />
+        {this.state.displayFeedbackModal ? FeedbackModal : false}
       </div>
     );
   }
