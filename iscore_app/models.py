@@ -15,6 +15,7 @@ class User(AbstractUser):
 
     pass
 
+
 class Organizations(models.Model):
     name = models.CharField(db_index=True, max_length=300)
     field_of_sports = models.CharField(max_length=300)
@@ -23,12 +24,17 @@ class Organizations(models.Model):
     def __str__(self):
         return self.name
 
+
 class RankingListCategories(models.Model):
     name = models.CharField(db_index=True, max_length=300)
-    organization = models.ForeignKey(Organizations, on_delete=models.DO_NOTHING)
+    organization = models.ForeignKey(
+        Organizations, on_delete=models.DO_NOTHING)
 
     class Meta:
-        unique_together = ('name', 'organization',)
+        unique_together = (
+            'name',
+            'organization',
+        )
 
     def __str__(self):
         return self.name
@@ -47,11 +53,15 @@ class Players(models.Model):
 
 class Money_Distribution_Methods(models.Model):
     name = models.CharField(db_index=True, max_length=300)
-    distribution = ArrayField(models.IntegerField(default=0),size=7)
-    organization = models.ForeignKey(Organizations, on_delete=models.DO_NOTHING)
+    distribution = ArrayField(models.IntegerField(default=0), size=7)
+    organization = models.ForeignKey(
+        Organizations, on_delete=models.DO_NOTHING)
 
     class Meta:
-        unique_together = ('name', 'organization',)
+        unique_together = (
+            'name',
+            'organization',
+        )
 
     def __str__(self):
         return self.name
@@ -59,11 +69,15 @@ class Money_Distribution_Methods(models.Model):
 
 class Points_Distribution_Methods(models.Model):
     name = models.CharField(db_index=True, max_length=300)
-    distribution = ArrayField(models.IntegerField(default=0),size=7)
-    organization = models.ForeignKey(Organizations, on_delete=models.DO_NOTHING)
+    distribution = ArrayField(models.IntegerField(default=0), size=7)
+    organization = models.ForeignKey(
+        Organizations, on_delete=models.DO_NOTHING)
 
     class Meta:
-        unique_together = ('name', 'organization',)
+        unique_together = (
+            'name',
+            'organization',
+        )
 
     def __str__(self):
         return self.name
@@ -81,20 +95,22 @@ class Grades(models.Model):
         on_delete=models.DO_NOTHING,
         null=True,
         blank=True)
-    organization=models.ForeignKey(Organizations,on_delete=models.DO_NOTHING)
+    organization = models.ForeignKey(
+        Organizations, on_delete=models.DO_NOTHING)
 
     class Meta:
-        unique_together = ('name', 'organization',)
+        unique_together = (
+            'name',
+            'organization',
+        )
 
     def __str__(self):
         return self.name
 
 
-
-
-
 class Ranking_Lists(models.Model):
-    organization = models.ForeignKey(Organizations, on_delete=models.DO_NOTHING)
+    organization = models.ForeignKey(
+        Organizations, on_delete=models.DO_NOTHING)
     name = models.CharField(db_index=True, max_length=300)
     grades = models.ManyToManyField(
         Grades, null=True, blank=True
@@ -104,7 +120,10 @@ class Ranking_Lists(models.Model):
         RankingListCategories, null=True, blank=True)
 
     class Meta:
-        unique_together = ('organization', 'name',)
+        unique_together = (
+            'organization',
+            'name',
+        )
 
     def __str__(self):
         return self.name
@@ -121,7 +140,11 @@ class RankedPlayers(models.Model):
     tournaments_played = models.IntegerField(default=0)
 
     class Meta:
-        unique_together = ('list', 'category','player',)
+        unique_together = (
+            'list',
+            'category',
+            'player',
+        )
 
     def __str__(self):
         return 'ranking list: : %s , category: %s , player:%s  ,rank : %s ,points : %s' % (
@@ -216,14 +239,16 @@ class Games(models.Model):
     set = models.ForeignKey(Sets, on_delete=models.CASCADE)
 
     def __str__(self):
-        return 'game_num: %d p1: %d , p2: %d , set:%d  '%(
-            self.game_num, self.player1_score, self.player2_score, self.set.id)
+        return 'game_num: %d p1: %d , p2: %d , set:%d  ' % (self.game_num,
+                                                            self.player1_score,
+                                                            self.player2_score,
+                                                            self.set.id)
 
 
 class Score(models.Model):
-    match_id=models.ForeignKey(Matches, on_delete=models.CASCADE)
+    match_id = models.ForeignKey(Matches, on_delete=models.CASCADE)
     current_set = models.IntegerField(default=1)
-    current_game= models.IntegerField(default=1)
+    current_game = models.IntegerField(default=1)
     p1_set1 = models.IntegerField(default=0)
     p2_set1 = models.IntegerField(default=0)
     p1_set2 = models.IntegerField(default=0)
@@ -234,20 +259,18 @@ class Score(models.Model):
     p1_set4 = models.IntegerField(default=0)
     p1_set5 = models.IntegerField(default=0)
     p2_set5 = models.IntegerField(default=0)
-    p1_sets =models.IntegerField(default=0)
+    p1_sets = models.IntegerField(default=0)
     p2_sets = models.IntegerField(default=0)
     p1_games = models.IntegerField(default=0)
     p2_games = models.IntegerField(default=0)
     p1_points = models.IntegerField(default=0)
     p2_points = models.IntegerField(default=0)
 
-
     def __str__(self):
-        return 'game_num: %d p1: %d , p2: %d , set:%d  '%(
-            self.game_num, self.player1_score, self.player2_score, self.set.id)
-
-
-
+        return 'game_num: %d p1: %d , p2: %d , set:%d  ' % (self.game_num,
+                                                            self.player1_score,
+                                                            self.player2_score,
+                                                            self.set.id)
 
 
 class Tournament_Managers(models.Model):
@@ -263,10 +286,12 @@ class Coach(models.Model):
     name = models.CharField(db_index=True, max_length=300)
     player_list = models.ManyToManyField(Players, null=True, blank=True)
 
+
 class Umpires(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(db_index=True, max_length=300)
-    organization = models.ForeignKey(Organizations,on_delete=models.DO_NOTHING ,null=True, blank=True)
+    organization = models.ForeignKey(
+        Organizations, on_delete=models.DO_NOTHING, null=True, blank=True)
 
 
 class Entries(models.Model):
@@ -278,9 +303,12 @@ class Entries(models.Model):
     rank = models.IntegerField(null=True, blank=True)
 
     class Meta:
-        unique_together = ('tournament_category', 'player',)
+        unique_together = (
+            'tournament_category',
+            'player',
+        )
 
     def __str__(self):
         return 'category: : %s , player: %s , rank:%d  ,seeded : %s ' % (
-            self.tournament_category.category, self.player.name, self.rank, self.is_seeded)
-
+            self.tournament_category.category, self.player.name, self.rank,
+            self.is_seeded)

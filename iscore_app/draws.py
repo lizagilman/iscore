@@ -2,7 +2,7 @@ import random
 
 from django.http import HttpResponse
 from iscore_app.serializers import MatchesReaderSerializer
-from iscore_app.models import Matches, RankedPlayers, RankingListCategories, Ranking_Lists, TournamentCategories, Entries, Tournaments, Players,Score
+from iscore_app.models import Matches, RankedPlayers, RankingListCategories, Ranking_Lists, TournamentCategories, Entries, Tournaments, Players, Score
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
@@ -12,8 +12,8 @@ def handle_generate_draws(request):
 
     category_id = request.GET['category_id']
     Generate_Draws(category_id)
-    draws = Matches.objects.filter(category=int(category_id)).order_by(
-        'match_index')
+    draws = Matches.objects.filter(
+        category=int(category_id)).order_by('match_index')
     serializer = MatchesReaderSerializer(data=draws, many=True)
 
     serializer.is_valid()
@@ -72,7 +72,6 @@ class Tournament():
         self.placesList = [None] * len(self.playerList)
         self.matchList = []
 
-
     def seedPlayer(self, rank, part_size):
 
         if rank <= 1:
@@ -83,59 +82,60 @@ class Tournament():
 
         return self.seedPlayer(rank // 2 + 1, part_size // 2)
 
-
     def make_draws(self, draw_table):
         part_size = len(self.playerList)
 
-        num_seeded=int(Entries.objects.filter(tournament_category=draw_table).filter(is_seeded=True).count())
+        num_seeded = int(
+            Entries.objects.filter(tournament_category=draw_table).filter(
+                is_seeded=True).count())
 
-        for i in range(1,num_seeded+1):
+        for i in range(1, num_seeded + 1):
             place_index = self.seedPlayer(i, part_size)
-            self.placesList[place_index] = self.playerList[i-1]
+            self.placesList[place_index] = self.playerList[i - 1]
 
-        for i in range(0,part_size):
-            if(self.placesList[i]==None):
-                rand=random.randint(num_seeded,len(self.playerList)-1)
+        for i in range(0, part_size):
+            if (self.placesList[i] == None):
+                rand = random.randint(num_seeded, len(self.playerList) - 1)
                 self.placesList[i] = self.playerList[rand]
-                del(self.playerList[rand])
+                del (self.playerList[rand])
         # for i in range(1, part_size + 1):
         #     place_index = self.seedPlayer(i, part_size)
         #     self.placesList[i - 1] = self.playerList[place_index]
 
         for i in range(0, len(self.placesList), 2):
-                match = Match(self.placesList[i], self.placesList[i + 1])
-                self.matchList.append(match)
-                stage = self.find_stage(len(self.placesList) / 2)
-                new_match = Matches(
-                    match_index=i,
-                    player1=match.playerA,
-                    player2=match.playerB,
-                    winner=None,
-                    stage=stage,
-                    time=None,
-                    category=draw_table)
-                new_match.save()
+            match = Match(self.placesList[i], self.placesList[i + 1])
+            self.matchList.append(match)
+            stage = self.find_stage(len(self.placesList) / 2)
+            new_match = Matches(
+                match_index=i,
+                player1=match.playerA,
+                player2=match.playerB,
+                winner=None,
+                stage=stage,
+                time=None,
+                category=draw_table)
+            new_match.save()
 
         counter = len(self.placesList)
         matches_len = len(self.matchList)
         if matches_len % 4 == 0:
-                arrayM = []
-                self.addEmptyMatches(matches_len // 2, arrayM)
-                for k in arrayM:
-                    stage = self.find_stage(k)
-                    for j in range(int(k)):
-                        match = Match(None, None)
-                        self.matchList.append(match)
-                        new_match = Matches(
-                            match_index=counter,
-                            player1=match.playerA,
-                            player2=match.playerB,
-                            winner=None,
-                            stage=stage,
-                            time=None,
-                            category=draw_table)
-                        new_match.save()
-                        counter += 2
+            arrayM = []
+            self.addEmptyMatches(matches_len // 2, arrayM)
+            for k in arrayM:
+                stage = self.find_stage(k)
+                for j in range(int(k)):
+                    match = Match(None, None)
+                    self.matchList.append(match)
+                    new_match = Matches(
+                        match_index=counter,
+                        player1=match.playerA,
+                        player2=match.playerB,
+                        winner=None,
+                        stage=stage,
+                        time=None,
+                        category=draw_table)
+                    new_match.save()
+                    counter += 2
         else:
             print('wrong input')
 
@@ -233,13 +233,15 @@ def handle_update_winner(request):
     update_winner(match_id, winner_id)
     return HttpResponse("match: " + match_id + " has updated his winner")
 
+
 def set_seeded_in_tournament(tournament):
 
-    categories=TournamentCategories.objects.filter(tournamet=tournament)
+    categories = TournamentCategories.objects.filter(tournamet=tournament)
     for category in categories:
-        rankedPlayers = RankedPlayers.objects.filter(list__organization=tournament.organization).filter(
-            list__name=tournament.ranking_list).filter(
-            category__name=category.category).order_by('points')
+        rankedPlayers = RankedPlayers.objects.filter(
+            list__organization=tournament.organization).filter(
+                list__name=tournament.ranking_list).filter(
+                    category__name=category.category).order_by('points')
 
         registered_players = Entries.objects.filter(
             tournament_category=category)
@@ -253,13 +255,11 @@ def set_seeded_in_tournament(tournament):
         ranked_registered_players = Entries.objects.filter(
             tournament_category=category).order_by('rank')
 
-
-        if(ranked_registered_players.count()>category.max_players):
-            size=registered_players.count()
-            for i in range(size, category.max_players,-1):
-                player = ranked_registered_players[i-1]
+        if (ranked_registered_players.count() > category.max_players):
+            size = registered_players.count()
+            for i in range(size, category.max_players, -1):
+                player = ranked_registered_players[i - 1]
                 player.delete()
-
 
             ranked_registered_players = Entries.objects.filter(
                 tournament_category=category).order_by('rank')
@@ -270,16 +270,14 @@ def set_seeded_in_tournament(tournament):
             count_seeded = int(ranked_registered_players.count() / 4)
 
         for i in range(0, count_seeded):
-            player=ranked_registered_players[i]
-            if (player.rank!=None):
-                player.is_seeded=True
+            player = ranked_registered_players[i]
+            if (player.rank != None):
+                player.is_seeded = True
                 player.save()
 
 
 def create_score_table(tournament):
-    matches=Matches.objects.filter(category__tournamet=tournament)
+    matches = Matches.objects.filter(category__tournamet=tournament)
     for match in matches:
-        score=Score(match_id=match)
+        score = Score(match_id=match)
         score.save()
-
-

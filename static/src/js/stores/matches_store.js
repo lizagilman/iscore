@@ -50,9 +50,14 @@ class MatchesStore {
 
   @action
   createSchedule() {
-    generateScheduleApi(this.scheduleParams).then((response) => {
-      this.matches = response;
-    });
+    return Promise.resolve(generateScheduleApi(this.scheduleParams).then((response) => {
+      if (response) {
+        response.sort((match1, match2) => new Date(match1.time) - new Date(match2.time));
+        this.matches = [response];
+        return true;
+      }
+      return false;
+    }));
   }
 
   @action

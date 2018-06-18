@@ -11,6 +11,7 @@ import {
 import TextField from 'material-ui/TextField';
 import FlatButton from 'material-ui/FlatButton';
 import Spinner from '../../spinner/spinner';
+import FeedBack from '../../feeback_dialog/feeback_modal';
 
 const mobx = require('mobx');
 
@@ -73,8 +74,13 @@ export default class Schedule extends React.Component {
   constructor(props) {
     super(props);
     this.setDateTime = this.setDateTime.bind(this);
+    this.closeFeedbackModal = this.closeFeedbackModal.bind(this);
 
-    this.state = {};
+    this.state = {
+      displayFeedbackModal: false,
+      feedbackText: '',
+      has_schedule: null,
+    };
 
     this.updateMatch = this.updateMatch.bind(this);
   }
@@ -93,13 +99,20 @@ export default class Schedule extends React.Component {
     MatchesStore.updateMatch(matchId, winner);
   }
 
+  closeFeedbackModal(e) {
+    e.preventDefault();
+    this.setState({ displayFeedbackModal: false, feedbackText: '' });
+  }
+
   componentWillMount() {
     const { TournamentStore, MatchesStore } = this.props.stores;
     const tournamentId =
       this.props.tournamentId || TournamentStore.getTournamentId();
 
     MatchesStore.updateParamValue('tournamentId', tournamentId);
-
+    this.setState({
+      has_schedule: TournamentStore.getTournament().has_schedule,
+    });
     MatchesStore.fetchMatches(tournamentId);
   }
 
@@ -140,7 +153,6 @@ export default class Schedule extends React.Component {
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStyleTime}>
           {match ? this.setDateTime(match.time) : ''}
-
         </TableRowColumn>
         <TableRowColumn style={scheduleTableStyleCourt}>
           {match.court ? match.court : ''}
@@ -241,8 +253,18 @@ export default class Schedule extends React.Component {
             label="Generate Schedule"
             primary={true}
             onClick={() => {
-              MatchesStore.createSchedule();
-              this.forceUpdate();
+              this.setState({ displayFeedbackModal: true });
+              MatchesStore.createSchedule().then((feedback) => {
+                if (feedback) {
+                  this.setState({
+                    feedbackText: 'Tournament schedule created Successfully!',
+                  });
+                  this.setState({ has_schedule: true });
+                  this.forceUpdate();
+                } else {
+                  this.setState({ feedbackText: 'Failed to create schedule!' });
+                }
+              });
             }}
           />
           <FlatButton
@@ -250,16 +272,25 @@ export default class Schedule extends React.Component {
             primary={true}
             onClick={() => {
               MatchesStore.deleteSchedule();
+              this.setState({ has_schedule: false });
             }}
           />
         </div>
       </div>
     );
 
+    const FeedbackModal = (
+      <FeedBack
+        text={this.state.feedbackText}
+        handleClose={this.closeFeedbackModal}
+      />
+    );
+
     return (
       <div>
         {scheduleParamsForm}
-        {scheduleTable}
+        {this.state.has_schedule ? scheduleTable : false}
+        {this.state.displayFeedbackModal ? FeedbackModal : false}
       </div>
     );
   }
