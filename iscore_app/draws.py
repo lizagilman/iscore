@@ -14,7 +14,6 @@ def handle_generate_draws(request):
     Generate_Draws(category_id)
     draws = Matches.objects.filter(category=int(category_id)).order_by(
         'match_index')
-
     serializer = MatchesReaderSerializer(data=draws, many=True)
 
     serializer.is_valid()
@@ -190,6 +189,8 @@ def Generate_Draws(category):
     tournamnt_info = Tournaments.objects.get(pk=tournament_id)
 
     match_generate(tournamnt_info, category)
+    category.has_draw = True
+    category.save()
 
 
 def Delete_Draws(request):

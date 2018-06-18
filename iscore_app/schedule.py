@@ -25,6 +25,8 @@ def handle_generate_schedule(request):
     if (data == "could not compute, too few matches per day"
             or data == "could not compute,draws for a category is missing"):
         return HttpResponse(data, status=400)
+    info.has_schedule = True
+    info.save()
     send_data = serializers.serialize('json', data)
     return HttpResponse(send_data)
 
