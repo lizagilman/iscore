@@ -84,8 +84,6 @@ export default class LogIn extends React.Component {
       registerEmail: null,
       registerFirstName: null,
       registerLastName: null,
-      loginFirstName: null,
-      loginLastName: null,
       selectedType: '',
       is_coach: false,
       is_manager: false,
@@ -93,14 +91,12 @@ export default class LogIn extends React.Component {
       is_organization: false,
       token: null,
       isAuthenticated: null,
-      userType: null,
-      userId: null,
+      userType: false,
       errorConfirmPass: null,
       errorPass: null,
       is_loading: false,
       loginEmailError: null,
       loginPassError: null,
-
     };
     this.setUserId = this.setUserId.bind(this);
     this.setToken = this.setToken.bind(this);
@@ -120,8 +116,7 @@ export default class LogIn extends React.Component {
   };
 
   submitLogin = (event) => {
-    console.log('this.state.password', this.state.password);
-    console.log('this.state.userName', this.state.userName);
+
 
     if (this.state.password && this.state.userName) {
       const payload = {
@@ -129,62 +124,15 @@ export default class LogIn extends React.Component {
         username: this.state.userName,
       };
 
-      //       this.setState({ is_loading: true });
-      //       loginUser(payload).then((res) => {
-      //         if (res.non_field_errors) {
-      //           alert('Failed to login. ', res.non_field_errors[0]);
-      //           this.setState({ is_loading: false });
-      //         } else {
-      //           console.log('res:', res);
-      //           console.log('res.auth_token:', res.auth_token);
-      //           this.setToken(res.auth_token);
-      //           GetUser(res.auth_token).then((data) => {
-      //             console.log('GetUser data:', data);
-      //             if (data.detail) {
-      //               alert('Failed to login. ', data.detail);
-      //               this.setState({ is_loading: false });
-      //             } else {
-      //               getRegisteredUser(data.id).then((user) => {
-      //                 if (user.detail) {
-      //                   alert('Failed to login. ', user.detail);
-      //                   this.setState({ is_loading: false });
-      //                 } else {
-      //                   console.log('user: ', user);
-      //                   if (user.is_coach === true) {
-      //                     this.setType('coach');
-      //                     this.setState({ userType: 'coach' });
-      //                   } else if (user.is_manager === true) {
-      //                     this.setType('manager');
-      //                     this.setState({ userType: 'manager' });
-      //                   } else if (user.is_organization === true) {
-      //                     this.setType('organization');
-      //                     this.setState({ userType: 'organization' });
-      //                   } else if (user.is_umpire === true) {
-      //                     this.setType('umpire');
-      //                     this.setState({ userType: 'umpire' });
-      //                   }
-      //                   this.setUserId(user.id);
-      //                   this.setLocalSFirstName(user.first_name);
-      //                   this.setLocalSLastName(user.last_name);
-      //                   this.setState({ userId: user.id });
-      //                   this.setState({ loginFirstName: user.first_name });
-      //                   this.setState({ loginLastName: user.last_name });
-      //                 }
-      //               });
-      //             }
-      //           });
-      // =======
       this.setState({ is_loading: true });
       loginUser(payload).then((res) => {
         if (res.non_field_errors) {
           alert('Failed to login. ', res.non_field_errors[0]);
           this.setState({ is_loading: false });
         } else {
-          console.log('res:', res);
-          console.log('res.auth_token:', res.auth_token);
+
           this.setToken(res.auth_token);
           GetUser(res.auth_token).then((data) => {
-            console.log('GetUser data:', data);
             if (data.detail) {
               alert('Failed to login. ', data.detail);
               this.setState({ is_loading: false });
@@ -194,26 +142,20 @@ export default class LogIn extends React.Component {
                   alert('Failed to login. ', user.detail);
                   this.setState({ is_loading: false });
                 } else {
-                  console.log('user: ', user);
-                  if (user.is_coach === true) {
-                    this.setType('coach');
-                    this.setState({ userType: 'coach' });
-                  } else if (user.is_manager === true) {
-                    this.setType('manager');
-                    this.setState({ userType: 'manager' });
-                  } else if (user.is_organization === true) {
-                    this.setType('organization');
-                    this.setState({ userType: 'organization' });
-                  } else if (user.is_umpire === true) {
-                    this.setType('umpire');
-                    this.setState({ userType: 'umpire' });
-                  }
                   this.setUserId(user.id);
                   this.setLocalSFirstName(user.first_name);
                   this.setLocalSLastName(user.last_name);
-                  this.setState({ userId: user.id });
-                  this.setState({ loginFirstName: user.first_name });
-                  this.setState({ loginLastName: user.last_name });
+                  let type;
+                  if (user.is_coach === true) {
+                    type = 'coach';
+                  } else if (user.is_manager === true) {
+                    type = 'manager';
+                  } else if (user.is_organization === true) {
+                    type = 'organization';
+                  } else if (user.is_umpire === true) {
+                    type = 'organization';
+                  }
+                  this.setType(type).then(this.setState({ userType: true }));
                 }
               });
             }
@@ -222,19 +164,20 @@ export default class LogIn extends React.Component {
       });
     }
   };
-  setToken=(idToken) => {
+  setToken = (idToken) => {
     localStorage.setItem('id_token', idToken);
   };
-  setUserId=(id) => {
+  setUserId = (id) => {
     localStorage.setItem('id_user', id);
   };
-  setType=(type) => {
+  setType = (type) => {
     localStorage.setItem('type', type);
+    return Promise.resolve();
   };
-  setLocalSFirstName=(name) => {
+  setLocalSFirstName = (name) => {
     localStorage.setItem('first_name', name);
   };
-  setLocalSLastName=(name) => {
+  setLocalSLastName = (name) => {
     localStorage.setItem('last_name', name);
   };
   setRegisterType = (event, value) => {
@@ -261,11 +204,9 @@ export default class LogIn extends React.Component {
           .then(
             // success
             (data) => {
-              console.log('RegisterUser success', data);
               getRegisteredUser(data.id)
                 .then(
                   (user) => {
-                    console.log('user', user);
                     user.first_name = this.state.registerFirstName;
                     user.last_name = this.state.registerLastName;
                     if (this.state.selectedType === 'manager') {
@@ -277,7 +218,6 @@ export default class LogIn extends React.Component {
                     } else if (this.state.selectedType === 'organization') {
                       user.is_organization = true;
                     }
-                    console.log('user', user);
                     editUserApi(user).then((res) => {
                       if (res.status >= 400) {
                         alert('Failed to save registered ');
@@ -311,8 +251,10 @@ export default class LogIn extends React.Component {
   };
 
   render() {
-    if (this.state.loginFirstName && this.state.loginLastName) {
-      if (this.state.userType === 'manager') {
+    //  let dataPromise = localStorage.get("last_name");
+    // dataPromise.then(data => {
+    if (localStorage.type) {
+      if (this.state.userType && localStorage.type === 'manager') {
         return (
           <Redirect
             to={{
@@ -320,7 +262,7 @@ export default class LogIn extends React.Component {
             }}
           />
         );
-      } else if (this.state.userType === 'coach') {
+      } else if (this.state.userType && localStorage.type === 'coach') {
         return (
           <Redirect
             to={{
@@ -328,7 +270,7 @@ export default class LogIn extends React.Component {
             }}
           />
         );
-      } else if (this.state.userType === 'umpire') {
+      } else if (this.state.userType && localStorage.type === 'umpire') {
         return (
           <Redirect
             to={{
@@ -336,7 +278,7 @@ export default class LogIn extends React.Component {
             }}
           />
         );
-      } else if (this.state.userType === 'organization') {
+      } else if (this.state.userType && localStorage.type === 'organization') {
         return (
           <Redirect
             to={{
@@ -346,6 +288,7 @@ export default class LogIn extends React.Component {
         );
       }
     }
+    // });
 
     const cardLogin = () => (
       <div>
@@ -353,50 +296,56 @@ export default class LogIn extends React.Component {
           <TextField
             floatingLabelText="Please enter email"
             type="text"
-            errorText={this.state.loginEmailError ? this.state.loginEmailError : ''}
+            errorText={
+              this.state.loginEmailError ? this.state.loginEmailError : ''
+            }
             onChange={(event, newValue) => {
-                if (newValue.length < 1) {
-                   this.setState({ loginEmailError: 'Required fild' });
-                } else if (newValue.length > 0) {
-                     this.setState({ loginEmailError: '' });
-                }
+              if (newValue.length < 1) {
+                this.setState({ loginEmailError: 'Required fild' });
+              } else if (newValue.length > 0) {
+                this.setState({ loginEmailError: '' });
+              }
 
-                    this.setState({ userName: newValue });
+              this.setState({ userName: newValue });
             }}
           />
         </div>
         <br />
         <div className={styles.frame}>
           <TextField
-              errorText={this.state.loginPassError ? this.state.loginPassError : ''}
+            errorText={
+              this.state.loginPassError ? this.state.loginPassError : ''
+            }
             floatingLabelText="Please enter password"
             type="password"
             onChange={(event, newValue) => {
-                if (newValue.length < 8) {
-                    this.setState({ loginPassError: 'password must contain at least 8 characters' });
-                } else if (newValue.length > 7) {
-                     this.setState({ loginPassError: '' });
-                }
+              if (newValue.length < 8) {
+                this.setState({
+                  loginPassError: 'password must contain at least 8 characters',
+                });
+              } else if (newValue.length > 7) {
+                this.setState({ loginPassError: '' });
+              }
 
-                    this.setState({ password: newValue });
+              this.setState({ password: newValue });
             }}
           />
         </div>
         <br />
 
-          {this.state.is_loading ? <div>{Spinner(50)}</div> :
-
-              <div className={styles.button}>
-                  <RaisedButton
-                      label="Login"
-                      labelColor={'white'}
-                      backgroundColor={'darkcyan'}
-                      buttonStyle={styles.button}
-                      onClick={event => this.submitLogin(event)}
-                  />
-              </div>
-          }
-
+        {this.state.is_loading ? (
+          <div>{Spinner(50)}</div>
+        ) : (
+          <div className={styles.button}>
+            <RaisedButton
+              label="Login"
+              labelColor={'white'}
+              backgroundColor={'darkcyan'}
+              buttonStyle={styles.button}
+              onClick={event => this.submitLogin(event)}
+            />
+          </div>
+        )}
       </div>
     );
 

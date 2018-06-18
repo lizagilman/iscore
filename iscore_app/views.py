@@ -268,7 +268,7 @@ class EntriesViewSet(viewsets.ModelViewSet):
             list=ranking_list).filter(
                 category__name=instance.tournament_category.category).filter(
                     player=instance.player)
-        if (player_ranking != None):
+        if (player_ranking.exists()):
             instance.rank = player_ranking[0].rank
             instance.save()
 
