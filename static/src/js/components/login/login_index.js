@@ -263,8 +263,9 @@ export default class LogIn extends React.Component {
   };
 
   render() {
-    if (this.state.loginFirstName && this.state.loginLastName) {
-      if (this.state.userType === 'manager') {
+
+    if ( (this.state.loginFirstName && this.state.loginLastName) || localStorage.type) {
+      if (this.state.userType === 'manager' || localStorage.type === 'manager') {
         return (
           <Redirect
             to={{
@@ -272,7 +273,7 @@ export default class LogIn extends React.Component {
             }}
           />
         );
-      } else if (this.state.userType === 'coach') {
+      } else if (this.state.userType === 'coach' || localStorage.type === 'coach') {
         return (
           <Redirect
             to={{
@@ -280,7 +281,7 @@ export default class LogIn extends React.Component {
             }}
           />
         );
-      } else if (this.state.userType === 'umpire') {
+      } else if (this.state.userType === 'umpire' || localStorage.type === 'umpire') {
         return (
           <Redirect
             to={{
@@ -288,7 +289,7 @@ export default class LogIn extends React.Component {
             }}
           />
         );
-      } else if (this.state.userType === 'organization') {
+      } else if (this.state.userType === 'organization' || localStorage.type === 'organization') {
         return (
           <Redirect
             to={{
