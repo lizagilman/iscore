@@ -36,7 +36,7 @@ export function createTournamentApi(tournament) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(tournament)
-  }).then(response => response);
+  }).then(response => (response.status < 400 ? response.json() : false));
 }
 
 export function deleteTournamentApi(id) {
@@ -78,7 +78,7 @@ export function createRankingListApi(rankingList) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(rankingList)
-  }).then(response => response.status < 400 ? response.json() : false);
+  }).then(response => (response.status < 400 ? response.json() : false));
 }
 
 export const getOrganizationBySports = fieldOfSports =>
@@ -368,7 +368,7 @@ export const generateScheduleApi = params => {
   } = params;
   return fetch(
     `/generate_schedule/?tournament_id=${tournamentId}&num_of_courts=${numOfCourts}&start_hour=${startHour}&finish_hour=${finishHour}&game_duration=${matchDuration} `
-  ).then(response => response);
+  ).then(response => (response.status < 400 ? response.json() : false));
 };
 
 export const deleteScheduleApi = tournament_id => {
@@ -396,13 +396,12 @@ export function loginUser(user) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(user)
-  }).then(function (response) {
+  }).then(function(response) {
     if (response.status >= 400) {
-        alert('Failed to login');
-      }
-       return response.json();
-  })
-
+      alert("Failed to login");
+    }
+    return response.json();
+  });
 }
 export function RegisterUser(user) {
   return fetch("/auth/users/create/", {
@@ -412,12 +411,12 @@ export function RegisterUser(user) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify(user)
-  }).then(function (response) {
+  }).then(function(response) {
     if (response.status >= 400) {
-        alert('Failed to register');
-      }
-      return response.json();
-  })
+      alert("Failed to register");
+    }
+    return response.json();
+  });
 }
 
 export function GetUser(token) {
@@ -426,37 +425,37 @@ export function GetUser(token) {
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      "Authorization": "Token " + token
+      Authorization: "Token " + token
     }
   }).then(function(response) {
-      if(response.status>=400){
-      alert('error');
+    if (response.status >= 400) {
+      alert("error");
     }
     return response.json();
   });
 }
 
-export function logOut(token){
-  return fetch("/auth/token/destroy/",{
+export function logOut(token) {
+  return fetch("/auth/token/destroy/", {
     method: "POST",
     headers: {
-    Accept: "application/json",
+      Accept: "application/json",
       "Content-Type": "application/json",
-        "Authorization": "Token "+token
-    },
-  }).then(function (response) {
-    if (response.status >= 400) {
-        alert('Failed to logout');
-      }
-        return response.json();
-  })
-}
-export const getRegisteredUser = (id) =>
-  fetch(`/api/Users/${id}/`).then(function (response) {
-    if(response.status>=400){
-      alert('error')
+      Authorization: "Token " + token
     }
-      return response.json();
+  }).then(function(response) {
+    if (response.status >= 400) {
+      alert("Failed to logout");
+    }
+    return response.json();
+  });
+}
+export const getRegisteredUser = id =>
+  fetch(`/api/Users/${id}/`).then(function(response) {
+    if (response.status >= 400) {
+      alert("error");
+    }
+    return response.json();
   });
 
 export function editUserApi(user) {

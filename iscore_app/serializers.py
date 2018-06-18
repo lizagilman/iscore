@@ -1,4 +1,4 @@
-from iscore_app.models import RankingListCategories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, RankedPlayers, Organizations, Tournaments, Matches, TournamentCategories, Tournament_Managers, Coach, Games, Sets, Entries,Umpires,User,Score
+from iscore_app.models import RankingListCategories, Players, Money_Distribution_Methods, Points_Distribution_Methods, Grades, Ranking_Lists, RankedPlayers, Organizations, Tournaments, Matches, TournamentCategories, Tournament_Managers, Coach, Games, Sets, Entries, Umpires, User, Score
 from rest_framework import serializers
 
 
@@ -42,7 +42,7 @@ class GradesSerializer(serializers.ModelSerializer):
 class GradesReaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Grades
-        fields = ['name', 'points', 'money','id']
+        fields = ['name', 'points', 'money', 'id']
         depth = 1
 
 
@@ -65,7 +65,7 @@ class RankingListsReaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ranking_Lists
         fields = ('organization', 'name', 'field_of_sport', 'updated_at',
-                  'grades', 'categories','id')
+                  'grades', 'categories', 'id')
 
 
 class RankedPlayersSerializer(serializers.ModelSerializer):
@@ -83,8 +83,7 @@ class RankedPlayersReaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = RankedPlayers
         fields = ('player', 'nationality', 'category', 'list', 'rank',
-                  'points','tournaments_played')
-
+                  'points', 'tournaments_played')
 
 
 class OrganizationsSerializer(serializers.ModelSerializer):
@@ -123,6 +122,7 @@ class MatchesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Matches
         fields = '__all__'
+
 
 class UsersSerializer(serializers.ModelSerializer):
     class Meta:
@@ -198,6 +198,7 @@ class SetSerializer(serializers.ModelSerializer):
         model = Sets
         fields = '__all__'
 
+
 class UmpireSerializer(serializers.ModelSerializer):
     class Meta:
         model = Umpires
@@ -209,12 +210,16 @@ class EntriesSerializer(serializers.ModelSerializer):
         model = Entries
         fields = '__all__'
 
+
 class ScoresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Score
-        fields =[ 'match_id','current_set','current_game','p1_set1','p2_set1',
-                  'p1_set2','p2_set2','p1_set3','p2_set3','p1_set4','p1_set4','p1_set5','p2_set5','p1_sets','p2_sets','p1_games'
-                  ,'p2_games','p1_points','p2_points']
+        fields = [
+            'match_id', 'current_set', 'current_game', 'p1_set1', 'p2_set1',
+            'p1_set2', 'p2_set2', 'p1_set3', 'p2_set3', 'p1_set4', 'p1_set4',
+            'p1_set5', 'p2_set5', 'p1_sets', 'p2_sets', 'p1_games', 'p2_games',
+            'p1_points', 'p2_points'
+        ]
 
 
 class EntriesReaderSerializer(serializers.ModelSerializer):

@@ -20,6 +20,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import Wizard from './wizard/wizard_index';
 import Spinner from '../spinner/spinner';
+import FeedBack from '../feeback_dialog/feeback_modal';
 
 const nameStyle = {
   paddingRight: '100px',
@@ -40,9 +41,12 @@ export default class TournamentsTable extends React.Component {
     this.saveNewTournament = this.saveNewTournament.bind(this);
     this.setDateTime = this.setDateTime.bind(this);
     this.handleStatusChange = this.handleStatusChange.bind(this);
+    this.closeFeedbackModal = this.closeFeedbackModal.bind(this);
 
     this.state = {
       displayModal: false,
+      displayFeedbackModal: false,
+      feedbackText: '',
     };
   }
   setDateTime(itemDate) {
@@ -60,8 +64,15 @@ export default class TournamentsTable extends React.Component {
   }
 
   saveNewTournament() {
+    this.setState({ displayModal: false, displayFeedbackModal: true });
     const { WizardStore } = this.props.stores;
-    WizardStore.createNewTournament();
+    WizardStore.createNewTournament().then((feedback) => {
+      if (feedback) {
+        this.setState({ feedbackText: 'Tournament created Successfully!' });
+      } else {
+        this.setState({ feedbackText: 'Failed to create tournament!' });
+      }
+    });
   }
 
   toggleHandler(e, tournament) {
@@ -105,6 +116,10 @@ export default class TournamentsTable extends React.Component {
     }))(tournament);
     updatedTournament.status = value;
     TournamentsStore.updateTournament(updatedTournament);
+  }
+  closeFeedbackModal(e) {
+    e.preventDefault();
+    this.setState({ displayFeedbackModal: false, feedbackText: '' });
   }
 
   componentWillMount() {
@@ -217,11 +232,19 @@ export default class TournamentsTable extends React.Component {
       </Dialog>
     );
 
+    const FeedbackModal = (
+      <FeedBack
+        text={this.state.feedbackText}
+        handleClose={this.closeFeedbackModal}
+      />
+    );
+
     return (
       <div>
         <div>{this.props.children}</div>
         {tournamentsTable}
         {modal}
+        {this.state.displayFeedbackModal ? FeedbackModal : false}
       </div>
     );
   }

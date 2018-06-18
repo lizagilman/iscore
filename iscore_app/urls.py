@@ -97,7 +97,5 @@ urlpatterns = [
     url(r'^import_ranking_list/',
         ranking.import_ranking_list_from_file,
         name='retrieve_ranking_list'),
-
-
     url(r'', IndexView.as_view(), name='index'),
 ]

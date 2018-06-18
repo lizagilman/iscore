@@ -23,15 +23,14 @@ class WizardStore {
   @observable rankingListCategories = [];
 
   @action
-  createNewTournament = () => {
-    createTournamentApi(this.tournament).then((response) => {
-      if (response.status >= 400) {
-        alert('Failed to save');
-      } else {
-        this.tournament = initialState;
+  createNewTournament = () =>
+    Promise.resolve(createTournamentApi(this.tournament).then((response) => {
+      if (response) {
+        return true;
       }
-    });
-  };
+      this.tournament = initialState;
+      return false;
+    }));
 
   @action
   setTournamentProperty = (key, value) => {

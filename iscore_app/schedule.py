@@ -1,9 +1,12 @@
 from django.http import HttpResponse
 import datetime
+from rest_framework.decorators import api_view
 from iscore_app.models import Matches, TournamentCategories, Entries, Tournaments
-from django.core import serializers
+from rest_framework.response import Response
+from iscore_app.serializers import MatchesReaderSerializer
 
 
+@api_view(['GET'])
 def handle_generate_schedule(request):
 
     tournament = int(request.GET['tournament_id'])
@@ -27,8 +30,9 @@ def handle_generate_schedule(request):
         return HttpResponse(data, status=400)
     info.has_schedule = True
     info.save()
-    send_data = serializers.serialize('json', data)
-    return HttpResponse(send_data)
+    send_data = MatchesReaderSerializer(data=data, many=True)
+    send_data.is_valid()
+    return Response(send_data.data)
 
 
 def create_schedule_for_matches(match_list, start_date, start_hour,
@@ -127,6 +131,9 @@ def delete_schedule(request):
         match.time = None
         match.save()
 
+    tournament = Tournaments.objects.get(pk=tournament_id)
+    tournament.has_schedule = False
+    tournament.save()
     return HttpResponse(status=200)
 
 
@@ -158,4 +165,4 @@ def generate_schedule_by_stage(tournament, start_date, end_date, num_of_courts,
                                        games_per_day, game_duration)
 
     return Matches.objects.filter(category__tournamet=tournament).order_by(
-       'category__category','stage')
+        'category__category', 'stage')
