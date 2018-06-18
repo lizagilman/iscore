@@ -47,6 +47,7 @@ export default class TournamentsTable extends React.Component {
       displayModal: false,
       displayFeedbackModal: false,
       feedbackText: '',
+      statuses: {},
     };
   }
   setDateTime(itemDate) {
@@ -106,6 +107,13 @@ export default class TournamentsTable extends React.Component {
 
   handleStatusChange(e, index, value, tournament) {
     e.preventDefault();
+
+    const statuses = this.state.statuses;
+    const oldStatus = statuses;
+
+    statuses[tournament.id] = value;
+    this.setState(statuses);
+
     const { TournamentsStore } = this.props.stores;
 
     // eslint-disable-next-line
@@ -115,19 +123,36 @@ export default class TournamentsTable extends React.Component {
       field_of_sport,
     }))(tournament);
     updatedTournament.status = value;
-    TournamentsStore.updateTournament(updatedTournament);
+    TournamentsStore.updateTournament(updatedTournament).then((feedback) => {
+      if (!feedback) {
+        this.setState({
+          displayFeedbackModal: true,
+          feedbackText: 'Status update failed!',
+        });
+        this.setState(oldStatus);
+      }
+    });
   }
+
   closeFeedbackModal(e) {
     e.preventDefault();
     this.setState({ displayFeedbackModal: false, feedbackText: '' });
   }
 
   componentWillMount() {
+    const statuses = {};
+
     const { TournamentsStore } = this.props.stores;
-    TournamentsStore.fetchAllTournaments();
+    TournamentsStore.fetchAllTournaments().then((tournaments) => {
+      tournaments.forEach(tournament => (statuses[tournament.id] = tournament.status));
+
+      this.setState({ statuses });
+    });
   }
 
   render() {
+    console.log(this.state);
+
     const { TournamentsStore } = this.props.stores;
 
     const storedData = TournamentsStore.allTournaments;
@@ -146,7 +171,7 @@ export default class TournamentsTable extends React.Component {
         <TableRowColumn>{item.field_of_sport}</TableRowColumn>
         <TableRowColumn>
           <SelectField
-            value={item.status}
+            value={this.state.statuses[item.id] || item.status}
             onChange={(event, index, value) =>
               this.handleStatusChange(event, index, value, item)
             }
@@ -155,7 +180,7 @@ export default class TournamentsTable extends React.Component {
             <MenuItem
               key={2}
               value={'Open for Registration'}
-              primaryText="Open for Registration'"
+              primaryText="Open for Registration"
             />
             <MenuItem
               key={3}
@@ -184,7 +209,6 @@ export default class TournamentsTable extends React.Component {
         </TableRowColumn>
       </TableRow>
     );
-
     const tournamentsTable = (
       <div>
         <Table style={{ backgroundColor: '#ffffff' }}>
