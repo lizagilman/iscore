@@ -162,5 +162,5 @@ CHANNEL_LAYERS = {
 }
 # Configure Django App for Heroku.
 django_heroku.settings(locals())
-# DATABASES['default'] = dj_database_url.config(conn_max_age=0)
+DATABASES['default'] = dj_database_url.config(conn_max_age=0)
 TEST_RUNNER = 'django_heroku.HerokuDiscoverRunner'
