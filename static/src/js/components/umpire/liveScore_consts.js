@@ -1,5 +1,5 @@
-export const PLAYER_1 = 1;
-export const PLAYER_2 = 2;
+export let PLAYER_1 = 1;
+export let PLAYER_2 = 2;
 export const ADVANTAGE = 100;
 export const ADD = '+';
 export const SUBTRACT = '-';
