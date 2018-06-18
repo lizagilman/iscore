@@ -14,7 +14,9 @@ def handle_generate_draws(request):
     Generate_Draws(category_id)
     draws = Matches.objects.filter(category=int(category_id)).order_by(
         'match_index')
-
+    category = TournamentCategories.objects.filter(pk=category_id)
+    category.has_schedule = True
+    category.save()
     serializer = MatchesReaderSerializer(data=draws, many=True)
 
     serializer.is_valid()
