@@ -62,7 +62,7 @@ class LiveMatch extends React.Component {
     newScore.serving =
       serving === LiveScore.PLAYER_1 ? LiveScore.PLAYER_2 : LiveScore.PLAYER_1;
     this.setState({ score: newScore });
-    this.updateLiveScore(newScore)
+    this.updateLiveScore(newScore);
   };
 
   startMatch = () => {
