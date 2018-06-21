@@ -3,10 +3,21 @@ import Paper from 'material-ui/Paper';
 import Done from 'material-ui/svg-icons/action/done';
 import * as drawStyles from './draws_styles';
 
+export const R16 = '1st Round';
+export const QF = 'Quarter Final';
+export const SF = 'Semi Final';
+export const F = 'Final';
+
+export const stages = [R16, QF, SF, F];
+
 export const Tree = (matches, nextMatches) => (
   <div id={'treeContainer'} style={drawStyles.treeContainerStyle}>
-    <div style={{ flexGrow: '2' }}>{matches}</div>
-    <div style={{ flexGrow: '2' }}>{nextMatches}</div>
+    <div style={{ flexGrow: '2', left: '5.5%', position: 'relative' }}>
+      {matches}
+    </div>
+    <div style={{ flexGrow: '2', right: '5.5%', position: 'relative' }}>
+      {nextMatches}
+    </div>
   </div>
 );
 
@@ -64,18 +75,22 @@ export const Match = (playerA, playerB, winner) => (
   </Paper>
 );
 
-export const NextMatch = (playerA, playerB, winner, nextStage) => (
+export const NextMatch = (playerA, playerB, winner, nextStage, matchIndex) => (
   <Paper
     zDepth={1}
     style={
-      nextStage === 'F'
+      nextStage === F
         ? {
             ...drawStyles.flexContainerMatch,
             ...drawStyles.flexContainerNextMatchFinal,
           }
         : {
+            height:
+              nextStage === SF
+                ? '47.5%'
+                : drawStyles.flexContainerNextMatch.height,
             ...drawStyles.flexContainerMatch,
-            ...drawStyles.flexContainerNextMatch,
+            maxHeight: matchIndex === 22 ? '22%' : false,
           }
     }
   >
