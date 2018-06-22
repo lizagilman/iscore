@@ -111,8 +111,8 @@ export default class CoachPage extends React.Component {
     this.registerPlayers = this.registerPlayers.bind(this);
     this.state = {
       coach_name: 'Haim',
-      first_name: '',
-      last_name: '',
+      first_name: this.props.location.firstName,
+      last_name: this.props.location.lastName,
       tournaments: [],
       optionsPlayers: [],
       optionsTournaments: [],
@@ -128,6 +128,7 @@ export default class CoachPage extends React.Component {
       userId: null,
       is_tour: false,
       is_cat: false,
+      user: null,
     };
   }
 
@@ -149,29 +150,28 @@ export default class CoachPage extends React.Component {
 
   componentWillMount() {
     const { TournamentsStore, CoachEnterPlayersStore } = this.props.stores;
-    console.log('localStorage.id_user', localStorage.id_user);
     const self = this;
-    CoachEnterPlayersStore.fetchPlayers(localStorage.id_user).then((storedPlayers) => {
-      self.setState({ players: mobx.toJS(storedPlayers) }, () => {
-        console.log('Players', this.state.players);
-      });
+    if (this.state.user === null && localStorage.id_user) {
+      this.setState({ user: localStorage.id_user }, () => {
+        CoachEnterPlayersStore.fetchPlayers(this.state.user).then((storedPlayers) => {
+          self.setState({ players: mobx.toJS(storedPlayers) }, () => {});
 
-      console.log('first_name', mobx.toJS(CoachEnterPlayersStore.firstName));
-      console.log('last_name', mobx.toJS(CoachEnterPlayersStore.lastName));
-      this.setState({
-        first_name: mobx.toJS(CoachEnterPlayersStore.firstName),
+          // this.setState({
+          //     first_name: mobx.toJS(CoachEnterPlayersStore.firstName),
+          // });
+          // this.setState({
+          //     last_name: mobx.toJS(CoachEnterPlayersStore.lastName),
+          // });
+        });
       });
-      this.setState({
-        last_name: mobx.toJS(CoachEnterPlayersStore.lastName),
-      });
-    });
-
+    }
     TournamentsStore.fetchAllTournaments().then((storedTournaments) => {
       self.setState({ tournaments: mobx.toJS(storedTournaments) }, () => {
         this.createTournamentOptions();
       });
     });
   }
+
   createTournamentOptions() {
     if (this.state.tournaments) {
       const self = this;
@@ -223,6 +223,7 @@ export default class CoachPage extends React.Component {
   }
 
   handleChangeTour = (value) => {
+    console.log('tour selected: ', value);
     this.setState({ tournamentSelected: value });
     const { CoachEnterPlayersStore } = this.props.stores;
     CoachEnterPlayersStore.setSelectedTournament(value);
@@ -263,7 +264,7 @@ export default class CoachPage extends React.Component {
 
     registerCoachPlayerToTournament(entry).then((response) => {
       if (response.status > 400) {
-        this.handleOpen('Error. Check your connection.');
+        this.handleOpen('Error.');
       } else {
         this.handleOpen('Registration has been done successfully.');
       }
@@ -285,8 +286,7 @@ export default class CoachPage extends React.Component {
     return (
       <div style={styles.conteinerStyle}>
         <Row>
-          <Column span="12">
-          </Column>
+          <Column span="12" />
         </Row>
         <Row>
           <Column span="12">

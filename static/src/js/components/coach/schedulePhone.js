@@ -1,9 +1,9 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import Spinner from '../spinner/spinner';
 import Subheader from 'material-ui/Subheader';
 import { Redirect } from 'react-router';
 import { List, ListItem } from 'material-ui/List';
+import Spinner from '../spinner/spinner';
 
 const mobx = require('mobx');
 
@@ -68,7 +68,6 @@ export default class ScheduleCoach extends React.Component {
     }
     CoachEnterPlayersStore.fetchMatches(tournamentId).then((matches) => {
       matches = mobx.toJS(matches);
-      console.log('matches ', matches);
       this.setState({ matches });
     });
   }
@@ -80,7 +79,7 @@ export default class ScheduleCoach extends React.Component {
         secondaryText={
           match ? (
             <p style={styles.matchStyleSecondary}>
-              {`${match.player1} against ${match.player2}`}
+              {`${match.player1} VS ${match.player2}`}
             </p>
           ) : (
             ''

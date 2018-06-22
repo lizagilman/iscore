@@ -13,7 +13,7 @@ import { withRouter, Route } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import { GetUser, logOut } from '../../api';
 import Drawer from 'material-ui/Drawer';
-import FeedBack from '../feeback_dialog/feeback_modal';
+
 
 const styles = {
   iscore: {
@@ -39,7 +39,7 @@ const styles = {
     paddingBottom: '2%',
   },
   menuButton: {
-    marginRight: '10px',
+    marginRight: '20px',
     height: '7em',
     width: '3em',
   },
@@ -73,6 +73,7 @@ const styles = {
   coachAppBar: {
     flexWrap: 'wrap',
     lineHeight: '4em',
+    paddingRight: '180px',
   },
   tabs: {
     width: '100%',
