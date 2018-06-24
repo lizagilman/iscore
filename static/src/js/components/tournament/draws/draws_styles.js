@@ -37,6 +37,38 @@ export const playerBStyle = {
   borderRight: '1px solid #ecda40',
 };
 
+
+export const playerAstyle1 = {
+  margin: '10px 10px 0px 10px',
+  borderTop: '2px solid #af25b1',
+  borderRight: '2px solid #af25b1',
+  borderLeft: '2px solid #af25b1',
+  borderBottom: '2px solid #ffffff',
+};
+
+export const playerBstyle1 = {
+  margin: '0 10px 10px 10px',
+  borderLeft: '2px solid #af25b1',
+  borderBottom: '2px solid #af25b1',
+  borderRight: '2px solid #af25b1',
+};
+
+export const playerAstyle2 = {
+  margin: '10px 10px 0px 10px',
+  borderTop: '2px solid #e5b325',
+  borderRight: '2px solid #e5b325',
+  borderLeft: '2px solid #e5b325',
+  borderBottom: '2px solid #ffffff',
+};
+
+export const playerBstyle2 = {
+  margin: '0 10px 10px 10px',
+  borderLeft: '2px solid #e5b325',
+  borderBottom: '2px solid #e5b325',
+  borderRight: '2px solid #e5b325',
+};
+
+
 export const nextMatchStyle = {
   width: '50%',
 };

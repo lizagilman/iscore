@@ -151,8 +151,6 @@ export default class TournamentsTable extends React.Component {
   }
 
   render() {
-    console.log(this.state);
-
     const { TournamentsStore } = this.props.stores;
 
     const storedData = TournamentsStore.allTournaments;

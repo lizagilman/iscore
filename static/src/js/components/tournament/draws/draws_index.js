@@ -108,10 +108,29 @@ export default class Draws extends React.Component {
       switch (this.state.currentStage) {
         case R16:
           // draw R16 and QF
-          matches = DrawsStore.matchesR16.map(matchR16 =>
-            Match(matchR16.player1, matchR16.player2, matchR16.winner));
-          nextMatches = DrawsStore.matchesQF.map(matchQF =>
-            NextMatch(
+          matches = DrawsStore.matchesR16.map((matchR16, index) => {
+            let style1 = true;
+
+            switch (index) {
+              case 2:
+              case 3:
+              case 6:
+              case 7:
+                style1 = false;
+            }
+
+            return Match(
+              matchR16.player1,
+              matchR16.player2,
+              matchR16.winner,
+              style1,
+            );
+          });
+
+          nextMatches = DrawsStore.matchesQF.map((matchQF, index) => {
+            const style1 = !(index % 2);
+
+            return NextMatch(
               matchQF.player1
                 ? matchQF.player1
                 : `Winner of R16 ${++nextMatchCounter}`,
@@ -121,45 +140,66 @@ export default class Draws extends React.Component {
               matchQF.winner,
               this.state.nextStage,
               matchQF.match_index,
-            ));
+              style1,
+            );
+          });
 
           break;
 
         case QF:
           // draw QF and SF
-          matches = DrawsStore.matchesQF.map(matchR16 =>
-            Match(matchR16.player1, matchR16.player2, matchR16.winner));
-          nextMatches = DrawsStore.matchesSF.map(matchQF =>
-            NextMatch(
-              matchQF.player1
-                ? matchQF.player1
-                : `Winner of R16 ${++nextMatchCounter}`,
-              matchQF.player2
-                ? matchQF.player2
-                : `Winner of R16 ${++nextMatchCounter}`,
+          matches = DrawsStore.matchesQF.map((matchQF, index) => {
+            let style1 = true;
+
+            switch (index) {
+              case 2:
+              case 3:
+                style1 = false;
+            }
+
+            return Match(
+              matchQF.player1,
+              matchQF.player2,
               matchQF.winner,
+              style1,
+            );
+          });
+
+          nextMatches = DrawsStore.matchesSF.map((matchSF, index) => {
+            const style1 = !(index % 2);
+
+            return NextMatch(
+              matchSF.player1
+                ? matchSF.player1
+                : `Winner of R16 ${++nextMatchCounter}`,
+              matchSF.player2
+                ? matchSF.player2
+                : `Winner of R16 ${++nextMatchCounter}`,
+              matchSF.winner,
               this.state.nextStage,
-              matchQF.match_index,
-            ));
+              matchSF.match_index,
+              style1,
+            );
+          });
 
           break;
 
         case SF:
-          // draw QF and SF
+          // draw SF and F
 
-          matches = DrawsStore.matchesSF.map(matchR16 =>
-            Match(matchR16.player1, matchR16.player2, matchR16.winner));
-          nextMatches = DrawsStore.matchesF.map(matchQF =>
+          matches = DrawsStore.matchesSF.map(matchSF =>
+            Match(matchSF.player1, matchSF.player2, matchSF.winner));
+          nextMatches = DrawsStore.matchesF.map(matchF =>
             NextMatch(
-              matchQF.player1
-                ? matchQF.player1
+              matchF.player1
+                ? matchF.player1
                 : `Winner of R16 ${++nextMatchCounter}`,
-              matchQF.player2
-                ? matchQF.player2
+              matchF.player2
+                ? matchF.player2
                 : `Winner of R16 ${++nextMatchCounter}`,
-              matchQF.winner,
+              matchF.winner,
               this.state.nextStage,
-              matchQF.match_index,
+              matchF.match_index,
             ));
 
           break;
