@@ -123,6 +123,16 @@ class MatchesSerializer(serializers.ModelSerializer):
         model = Matches
         fields = '__all__'
 
+class ScoresSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Score
+        fields = [
+            'match_id', 'current_set', 'current_game', 'p1_set1', 'p2_set1',
+            'p1_set2', 'p2_set2', 'p1_set3', 'p2_set3', 'p1_set4', 'p1_set4',
+            'p1_set5', 'p2_set5', 'p1_sets', 'p2_sets', 'p1_games', 'p2_games',
+            'p1_points', 'p2_points'
+        ]
+
 
 class UsersSerializer(serializers.ModelSerializer):
     class Meta:
@@ -137,11 +147,11 @@ class MatchesReaderSerializer(serializers.ModelSerializer):
     winner = serializers.SlugRelatedField(read_only=True, slug_field='name')
     category = serializers.SlugRelatedField(
         read_only=True, slug_field='category')
+    score=ScoresSerializer(read_only=True)
 
     class Meta:
         model = Matches
-        fields = '__all__'
-
+        fields = ('player1','player2','winner','stage','time','match_index','next_match','category','court','score')
 
 class TournamentCategoriesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -210,16 +220,6 @@ class EntriesSerializer(serializers.ModelSerializer):
         model = Entries
         fields = '__all__'
 
-
-class ScoresSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Score
-        fields = [
-            'match_id', 'current_set', 'current_game', 'p1_set1', 'p2_set1',
-            'p1_set2', 'p2_set2', 'p1_set3', 'p2_set3', 'p1_set4', 'p1_set4',
-            'p1_set5', 'p2_set5', 'p1_sets', 'p2_sets', 'p1_games', 'p2_games',
-            'p1_points', 'p2_points'
-        ]
 
 
 class EntriesReaderSerializer(serializers.ModelSerializer):
