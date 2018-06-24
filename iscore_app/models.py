@@ -246,7 +246,8 @@ class Games(models.Model):
 
 
 class Score(models.Model):
-    match_id = models.ForeignKey(Matches, on_delete=models.CASCADE)
+    match_id = models.ForeignKey(
+        Matches, on_delete=models.CASCADE, unique=True)
     current_set = models.IntegerField(default=1)
     current_game = models.IntegerField(default=1)
     p1_set1 = models.IntegerField(default=0)
@@ -267,10 +268,9 @@ class Score(models.Model):
     p2_points = models.IntegerField(default=0)
 
     def __str__(self):
-        return 'game_num: %d p1: %d , p2: %d , set:%d  ' % (self.game_num,
-                                                            self.player1_score,
-                                                            self.player2_score,
-                                                            self.set.id)
+        return 'match: %d ,current set:%d,current game%d , p1_games: %d ,p2_games: %d ,   ' % (
+            self.match_id.id, self.current_set, self.current_game,
+            self.p1_games, self.p2_games)
 
 
 class Tournament_Managers(models.Model):
