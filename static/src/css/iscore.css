@@ -18,7 +18,6 @@
 }
 
 .rrs__button {
-
   padding-top: 0em;
   color: #555;
   position: relative;
@@ -157,7 +156,7 @@
   text-overflow: ellipsis;
 }
 
-.rrs__multiselect-label__badge{
+.rrs__multiselect-label__badge {
   border: 1px solid #ccc;
   padding: 1px 6px;
   margin: 0 0 0 4px;
@@ -168,9 +167,7 @@
   display: inline-block;
 }
 
-
 @media (max-width: 720px) {
-
   /* Fullscreen `<DatePicker/>` "Close" button */
   .rrui__date-picker__close {
     font-size: 4em;
@@ -202,16 +199,16 @@
     margin-right: 3px;
   }
   .rrui__input {
-    height : 40px;
+    height: 40px;
   }
   .rrui__input--multiline {
-    height : 0;
+    height: 0;
   }
   .rrui__input-field {
-    border-bottom : 1px solid blue;
+    border-bottom: 1px solid blue;
   }
   .rrui__input-field--invalid {
-    border-color : red;
+    border-color: red;
   }
 }
 
@@ -236,7 +233,7 @@ body {
 .flag {
   width: 40px;
   height: 40px;
-  margin: 0px 15px;
+  margin: 0 15px;
 }
 
 .matchWinner {
@@ -247,4 +244,62 @@ body {
   width: 40px;
   height: 40px;
   margin-right: 6px;
+}
+
+.drawCategories {
+  padding-bottom: 2%;
+}
+
+#stageBar {
+  background-color: rgba(224, 224, 224, 0.62) !important;
+  width: 100%;
+  display: inline-block;
+  margin-bottom: 1%;
+  padding-top: 1%;
+  padding-bottom: 1%;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  height: 123px;
+}
+
+.stage {
+  background-color: rgba(0, 150, 136, 0.32);
+  margin: 10px;
+  text-align: center;
+  line-height: 75px;
+  font-size: 30px;
+  border-radius: 6px;
+  position: relative;
+  float: left;
+  display: inline-block;
+  width: 13%;
+  color: #ffffff;
+  /*color: #ff4081;*/
+  font-weight: bold;
+}
+
+.currentStage {
+  left: 33%;
+  position: absolute;
+}
+
+.nextStage {
+  left: 64%;
+  position: absolute;
+}
+
+.arrow {
+  position: relative;
+  top: 23px;
+  display: block;
+}
+
+#rightArrow {
+  float: right;
+  margin-right: 1%;
+}
+
+#leftArrow {
+  float: left;
+  margin-left: 1%;
 }

@@ -2,11 +2,10 @@ import React from 'react';
 import * as mobx from 'mobx';
 import { inject, observer } from 'mobx-react/index';
 import Paper from 'material-ui/Paper';
-import ArrowForward from 'material-ui/svg-icons/navigation/arrow-forward';
-import ArrowBack from 'material-ui/svg-icons/navigation/arrow-back';
+import FontIcon from 'material-ui/FontIcon';
 import FlatButton from 'material-ui/FlatButton';
-import * as drawStyles from './draws_styles';
-import { Tree, Match, NextMatch } from './draw_body';
+import { teal500 } from 'material-ui/styles/colors';
+import { Tree, Match, NextMatch, R16, QF, SF, F, stages } from './draw_body';
 import Spinner from '../../spinner/spinner';
 
 @inject('stores')
@@ -14,22 +13,41 @@ import Spinner from '../../spinner/spinner';
 export default class Draws extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { prevStage: null, currentStage: 'R16', nextStage: 'QF' };
+    this.state = {
+      prevStage: null,
+      currentStage: R16,
+      nextStage: QF,
+      isLoading: false,
+    };
     this.arrowForwardClick = this.arrowForwardClick.bind(this);
     this.arrowBackClick = this.arrowBackClick.bind(this);
   }
 
-  arrowForwardClick(e) {
+  arrowBackClick(e) {
     e.preventDefault();
-    if (this.state.prevStage) {
-      this.setState({ prevStage: null, currentStage: 'R16', nextStage: 'QF' });
+
+    const currentStageIndex = stages.findIndex(stage => stage === this.state.currentStage);
+
+    if (currentStageIndex > -1) {
+      this.setState({
+        prevStage: stages[currentStageIndex - 2],
+        currentStage: stages[currentStageIndex - 1],
+        nextStage: stages[currentStageIndex],
+      });
     }
   }
 
-  arrowBackClick(e) {
+  arrowForwardClick(e) {
     e.preventDefault();
-    if (!(this.state.nextStage === 'F')) {
-      this.setState({ prevStage: 'QF', currentStage: 'SF', nextStage: 'F' });
+
+    const currentStageIndex = stages.findIndex(stage => stage === this.state.currentStage);
+
+    if (currentStageIndex > -1) {
+      this.setState({
+        prevStage: stages[currentStageIndex],
+        currentStage: stages[currentStageIndex + 1],
+        nextStage: stages[currentStageIndex + 2],
+      });
     }
   }
 
@@ -49,24 +67,32 @@ export default class Draws extends React.Component {
     const categories = TournamentStore.tournamentCategories;
 
     const StageBar = () => (
-      <Paper id={'stageBar'} zDepth={1} style={drawStyles.flexContainerStage}>
+      <Paper id={'stageBar'} zDepth={1}>
         {this.state.prevStage ? (
-          <ArrowBack onClick={e => this.arrowForwardClick(e)} />
+          <div id={'leftArrow'} className={'arrow'} title={'Previous Stage'}>
+            <FontIcon
+              className="material-icons"
+              onClick={e => this.arrowBackClick(e)}
+              style={{ fontSize: '50px', fontWeight: 'bold', color: teal500 }}
+            >
+              arrow_back
+            </FontIcon>
+          </div>
         ) : (
           false
         )}
-        <div
-          style={{ ...drawStyles.basicBlockStyle, ...drawStyles.stageStyle }}
-        >
-          {this.state.currentStage}
-        </div>
-        <div
-          style={{ ...drawStyles.basicBlockStyle, ...drawStyles.stageStyle }}
-        >
-          {this.state.nextStage}
-        </div>
-        {!(this.state.nextStage === 'F') ? (
-          <ArrowForward onClick={e => this.arrowBackClick(e)} />
+        <div className={'stage currentStage'}>{this.state.currentStage}</div>
+        <div className={'stage nextStage'}>{this.state.nextStage}</div>
+        {!(this.state.nextStage === F) ? (
+          <div id={'rightArrow'} className={'arrow'} title={'Next Stage'}>
+            <FontIcon
+              className="material-icons"
+              onClick={e => this.arrowForwardClick(e)}
+              style={{ fontSize: '50px', fontWeight: 'bold', color: teal500 }}
+            >
+              arrow_forward
+            </FontIcon>
+          </div>
         ) : (
           false
         )}
@@ -79,90 +105,153 @@ export default class Draws extends React.Component {
     if (draw) {
       let nextMatchCounter = 0;
 
-      if (this.state.currentStage === 'R16') {
-        matches = DrawsStore.matchesR16.map(matchR16 =>
-          Match(matchR16.player1, matchR16.player2, matchR16.winner));
-        nextMatches = DrawsStore.matchesQF.map(matchQF => NextMatch(
-          matchQF.player1
-            ? matchQF.player1
-            : `Winner of R16 ${++nextMatchCounter}`,
-          matchQF.player2
-            ? matchQF.player2
-            : `Winner of R16 ${++nextMatchCounter}`,
-          matchQF.winner,
-          this.state.nextStage,
-        ));
-      } else {
-        matches = DrawsStore.matchesSF.map(matchSF =>
-          Match(
-            matchSF.player1
-              ? matchSF.player1
-              : `Winner of QF ${++nextMatchCounter}`,
-            matchSF.player2
-              ? matchSF.player2
-              : `Winner of QF ${++nextMatchCounter}`,
-            matchSF.winner,
-            this.state.nextStage,
-          ));
-        nextMatches = DrawsStore.matchesF.map((matchF) => {
-          nextMatchCounter = 0;
+      switch (this.state.currentStage) {
+        case R16:
+          // draw R16 and QF
+          matches = DrawsStore.matchesR16.map((matchR16, index) => {
+            let style1 = true;
 
-          return NextMatch(
-            matchF.player1
-              ? matchF.player1
-              : `Winner of SF ${++nextMatchCounter}`,
-            matchF.player2
-              ? matchF.player2
-              : `Winner of SF ${++nextMatchCounter}`,
-            matchF.winner,
-            this.state.nextStage,
-          );
-        });
+            switch (index) {
+              case 2:
+              case 3:
+              case 6:
+              case 7:
+                style1 = false;
+            }
+
+            return Match(
+              matchR16.player1,
+              matchR16.player2,
+              matchR16.winner,
+              style1,
+            );
+          });
+
+          nextMatches = DrawsStore.matchesQF.map((matchQF, index) => {
+            const style1 = !(index % 2);
+
+            return NextMatch(
+              matchQF.player1
+                ? matchQF.player1
+                : `Winner of R16 ${++nextMatchCounter}`,
+              matchQF.player2
+                ? matchQF.player2
+                : `Winner of R16 ${++nextMatchCounter}`,
+              matchQF.winner,
+              this.state.nextStage,
+              matchQF.match_index,
+              style1,
+            );
+          });
+
+          break;
+
+        case QF:
+          // draw QF and SF
+          matches = DrawsStore.matchesQF.map((matchQF, index) => {
+            let style1 = true;
+
+            switch (index) {
+              case 2:
+              case 3:
+                style1 = false;
+            }
+
+            return Match(
+              matchQF.player1,
+              matchQF.player2,
+              matchQF.winner,
+              style1,
+            );
+          });
+
+          nextMatches = DrawsStore.matchesSF.map((matchSF, index) => {
+            const style1 = !(index % 2);
+
+            return NextMatch(
+              matchSF.player1
+                ? matchSF.player1
+                : `Winner of R16 ${++nextMatchCounter}`,
+              matchSF.player2
+                ? matchSF.player2
+                : `Winner of R16 ${++nextMatchCounter}`,
+              matchSF.winner,
+              this.state.nextStage,
+              matchSF.match_index,
+              style1,
+            );
+          });
+
+          break;
+
+        case SF:
+          // draw SF and F
+
+          matches = DrawsStore.matchesSF.map(matchSF =>
+            Match(matchSF.player1, matchSF.player2, matchSF.winner));
+          nextMatches = DrawsStore.matchesF.map(matchF =>
+            NextMatch(
+              matchF.player1
+                ? matchF.player1
+                : `Winner of R16 ${++nextMatchCounter}`,
+              matchF.player2
+                ? matchF.player2
+                : `Winner of R16 ${++nextMatchCounter}`,
+              matchF.winner,
+              this.state.nextStage,
+              matchF.match_index,
+            ));
+
+          break;
+
+        default:
+        // draw R16
       }
     }
 
     const drawTree = draw ? (
       <div>
-        {StageBar(
-          this.state.prevStage,
-          this.state.currentStage,
-          this.state.nextStage,
-        )}
-        {Tree(matches, nextMatches)}
+        <div>
+          {StageBar(
+            this.state.prevStage,
+            this.state.currentStage,
+            this.state.nextStage,
+          )}
+        </div>
+        <div>{Tree(matches, nextMatches)}</div>
       </div>
     ) : (
-      <div>{Spinner(70)}</div>
+      <div>{this.state.isLoading ? Spinner(70) : false}</div>
     );
 
     return (
       <div>
-        <div>
-          {categories ? (
-            categories.map((category, index) => (
-              <div>
-                <a key={index}>{category.category}</a>
+        <div className={'drawCategories'}>
+          {categories
+            ? categories.map((category, index) => (
+                <div>
+                  <a key={index}>{category.category}</a>
 
-                <FlatButton
-                  label="Generate/ Display Draw"
-                  primary={true}
-                  onClick={() => {
-                    DrawsStore.getCategoryDraw(category.id);
-                    this.forceUpdate();
-                  }}
-                />
-                <FlatButton
-                  label="Delete Draw"
-                  primary={true}
-                  onClick={() => {
-                    DrawsStore.deleteDraw(category.id);
-                    this.forceUpdate();
-                  }}
-                />
-              </div>
-            ))
-          ) : (
-            <div>{Spinner(70)}</div>
-          )}
+                  <FlatButton
+                    label="Display Draw"
+                    primary={true}
+                    onClick={() => {
+                      this.setState({ isLoading: true });
+                      DrawsStore.getCategoryDraw(category.id);
+                      this.forceUpdate();
+                    }}
+                  />
+                  <FlatButton
+                    label="Delete Draw"
+                    primary={true}
+                    onClick={() => {
+                      DrawsStore.deleteDraw(category.id);
+                      this.forceUpdate();
+                    }}
+                  />
+                </div>
+              ))
+            : Spinner(40)}
         </div>
 
         <div>{drawTree}</div>

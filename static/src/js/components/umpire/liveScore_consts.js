@@ -1,3 +1,4 @@
+/* eslint-disable */
 export let PLAYER_1 = 1;
 export let PLAYER_2 = 2;
 export const ADVANTAGE = 100;
