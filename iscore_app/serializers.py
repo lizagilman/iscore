@@ -153,6 +153,7 @@ class MatchesReaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Matches
         fields = (
+            'id',
             'player1',
             'player2',
             'winner',

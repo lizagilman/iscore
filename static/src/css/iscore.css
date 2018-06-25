@@ -303,3 +303,27 @@ body {
   float: left;
   margin-left: 1%;
 }
+
+.score {
+  width: 50%;
+  background-color: #a9d1cccc;
+  height: 100px;
+  font-size: 28px;
+  color: #ffffff;
+  font-weight: bold;
+  margin-top: -10px;
+  display: none;
+}
+
+.score table{
+  width: 100%;
+  height: 100%;
+}
+
+.score td{
+  text-align: center;
+}
+
+.setWinner {
+  color: #047664eb;
+}

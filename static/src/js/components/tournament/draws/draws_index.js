@@ -108,6 +108,7 @@ export default class Draws extends React.Component {
       switch (this.state.currentStage) {
         case R16:
           // draw R16 and QF
+
           matches = DrawsStore.matchesR16.map((matchR16, index) => {
             let style1 = true;
 
@@ -124,6 +125,8 @@ export default class Draws extends React.Component {
               matchR16.player2,
               matchR16.winner,
               style1,
+              matchR16.id,
+              matchR16.score_set[0],
             );
           });
 
@@ -133,14 +136,16 @@ export default class Draws extends React.Component {
             return NextMatch(
               matchQF.player1
                 ? matchQF.player1
-                : `Winner of R16 ${++nextMatchCounter}`,
+                : `Winner of 1st Round ${++nextMatchCounter}`,
               matchQF.player2
                 ? matchQF.player2
-                : `Winner of R16 ${++nextMatchCounter}`,
+                : `Winner of 1st Round ${++nextMatchCounter}`,
               matchQF.winner,
               this.state.nextStage,
               matchQF.match_index,
               style1,
+              matchQF.id,
+              matchQF.score_set[0],
             );
           });
 
@@ -148,6 +153,8 @@ export default class Draws extends React.Component {
 
         case QF:
           // draw QF and SF
+          nextMatchCounter = 0;
+
           matches = DrawsStore.matchesQF.map((matchQF, index) => {
             let style1 = true;
 
@@ -158,12 +165,20 @@ export default class Draws extends React.Component {
             }
 
             return Match(
-              matchQF.player1,
-              matchQF.player2,
+              matchQF.player1
+                ? matchQF.player1
+                : `Winner of 1st Round ${++nextMatchCounter}`,
+              matchQF.player2
+                ? matchQF.player2
+                : `Winner of 1st Round ${++nextMatchCounter}`,
               matchQF.winner,
               style1,
+              matchQF.id,
+              matchQF.score_set[0],
             );
           });
+
+          nextMatchCounter = 0;
 
           nextMatches = DrawsStore.matchesSF.map((matchSF, index) => {
             const style1 = !(index % 2);
@@ -171,14 +186,16 @@ export default class Draws extends React.Component {
             return NextMatch(
               matchSF.player1
                 ? matchSF.player1
-                : `Winner of R16 ${++nextMatchCounter}`,
+                : `Winner of QF ${++nextMatchCounter}`,
               matchSF.player2
                 ? matchSF.player2
-                : `Winner of R16 ${++nextMatchCounter}`,
+                : `Winner of QF ${++nextMatchCounter}`,
               matchSF.winner,
               this.state.nextStage,
               matchSF.match_index,
               style1,
+              matchSF.id,
+              matchSF.score_set[0],
             );
           });
 
@@ -187,19 +204,38 @@ export default class Draws extends React.Component {
         case SF:
           // draw SF and F
 
+          nextMatchCounter = 0;
+
           matches = DrawsStore.matchesSF.map(matchSF =>
-            Match(matchSF.player1, matchSF.player2, matchSF.winner));
+            Match(
+              matchSF.player1
+                ? matchSF.player1
+                : `Winner of QF ${++nextMatchCounter}`,
+              matchSF.player2
+                ? matchSF.player2
+                : `Winner of QF ${++nextMatchCounter}`,
+              matchSF.winner,
+              false,
+              matchSF.id,
+              matchSF.score_set[0],
+            ));
+
+          nextMatchCounter = 0;
+
           nextMatches = DrawsStore.matchesF.map(matchF =>
             NextMatch(
               matchF.player1
                 ? matchF.player1
-                : `Winner of R16 ${++nextMatchCounter}`,
+                : `Winner of SF ${++nextMatchCounter}`,
               matchF.player2
                 ? matchF.player2
-                : `Winner of R16 ${++nextMatchCounter}`,
+                : `Winner of SF ${++nextMatchCounter}`,
               matchF.winner,
               this.state.nextStage,
               matchF.match_index,
+              false,
+              matchF.id,
+              matchF.score_set[0],
             ));
 
           break;
