@@ -99,6 +99,10 @@ export default class Draws extends React.Component {
       </Paper>
     );
 
+    const f = () => {
+      console.log('f');
+    };
+
     let matches = [];
     let nextMatches = [];
 
@@ -124,6 +128,8 @@ export default class Draws extends React.Component {
               matchR16.player2,
               matchR16.winner,
               style1,
+              matchR16.id,
+              matchR16.score_set[0],
             );
           });
 

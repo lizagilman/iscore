@@ -258,6 +258,7 @@ class Score(models.Model):
     p2_set3 = models.IntegerField(default=0)
     p1_set4 = models.IntegerField(default=0)
     p1_set4 = models.IntegerField(default=0)
+  # p2_set4 = models.IntegerField(default=0)
     p1_set5 = models.IntegerField(default=0)
     p2_set5 = models.IntegerField(default=0)
     p1_sets = models.IntegerField(default=0)

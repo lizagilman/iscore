@@ -116,8 +116,6 @@ export default class LogIn extends React.Component {
   };
 
   submitLogin = (event) => {
-
-
     if (this.state.password && this.state.userName) {
       const payload = {
         password: this.state.password,
@@ -130,7 +128,6 @@ export default class LogIn extends React.Component {
           alert('Failed to login. ', res.non_field_errors[0]);
           this.setState({ is_loading: false });
         } else {
-
           this.setToken(res.auth_token);
           GetUser(res.auth_token).then((data) => {
             if (data.detail) {
