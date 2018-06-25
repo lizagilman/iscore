@@ -123,6 +123,7 @@ class MatchesSerializer(serializers.ModelSerializer):
         model = Matches
         fields = '__all__'
 
+
 class ScoresSerializer(serializers.ModelSerializer):
     class Meta:
         model = Score
@@ -147,11 +148,23 @@ class MatchesReaderSerializer(serializers.ModelSerializer):
     winner = serializers.SlugRelatedField(read_only=True, slug_field='name')
     category = serializers.SlugRelatedField(
         read_only=True, slug_field='category')
-    score=ScoresSerializer(read_only=True)
+    score_set = ScoresSerializer(many=True, read_only=True)
 
     class Meta:
         model = Matches
-        fields = ('player1','player2','winner','stage','time','match_index','next_match','category','court','score')
+        fields = (
+            'player1',
+            'player2',
+            'winner',
+            'stage',
+            'time',
+            'match_index',
+            'next_match',
+            'category',
+            'court',
+            'score_set',
+        )
+
 
 class TournamentCategoriesSerializer(serializers.ModelSerializer):
     class Meta:
@@ -219,7 +232,6 @@ class EntriesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Entries
         fields = '__all__'
-
 
 
 class EntriesReaderSerializer(serializers.ModelSerializer):
