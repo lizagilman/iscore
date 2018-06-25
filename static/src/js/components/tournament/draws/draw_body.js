@@ -21,76 +21,130 @@ export const Tree = (matches, nextMatches) => (
   </div>
 );
 
-export const Match = (playerA, playerB, winner, style1) => (
-    <Paper zDepth={1} style={drawStyles.flexContainerMatch}>
-      <div
-        style={
-          style1
-            ? {
-                ...drawStyles.basicBlockStyle,
-                ...drawStyles.stageStyle,
-                ...drawStyles.matchStyle,
-                ...drawStyles.playerAstyle1,
-              }
-            : {
-                ...drawStyles.basicBlockStyle,
-                ...drawStyles.stageStyle,
-                ...drawStyles.matchStyle,
-                ...drawStyles.playerAstyle2,
-              }
-        }
-      >
-        {playerA === winner ? (
-          <span>
-            <img
-              src={
-                'https://cdn3.iconfinder.com/data/icons/higher-education-icon-set/256/trophy.png'
-              }
-              className={'trophy'}
-            />
-          </span>
-        ) : (
-          false
-        )}
-        <span className={playerA === winner ? 'matchWinner' : false}>
-          {playerA}
-        </span>
-      </div>
+const showScore = (id) => {
+  if (document.getElementById(`score-${id}`)) {
+    document.getElementById(`score-${id}`).style.display = 'block';
+  }
+};
 
-      <div
-        style={
-          style1
-            ? {
-                ...drawStyles.basicBlockStyle,
-                ...drawStyles.stageStyle,
-                ...drawStyles.matchStyle,
-                ...drawStyles.playerBstyle1,
-              }
-            : {
-                ...drawStyles.basicBlockStyle,
-                ...drawStyles.stageStyle,
-                ...drawStyles.matchStyle,
-                ...drawStyles.playerBstyle2,
-              }
-        }
-      >
-        {playerB === winner ? (
-          <span>
-            <img
-              src={
-                'https://cdn3.iconfinder.com/data/icons/higher-education-icon-set/256/trophy.png'
-              }
-              className={'trophy'}
-            />
-          </span>
-        ) : (
-          false
-        )}
-        <span className={playerB === winner ? 'matchWinner' : false}>
-          {playerB}
+const hideScore = (id) => {
+  if (document.getElementById(`score-${id}`)) {
+    document.getElementById(`score-${id}`).style.display = 'none';
+  }
+};
+
+export const Match = (playerA, playerB, winner, style1, matchId, score) => (
+  <Paper
+    zDepth={1}
+    style={drawStyles.flexContainerMatch}
+    onMouseEnter={(e) => {
+      e.preventDefault();
+      showScore(matchId);
+    }}
+    onMouseLeave={(e) => {
+      e.preventDefault();
+      hideScore(matchId);
+    }}
+  >
+    <div
+      style={
+        style1
+          ? {
+              ...drawStyles.basicBlockStyle,
+              ...drawStyles.stageStyle,
+              ...drawStyles.matchStyle,
+              ...drawStyles.playerAstyle1,
+            }
+          : {
+              ...drawStyles.basicBlockStyle,
+              ...drawStyles.stageStyle,
+              ...drawStyles.matchStyle,
+              ...drawStyles.playerAstyle2,
+            }
+      }
+    >
+      {winner && playerA === winner ? (
+        <span>
+          <img
+            src={
+              'https://cdn3.iconfinder.com/data/icons/higher-education-icon-set/256/trophy.png'
+            }
+            className={'trophy'}
+          />
         </span>
-      </div>
-    </Paper>
+      ) : (
+        false
+      )}
+      <span className={playerA === winner ? 'matchWinner' : false}>
+        {playerA}
+      </span>
+    </div>
+
+    <div
+      style={
+        style1
+          ? {
+              ...drawStyles.basicBlockStyle,
+              ...drawStyles.stageStyle,
+              ...drawStyles.matchStyle,
+              ...drawStyles.playerBstyle1,
+            }
+          : {
+              ...drawStyles.basicBlockStyle,
+              ...drawStyles.stageStyle,
+              ...drawStyles.matchStyle,
+              ...drawStyles.playerBstyle2,
+            }
+      }
+    >
+      {winner && playerB === winner ? (
+        <span>
+          <img
+            src={
+              'https://cdn3.iconfinder.com/data/icons/higher-education-icon-set/256/trophy.png'
+            }
+            className={'trophy'}
+          />
+        </span>
+      ) : (
+        false
+      )}
+      <span className={playerB === winner ? 'matchWinner' : false}>
+        {playerB}
+      </span>
+    </div>
+
+    <div id={`score-${matchId}`} className="score">
+      {score ? (
+        <table>
+          <tr>
+            <td className={score.p1_set1 > score.p2_set1 ? 'setWinner' : false}>
+              {score.p1_set1}
+            </td>
+            <td className={score.p1_set2 > score.p2_set2 ? 'setWinner' : false}>
+              {score.p1_set2}
+            </td>
+            <td className={score.p1_set3 > score.p2_set3 ? 'setWinner' : false}>
+              {score.p1_set3}
+            </td>
+          </tr>
+          <tr>
+            <td className={score.p2_set1 > score.p1_set1 ? 'setWinner' : false}>
+              {score.p2_set1}
+            </td>
+            <td className={score.p2_set2 > score.p1_set2 ? 'setWinner' : false}>
+              {score.p2_set2}
+            </td>
+            <td className={score.p2_set3 > score.p1_set3 ? 'setWinner' : false}>
+              {score.p2_set3}
+            </td>
+          </tr>
+        </table>
+      ) : (
+        false
+      )}
+    </div>
+  </Paper>
 );
 
 export const NextMatch = (
@@ -100,86 +154,126 @@ export const NextMatch = (
   nextStage,
   matchIndex,
   style1,
+  matchId,
+  score,
 ) => (
-    <Paper
-      zDepth={1}
+  <Paper
+    onMouseEnter={(e) => {
+      e.preventDefault();
+      showScore(matchId);
+    }}
+    onMouseLeave={(e) => {
+      e.preventDefault();
+      hideScore(matchId);
+    }}
+    zDepth={1}
+    style={
+      nextStage === F
+        ? {
+            ...drawStyles.flexContainerMatch,
+            ...drawStyles.flexContainerNextMatchFinal,
+          }
+        : {
+            height:
+              nextStage === SF
+                ? '47.5%'
+                : drawStyles.flexContainerNextMatch.height,
+            ...drawStyles.flexContainerMatch,
+            maxHeight: matchIndex === 22 ? '22%' : false,
+          }
+    }
+  >
+    <div
       style={
-        nextStage === F
+        style1
           ? {
-              ...drawStyles.flexContainerMatch,
-              ...drawStyles.flexContainerNextMatchFinal,
+              ...drawStyles.basicBlockStyle,
+              ...drawStyles.nextMatchStyle,
+              ...drawStyles.playerAstyle1,
             }
           : {
-              height:
-                nextStage === SF
-                  ? '47.5%'
-                  : drawStyles.flexContainerNextMatch.height,
-              ...drawStyles.flexContainerMatch,
-              maxHeight: matchIndex === 22 ? '22%' : false,
+              ...drawStyles.basicBlockStyle,
+              ...drawStyles.nextMatchStyle,
+              ...drawStyles.playerAstyle2,
             }
       }
     >
-      <div
-        style={
-          style1
-            ? {
-                ...drawStyles.basicBlockStyle,
-                ...drawStyles.nextMatchStyle,
-                ...drawStyles.playerAstyle1,
-              }
-            : {
-                ...drawStyles.basicBlockStyle,
-                ...drawStyles.nextMatchStyle,
-                ...drawStyles.playerAstyle2,
-              }
-        }
-      >
-        {playerA === winner ? (
-          <span>
-            <img
-              src={
-                'https://cdn3.iconfinder.com/data/icons/higher-education-icon-set/256/trophy.png'
-              }
-              className={'trophy'}
-            />
-          </span>
-        ) : (
-          false
-        )}
-        <span className={playerA === winner ? 'matchWinner' : false}>
-          {playerA}
+      {playerA === winner ? (
+        <span>
+          <img
+            src={
+              'https://cdn3.iconfinder.com/data/icons/higher-education-icon-set/256/trophy.png'
+            }
+            className={'trophy'}
+          />
         </span>
-      </div>
-      <div
-        style={
-          style1
-            ? {
-                ...drawStyles.basicBlockStyle,
-                ...drawStyles.nextMatchStyle,
-                ...drawStyles.playerBstyle1,
-              }
-            : {
-                ...drawStyles.basicBlockStyle,
-                ...drawStyles.nextMatchStyle,
-                ...drawStyles.playerBstyle2,
-              }
-        }
-      >
-        {playerB === winner ? (
-          <span>
-            <img
-              src={
-                'https://cdn3.iconfinder.com/data/icons/higher-education-icon-set/256/trophy.png'
-              }
-              className={'trophy'}
-            />
-          </span>
-        ) : (
-          false
-        )}
-        <span className={playerB === winner ? 'matchWinner' : false}>
-          {playerB}
+      ) : (
+        false
+      )}
+      <span className={playerA === winner ? 'matchWinner' : false}>
+        {playerA}
+      </span>
+    </div>
+    <div
+      style={
+        style1
+          ? {
+              ...drawStyles.basicBlockStyle,
+              ...drawStyles.nextMatchStyle,
+              ...drawStyles.playerBstyle1,
+            }
+          : {
+              ...drawStyles.basicBlockStyle,
+              ...drawStyles.nextMatchStyle,
+              ...drawStyles.playerBstyle2,
+            }
+      }
+    >
+      {playerB === winner ? (
+        <span>
+          <img
+            src={
+              'https://cdn3.iconfinder.com/data/icons/higher-education-icon-set/256/trophy.png'
+            }
+            className={'trophy'}
+          />
         </span>
-      </div>
-    </Paper>
+      ) : (
+        false
+      )}
+      <span className={playerB === winner ? 'matchWinner' : false}>
+        {playerB}
+      </span>
+    </div>
+    <div id={`score-${matchId}`} className="score">
+      {score ? (
+        <table>
+          <tr>
+            <td className={score.p1_set1 > score.p2_set1 ? 'setWinner' : false}>
+              {score.p1_set1}
+            </td>
+            <td className={score.p1_set2 > score.p2_set2 ? 'setWinner' : false}>
+              {score.p1_set2}
+            </td>
+            <td className={score.p1_set3 > score.p2_set3 ? 'setWinner' : false}>
+              {score.p1_set3}
+            </td>
+          </tr>
+          <tr>
+            <td className={score.p2_set1 > score.p1_set1 ? 'setWinner' : false}>
+              {score.p2_set1}
+            </td>
+            <td className={score.p2_set2 > score.p1_set2 ? 'setWinner' : false}>
+              {score.p2_set2}
+            </td>
+            <td className={score.p2_set3 > score.p1_set3 ? 'setWinner' : false}>
+              {score.p2_set3}
+            </td>
+          </tr>
+        </table>
+      ) : (
+        false
+      )}
+    </div>
+  </Paper>
 );
