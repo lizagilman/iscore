@@ -150,7 +150,7 @@ export default class LogIn extends React.Component {
                   } else if (user.is_organization === true) {
                     type = 'organization';
                   } else if (user.is_umpire === true) {
-                    type = 'organization';
+                    type = 'umpire';
                   }
                   this.setType(type).then(this.setState({ userType: true }));
                 }

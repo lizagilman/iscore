@@ -14,13 +14,11 @@ import { Redirect } from 'react-router';
 import { GetUser, logOut } from '../../api';
 import Drawer from 'material-ui/Drawer';
 
-
 const styles = {
   iscore: {
     fontSize: '3em',
     color: 'white',
     height: '70px',
-    display: 'block',
     display: 'block',
   },
 
@@ -78,18 +76,20 @@ const styles = {
   tabs: {
     width: '100%',
     height: '20px',
-    backgroundColor: 'gray',
+    backgroundColor: '#770fac',
   },
+
+  tab: {
+    backgroundColor: '#770fac',
+  },
+
   orgAppBar: {
-    backgroundColor: '#b841f4',
     height: '10em',
   },
   managerAppBar: {
-    backgroundColor: 'orange',
     height: '10em',
   },
   umpireAppBar: {
-    backgroundColor: '#4242f4',
     height: '10em',
   },
   menuItem: {
@@ -134,11 +134,26 @@ class ManagerHeader extends React.Component {
   goToSchedule = () => {
     this.setState({ goToSchedule: true });
   };
+
   componentWillMount() {
     if (localStorage.id_user != null) {
       this.setState({ logged: true });
     } else {
       this.setState({ logged: false });
+    }
+
+    switch (this.props.type) {
+      case 'Coach':
+      case 'coach':
+        this.props.headerSwitcher('#ffa500');
+        break;
+      case 'Organization Manager':
+        this.props.headerSwitcher('#b841f4');
+        break;
+      case 'umpire':
+      case 'Umpire':
+        this.props.headerSwitcher('#4242f4');
+        break;
     }
   }
 
@@ -149,10 +164,10 @@ class ManagerHeader extends React.Component {
         value={this.props.history.location.pathname}
         onChange={this.handleCallToRouter}
       >
-        <Tab label="Tournaments" value={'/tournaments'} />
-        <Tab label="Rankings" value={'/rankings'} />
-        <Tab label="Points Distribution Methods" />
-        <Tab label="Money Distribution Methods" />
+        <Tab label="Tournaments" value={'/tournaments'} style={styles.tab} />
+        <Tab label="Rankings" value={'/rankings'} style={styles.tab} />
+        <Tab label="Points Distribution Methods" style={styles.tab} />
+        <Tab label="Money Distribution Methods" style={styles.tab} />
       </Tabs>
     );
     const Logged = props => (
@@ -208,7 +223,7 @@ class ManagerHeader extends React.Component {
     const Iscore = () => (
       <div className="row">
         <div className="col-xs-12 col-sm-12 col-md-12">
-          <FlatButton label="ISCORE" labelStyle={styles.iscore} />
+          <FlatButton label="iSCORE" labelStyle={styles.iscore} />
         </div>
       </div>
     );
@@ -274,7 +289,7 @@ class ManagerHeader extends React.Component {
           {this.state.goToSchedule ? <Redirect to="/coach/tournaments" /> : ''}
         </AppBar>
         <div>
-          {localStorage.type === 'manager' ? (
+          {localStorage.type === 'organization' ? (
             <div className="row">
               <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">{tabs}</div>
             </div>

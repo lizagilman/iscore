@@ -1,7 +1,6 @@
 import React from 'react';
 import ManagerHeader from '../tournaments_header/tournaments_header';
 
-
 export default class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -14,6 +13,7 @@ export default class Header extends React.Component {
         type={'Coach'}
         first_name={first_name}
         last_name={last_name}
+        headerSwitcher={this.props.headerSwitcher}
       />
     );
     const managerHeader = (
@@ -21,6 +21,7 @@ export default class Header extends React.Component {
         type={'Tournament Manager'}
         first_name={first_name}
         last_name={last_name}
+        headerSwitcher={this.props.headerSwitcher}
       />
     );
     const umpireHeader = (
@@ -28,6 +29,7 @@ export default class Header extends React.Component {
         type={'Umpire'}
         first_name={first_name}
         last_name={last_name}
+        headerSwitcher={this.props.headerSwitcher}
       />
     );
     const orgHeader = (
@@ -35,6 +37,7 @@ export default class Header extends React.Component {
         type={'Organization Manager'}
         first_name={first_name}
         last_name={last_name}
+        headerSwitcher={this.props.headerSwitcher}
       />
     );
 

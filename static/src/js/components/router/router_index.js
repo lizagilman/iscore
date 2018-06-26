@@ -13,11 +13,10 @@ import Header from '../header/header_index';
 import ScheduleCoach from '../coach/schedulePhone';
 import ScheduleCoachTournaments from '../coach/tournamentsPhone';
 
-const AppRouter = () => (
+const AppRouter = headerSwitcher => (
   <BrowserRouter>
     <div>
-
-      <Header/>
+      <Header headerSwitcher={headerSwitcher} />
 
       <Route exact path="/umpire/tournaments" component={UmpireTournaments} />
       <Route
@@ -33,7 +32,11 @@ const AppRouter = () => (
       <Route exact path="/tournament/:id" component={Tournament} />
       <Route exact path="/ranking/:id" component={Ranking} />
       <Route exact path="/coach" component={CoachPage} />
-      <Route exact path="/coach/tournaments" component={ScheduleCoachTournaments} />
+      <Route
+        exact
+        path="/coach/tournaments"
+        component={ScheduleCoachTournaments}
+      />
       <Route exact path="/coach/tournaments/:id" component={ScheduleCoach} />
     </div>
   </BrowserRouter>
