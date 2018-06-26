@@ -379,7 +379,7 @@ export const deleteScheduleApi = tournament_id => {
 
 export const generateDraws = categoryid =>
   fetch(`/generate_draws/?category_id=${categoryid}`).then(
-    response => response
+    response => response.json()
   );
 
 export const deleteDraws = categoryid => {
