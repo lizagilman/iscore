@@ -36,17 +36,19 @@ const styles = {
     paddingTop: '2%',
     paddingBottom: '2%',
   },
+    drawerElementRegPlayers:{
+
+    },
   menuButton: {
     marginRight: '20px',
     height: '7em',
     width: '3em',
   },
   menuIcon: {
-    padding: '-12px',
-    color: 'white',
-    width: '53px',
-    height: '55px',
-    marginRight: '20px',
+    // padding: '-12px',
+    color: "white",
+    width: "53px",
+    height: "55px"
   },
 
   coachTitleStyle: {
@@ -69,9 +71,9 @@ const styles = {
     fontSize: '3em',
   },
   coachAppBar: {
-    flexWrap: 'wrap',
-    lineHeight: '4em',
-    paddingRight: '180px',
+    flexWrap: "wrap",
+    lineHeight: "4em",
+    paddingRight: "70px"
   },
   tabs: {
     width: '100%',
@@ -103,6 +105,7 @@ class ManagerHeader extends React.Component {
     this.handleCallToRouter = this.handleCallToRouter.bind(this);
     this.logOut = this.logOut.bind(this);
     this.goToSchedule = this.goToSchedule.bind(this);
+    this.goToRegistration = this.goToRegistration.bind(this);
     this.handleToggle = this.handleToggle.bind(this);
     this.state = {
       logged: null,
@@ -110,8 +113,9 @@ class ManagerHeader extends React.Component {
       org: false,
       coach: false,
       umpire: false,
-      goToSchedule: false,
+      goTo: false,
       open: false,
+        goToReg:false,
     };
   }
   logOut = () => {
@@ -125,16 +129,29 @@ class ManagerHeader extends React.Component {
     localStorage.removeItem('type');
     window.location.replace('/');
   };
-  handleToggle = () => {
-    this.setState({ open: !this.state.open });
+  handleToggle = e => {
+    e.preventDefault();
+
+    this.setState(
+      prevState => ({
+        open: !prevState.open
+      }),
+      () => {
+        console.log("open is: ", this.state.open);
+      }
+    );
   };
   handleCallToRouter = (value) => {
     this.props.history.push(value);
   };
-  goToSchedule = () => {
-    this.setState({ goToSchedule: true });
+  goToSchedule = e => {
+    this.setState({ goTo: true });
+    this.handleToggle(e);
   };
-
+  goToRegistration= e =>{
+    this.setState({ goToReg: true });
+    this.handleToggle(e);
+  };
   componentWillMount() {
     if (localStorage.id_user != null) {
       this.setState({ logged: true });
@@ -194,15 +211,15 @@ class ManagerHeader extends React.Component {
               {this.state.open ? <Close /> : <Menu />}
             </IconButton>
           }
-          anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-          targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-          onClick={() => this.handleToggle()}
+          anchorOrigin={{ horizontal: "right", vertical: "top" }}
+          targetOrigin={{ horizontal: "right", vertical: "top" }}
+          onClick={e => this.handleToggle(e)}
           style={styles.menuButton}
         />
         <Drawer
           open={this.state.open}
-          disableSwipeToOpen={true}
-          width="50%"
+          disableSwipeToOpen={false}
+          width="80%"
           style={styles.drawerStyle}
         >
           <FlatButton
@@ -215,7 +232,13 @@ class ManagerHeader extends React.Component {
             style={styles.drawerElementsStyle}
             labelStyle={styles.drawerElementsLabel}
             label="schedule"
-            onClick={this.goToSchedule}
+            onClick={e => this.goToSchedule(e)}
+          />
+           <FlatButton
+            style={styles.drawerElementsStyle}
+            labelStyle={styles.drawerElementsLabel}
+            label="players registration"
+            onClick={e => this.goToRegistration(e)}
           />
         </Drawer>
       </div>
@@ -285,8 +308,16 @@ class ManagerHeader extends React.Component {
           ) : (
             ''
           )}
-
-          {this.state.goToSchedule ? <Redirect to="/coach/tournaments" /> : ''}
+          {this.state.goTo && !this.state.open ? (
+            <Redirect to="/coach/tournaments" />
+          ) : (
+            ""
+          )}
+          {this.state.goToReg && !this.state.open ? (
+            <Redirect to="/coach" />
+          ) : (
+            ""
+          )}
         </AppBar>
         <div>
           {localStorage.type === 'organization' ? (

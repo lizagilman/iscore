@@ -92,6 +92,18 @@ export default class ScheduleCoach extends React.Component {
           <ListItem
             style={styles.matchStyle}
             key={1}
+            primaryText="Category:"
+            secondaryText={
+              match ? (
+                <p style={styles.matchStyleSecondary}>{match.category}</p>
+              ) : (
+                ''
+              )
+            }
+          />,
+          <ListItem
+            style={styles.matchStyle}
+            key={2}
             primaryText="Player 1:"
             secondaryText={
               match ? (
@@ -103,7 +115,7 @@ export default class ScheduleCoach extends React.Component {
           />,
           <ListItem
             style={styles.matchStyle}
-            key={2}
+            key={3}
             primaryText="Player 2:"
             secondaryText={
               match ? (
@@ -115,7 +127,7 @@ export default class ScheduleCoach extends React.Component {
           />,
           <ListItem
             style={styles.matchStyle}
-            key={3}
+            key={4}
             primaryText="Date and Time:"
             secondaryText={
               match ? (
@@ -129,7 +141,7 @@ export default class ScheduleCoach extends React.Component {
           />,
           <ListItem
             style={styles.matchStyle}
-            key={4}
+            key={5}
             primaryText="Winner:"
             secondaryText={
               match ? (

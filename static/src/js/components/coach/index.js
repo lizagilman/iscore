@@ -153,19 +153,14 @@ export default class CoachPage extends React.Component {
     const self = this;
     if (this.state.user === null && localStorage.id_user) {
       this.setState({ user: localStorage.id_user }, () => {
-        CoachEnterPlayersStore.fetchPlayers(this.state.user).then((storedPlayers) => {
-          self.setState({ players: mobx.toJS(storedPlayers) }, () => {});
-
-          // this.setState({
-          //     first_name: mobx.toJS(CoachEnterPlayersStore.firstName),
-          // });
-          // this.setState({
-          //     last_name: mobx.toJS(CoachEnterPlayersStore.lastName),
-          // });
-        });
+        CoachEnterPlayersStore.fetchPlayers(this.state.user).then(
+          storedPlayers => {
+            self.setState({ players: mobx.toJS(storedPlayers) }, () => {});
+          }
+        );
       });
     }
-    TournamentsStore.fetchAllTournaments().then((storedTournaments) => {
+    TournamentsStore.fetchAllTournaments().then(storedTournaments => {
       self.setState({ tournaments: mobx.toJS(storedTournaments) }, () => {
         this.createTournamentOptions();
       });

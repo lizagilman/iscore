@@ -20,6 +20,10 @@ class LiveMatch extends React.Component {
     this.state = {
       startDisabled: false,
       serving: false,
+      intervalId: null,
+      startTime: false,
+      currentCount: null,
+      date: null,
       score: {
         current_set: 1,
         current_game: 1,
@@ -39,6 +43,7 @@ class LiveMatch extends React.Component {
         p1_points: 0,
         p2_points: 0,
         match_id: null,
+        currentTime: null,
         serving: LiveScore.PLAYER_1,
         winner: null,
         displayFeedbackModal: false,
@@ -54,6 +59,7 @@ class LiveMatch extends React.Component {
     this.updateLiveScore = this.updateLiveScore.bind(this);
     this.updateWinner = this.updateWinner.bind(this);
     this.closeFeedbackModal = this.closeFeedbackModal.bind(this);
+    this.timer = this.timer.bind(this);
   }
 
   toggleServing = () => {
@@ -66,10 +72,37 @@ class LiveMatch extends React.Component {
   };
 
   startMatch = () => {
-    this.setState({ startDisabled: true });
+    const intervalId = setInterval(this.timer, 1000);
+    const date = new Date();
+    this.setState({ date: date });
+    this.setState({
+      intervalId: intervalId,
+      startTime: true,
+      startDisabled: true
+    });
   };
 
-  update_state = (data) => {
+  timer = () => {
+    let curr = new Date();
+    let newTime = new Date();
+    newTime.setSeconds(curr.getSeconds() - this.state.date.getSeconds());
+    newTime.setMinutes(curr.getMinutes() - this.state.date.getMinutes());
+    newTime.setHours(curr.getHours() - this.state.date.getHours());
+    let timeStr =
+      newTime.getHours() +
+      ":" +
+      newTime.getMinutes() +
+      ":" +
+      newTime.getSeconds();
+    this.setState({ currentCount: timeStr }, () => {
+      console.log("currentCount", this.state.currentCount);
+    });
+    const newTimeToSend = this.state.score;
+    newTimeToSend.currentTime = timeStr;
+    this.setState({ score: newTimeToSend });
+    this.updateLiveScore(newTimeToSend);
+  };
+  update_state = data => {
     this.setState(data);
   };
 
@@ -270,12 +303,14 @@ class LiveMatch extends React.Component {
   };
 
   updateWinner(playerId) {
-    this.setState({ displayFeedbackModal: true });
-    updateMatchWinnerApi(this.state.score.match_id, playerId).then((responseUpdate) => {
-      responseUpdate.status > 400
-        ? this.setState({ feedbackText: 'Failed to update winner!' })
-        : this.setState({ feedbackText: 'winner updated!' });
-    });
+    this.setState({ displayFeedbackModal: true, startTime: false });
+    updateMatchWinnerApi(this.state.score.match_id, playerId).then(
+      responseUpdate => {
+        responseUpdate.status > 400
+          ? this.setState({ feedbackText: "Failed to update winner!" })
+          : this.setState({ feedbackText: "winner updated!" });
+      }
+    );
   }
 
   closeFeedbackModal(e) {
@@ -284,6 +319,9 @@ class LiveMatch extends React.Component {
   }
 
   render() {
+    {
+      !this.state.startTime ? clearInterval(this.state.intervalId) : false;
+    }
     const { UmpireStore } = this.props.stores;
     const match = mobx.toJS(UmpireStore.getSingleMatch());
 
@@ -556,13 +594,17 @@ class LiveMatch extends React.Component {
                   <h2>Match Duration:</h2>
                 </div>
                 <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  <h3>1:56</h3>
+                  <h3>
+                    {this.state.score.currentTime
+                      ? this.state.score.currentTime
+                      : this.state.currentCount ? this.state.currentCount : ""}
+                  </h3>
                 </div>
                 <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                   <RaisedButton
                     label="Start Match"
                     secondary={true}
-                    disabled={this.state.startDisabled}
+                    disabled={this.state.startDisabled || this.state.score.currentTime}
                     labelStyle={LiveScore.styles.start}
                     onClick={() => this.startMatch()}
                   />
