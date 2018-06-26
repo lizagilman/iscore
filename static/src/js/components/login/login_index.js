@@ -97,6 +97,10 @@ export default class LogIn extends React.Component {
       is_loading: false,
       loginEmailError: null,
       loginPassError: null,
+      alreadyUmpire: false,
+      alreadyManager: false,
+      alreadyOrg: false,
+      alreadyCoach: false
     };
     this.setUserId = this.setUserId.bind(this);
     this.setToken = this.setToken.bind(this);
@@ -108,7 +112,17 @@ export default class LogIn extends React.Component {
     this.setLocalSFirstName = this.setLocalSFirstName.bind(this);
     this.setLocalSLastName = this.setLocalSLastName.bind(this);
   }
-
+  componentWillMount() {
+    if (localStorage.type === "manager") {
+      this.setState({ alreadyManager: true });
+    } else if (localStorage.type === "coach") {
+      this.setState({ alreadyCoach: true });
+    } else if (localStorage.type === "umpire") {
+      this.setState({ alreadyUmpire: true });
+    } else if (localStorage.type === "organization") {
+      this.setState({ alreadyOrg: true });
+    }
+  }
   handleChange = () => {
     this.setState(prevState => ({
       login: !prevState.login,
@@ -457,6 +471,43 @@ export default class LogIn extends React.Component {
 
     return (
       <div>
+        {this.state.alreadyUmpire ? (
+          <Redirect
+            to={{
+              pathname: "/umpire/tournaments"
+            }}
+          />
+        ) : (
+          false
+        )}
+        {this.state.alreadyManager ? (
+          <Redirect
+            to={{
+              pathname: "/tournaments"
+            }}
+          />
+        ) : (
+          false
+        )}
+        {this.state.alreadyCoach ? (
+          <Redirect
+            to={{
+              pathname: "/coach"
+            }}
+          />
+        ) : (
+          false
+        )}
+        {this.state.alreadyOrg ? (
+          <Redirect
+            to={{
+              pathname: "/rankings"
+            }}
+          />
+        ) : (
+          false
+        )}
+
         <Toolbar>
           <ToolbarGroup firstChild={true} style={styles.toolbar}>
             <ToolbarTitle style={styles.toolbartitle} text="WELCOME" />
