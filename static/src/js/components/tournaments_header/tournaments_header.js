@@ -326,7 +326,7 @@ class ManagerHeader extends React.Component {
             </div>
           ) : (
             ''
-          )};
+          )}
         </div>
       </div>
     );
