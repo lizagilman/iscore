@@ -83,15 +83,15 @@ const styles = {
   },
 
   orgAppBar: {
-    paddingTop:'2%',
+    paddingTop:'1%',
     height: '10em',
   },
   managerAppBar: {
-    paddingTop:'2%',
+    paddingTop:'1%',
     height: '10em',
   },
   umpireAppBar: {
-    paddingTop:'2%',
+    paddingTop:'1%',
     height: '10em',
   },
   menuItem: {
@@ -262,11 +262,7 @@ class ManagerHeader extends React.Component {
         <AppBar
           title={
             localStorage.type != 'coach'
-              ? `Welcome ${this.props.type} ${this.props.first_name} ${
-                  this.props.last_name
-                }`
-              : ''
-          }
+              ? `Welcome ${this.props.first_name} ${this.props.last_name} - ${this.props.type}` : ''}
           titleStyle={localStorage.type != 'coach' ? styles.titleStyle : ''}
           style={
             this.props.type === 'Coach'
