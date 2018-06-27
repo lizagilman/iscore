@@ -327,3 +327,28 @@ body {
 .setWinner {
   color: #047664eb;
 }
+
+#breadcrumbs {
+  list-style-type: none;
+}
+
+#breadcrumbs:first-child {
+
+}
+
+#breadcrumbs li{
+  float:  left;
+  color: #534848;
+  font-size: 17px;
+  font-weight: initial;
+}
+
+#breadcrumbs li:nth-child(2) {
+  margin-right: 1.5%;
+  margin-left: 1.5%;
+}
+
+.current-page{
+  color: #389687 !important;
+  float: initial !important;
+}

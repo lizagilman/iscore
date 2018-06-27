@@ -1,8 +1,10 @@
 import { inject, observer } from 'mobx-react';
 import React from 'react';
+import * as mobx from 'mobx';
 import MainCard from '../main_card/main_card_index';
 import LeftMenu from './left_menu/left_menu_index';
 import BasicInfo from '../tournament/basic_info/basic_info_index';
+import { Link } from 'react-router-dom';
 
 @inject('stores')
 @observer
@@ -36,18 +38,44 @@ class Tournament extends React.Component {
   }
 
   render() {
+    const { TournamentStore } = this.props.stores;
+
     return (
-      <div id={'tindex'}>
-        <LeftMenu
-          zDepth={0}
-          mainContentSwitcher={this.mainContentSwitcher}
-          tournamentId={parseInt(this.props.match.params.id, 10)}
-        />
-        <MainCard
-          title={this.state.title}
-          content={this.state.mainContent}
-          style={{ margin: '2% 0px 0px 15%', width: '80%' }}
-        />
+      <div>
+        <ul id={'breadcrumbs'}>
+          <li>
+            <Link to={'/tournaments'} style={{ color: '#534848' }}>
+              Tournaments
+            </Link>
+          </li>
+
+          <li>/</li>
+
+          <li className={'current-page'}>
+            {(this.props.location.state
+              ? this.props.location.state.tournamentName
+              : false) ||
+              (TournamentStore.tournament
+                ? TournamentStore.tournament.name
+                  ? mobx.toJS(TournamentStore.tournament).name
+                  : ''
+                : false) ||
+              ''}
+          </li>
+        </ul>
+
+        <div id={'tindex'}>
+          <LeftMenu
+            zDepth={0}
+            mainContentSwitcher={this.mainContentSwitcher}
+            tournamentId={parseInt(this.props.match.params.id, 10)}
+          />
+          <MainCard
+            title={this.state.title}
+            content={this.state.mainContent}
+            style={{ margin: '2% 0px 0px 15%', width: '80%' }}
+          />
+        </div>
       </div>
     );
   }

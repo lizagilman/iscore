@@ -4,7 +4,6 @@ import { Redirect } from 'react-router';
 import RaisedButton from 'material-ui/RaisedButton';
 import * as mobx from 'mobx';
 
-
 const styles = {
   buttonStyle: {
     lineHeight: '5em',
@@ -14,7 +13,6 @@ const styles = {
     marginBottom: '1%',
     paddingTop: '2%',
     paddingBottom: '2%',
-
   },
   labelStyle: {
     fontSize: '2.5em',
@@ -40,26 +38,41 @@ export default class ScheduleCoachTournaments extends React.Component {
       self.setState({ tournaments: mobx.toJS(storedTournaments) });
     });
   }
-    handleSelectedTournament=(tour) => {
-      console.log(`handleSelectedTournament ${JSON.stringify(tour)}`, tour);
-      const { CoachEnterPlayersStore } = this.props.stores;
-      CoachEnterPlayersStore.setSelectedTournament(tour);
-      this.setState({ selectedTournament: tour });
-    };
-    render() {
-      const createTournamentButton = tour => (
-
-                 <RaisedButton style={styles.buttonStyle} label={tour.name} labelStyle={styles.labelStyle} fullWidth={true} onClick={() => this.handleSelectedTournament(tour)}/>
-
-      );
-      return (
-            <div>
-                {this.state.tournaments ? this.state.tournaments.map(tournament => createTournamentButton(tournament)) : ''}
-                {
-                    this.state.selectedTournament ? <Redirect to={{ pathname: `/coach/tournaments/${this.state.selectedTournament.id}` }}/> : false
-                }
-
-            </div>
-      );
-    }
+  handleSelectedTournament = (tour) => {
+    console.log(`handleSelectedTournament ${JSON.stringify(tour)}`, tour);
+    const { CoachEnterPlayersStore } = this.props.stores;
+    CoachEnterPlayersStore.setSelectedTournament(tour);
+    this.setState({ selectedTournament: tour });
+  };
+  render() {
+    const createTournamentButton = tour => (
+      <RaisedButton
+        style={styles.buttonStyle}
+        label={tour.name}
+        labelStyle={styles.labelStyle}
+        fullWidth={true}
+        onClick={() => this.handleSelectedTournament(tour)}
+      />
+    );
+    return (
+      <div>
+        {this.state.tournaments
+          ? this.state.tournaments.map(tournament =>
+              createTournamentButton(tournament))
+          : ''}
+        {this.state.selectedTournament ? (
+          <Redirect
+            to={{
+              pathname: `/coach/tournaments/${
+                this.state.selectedTournament.id
+              }`,
+              state: { tournamentName: this.state.selectedTournament.name },
+            }}
+          />
+        ) : (
+          false
+        )}
+      </div>
+    );
+  }
 }

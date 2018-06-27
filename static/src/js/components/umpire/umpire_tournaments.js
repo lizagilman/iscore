@@ -68,7 +68,12 @@ export default class UmpireTournaments extends React.Component {
     const createRow = (item, index) => (
       <TableRow key={index}>
         <TableRowColumn>
-          <Link to={`/umpire/tournament/${item.id}/matches`}>
+          <Link
+            to={{
+              pathname: `/umpire/tournament/${item.id}/matches`,
+              state: { tournamentName: item.name },
+            }}
+          >
             <div style={nameStyle} onClick={e => this.onLinkClick(item.id, e)}>
               {item.name}
             </div>
