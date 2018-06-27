@@ -24,7 +24,7 @@ const styles = {
 
   drawerElementsLabel: {
     fontSize: '3em',
-    color: 'rgb(0, 150, 136)',
+    color: 'rgb(255, 165, 0)',
   },
   drawerElementsStyle: {
     display: 'block',
@@ -36,9 +36,6 @@ const styles = {
     paddingTop: '2%',
     paddingBottom: '2%',
   },
-    drawerElementRegPlayers:{
-
-    },
   menuButton: {
     marginRight: '20px',
     height: '7em',
@@ -86,12 +83,15 @@ const styles = {
   },
 
   orgAppBar: {
+    paddingTop:'2%',
     height: '10em',
   },
   managerAppBar: {
+    paddingTop:'2%',
     height: '10em',
   },
   umpireAppBar: {
+    paddingTop:'2%',
     height: '10em',
   },
   menuItem: {
