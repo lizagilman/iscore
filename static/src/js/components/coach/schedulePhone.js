@@ -79,7 +79,7 @@ export default class ScheduleCoach extends React.Component {
         secondaryText={
           match ? (
             <p style={styles.matchStyleSecondary}>
-              {`${match.player1} VS ${match.player2}`}
+                {match.player1 != null && match.player2 != null   ? `${match.player1} VS ${match.player2}` : ''}
             </p>
           ) : (
             ''
