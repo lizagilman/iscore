@@ -124,8 +124,6 @@ class LiveMatch extends React.Component {
     this.setState({ match_id: match.id });
     this.setState({ score: { ...this.state.score, match_id: match.id } });
 
-    console.log('gonna create new websocket');
-
     this.socket = new WebSocket(`wss://iscore-app.herokuapp.com/ws/iscore/match/${match.id}/`);
 
     // recieve
@@ -295,7 +293,6 @@ class LiveMatch extends React.Component {
         }
       }
     }
-
 
     this.setState({ score: newScore });
 
@@ -616,9 +613,21 @@ class LiveMatch extends React.Component {
       </div>
     );
 
+    const matchDetails = this.props.location.state;
+
     return (
       <div>
-        <MainCard title={'Matches'} content={liveMatch} />
+        {matchDetails ? (
+          <MainCard
+            title={`${matchDetails.tournamentName}  |  ${
+              matchDetails.category
+            }  |  ${matchDetails.stage}`}
+            content={liveMatch}
+          />
+        ) : (
+          <MainCard title={'Match'} />
+        )}
+
         {this.state.displayFeedbackModal ? FeedbackModal : false}
       </div>
     );

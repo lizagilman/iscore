@@ -61,7 +61,9 @@ export default class ScheduleCoach extends React.Component {
   componentWillMount() {
     const { CoachEnterPlayersStore } = this.props.stores;
     const tournament = mobx.toJS(CoachEnterPlayersStore.getSelectedTournament());
-    const tournamentId = tournament ? tournament.id : this.props.match.params.id;
+    const tournamentId = tournament
+      ? tournament.id
+      : this.props.match.params.id;
     if (!tournamentId) {
       this.setState({ error: true });
       return;
@@ -158,7 +160,11 @@ export default class ScheduleCoach extends React.Component {
     const scheduleList = (
       <div>
         <List>
-          <Subheader style={styles.header}>Matches:</Subheader>
+          <Subheader style={styles.header}>
+            {this.props.location.state
+              ? this.props.location.state.tournamentName
+              : 'Matches'}
+          </Subheader>
           {this.state.matches ? (
             this.state.matches.map((Match, index) => createList(Match, index))
           ) : (

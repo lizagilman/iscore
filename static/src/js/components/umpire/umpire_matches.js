@@ -136,7 +136,16 @@ export default class UmpireMatches extends React.Component {
           class={'col-lg-1.5 col-md-1.5 col-sm-1.5'}
           style={scheduleTableStyleStart}
         >
-          <Link to={`/umpire/match/${match.id}`}>
+          <Link
+            to={{
+              pathname: `/umpire/match/${match.id}`,
+              state: {
+                tournamentName: this.props.location.state.tournamentName,
+                category: match.category,
+                stage: match.stage,
+              },
+            }}
+          >
             <div onClick={e => this.onLinkClick(match.id, e)}>
               <FlatButton label="Start Match" primary={true} />
             </div>
@@ -207,10 +216,10 @@ export default class UmpireMatches extends React.Component {
               <TableHeaderColumn />
               <TableHeaderColumn>Stage</TableHeaderColumn>
               <TableHeaderColumn style={scheduleTableHeader}>
-                Player
+                Player A
               </TableHeaderColumn>
               <TableHeaderColumn style={scheduleTableHeader}>
-                Player
+                Player B
               </TableHeaderColumn>
               <TableHeaderColumn style={scheduleTableHeader}>
                 Time
@@ -238,7 +247,7 @@ export default class UmpireMatches extends React.Component {
     return (
       <div>
         <MainCard
-          title={'Matches'}
+          title={this.props.location.state.tournamentName || ''}
           content={scheduleTable}
           style={{ flex: 1, height: '100%', margin: '1vw 2vw 0 2vw' }}
         />
