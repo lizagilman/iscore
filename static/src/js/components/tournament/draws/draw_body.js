@@ -22,13 +22,13 @@ export const Tree = (matches, nextMatches) => (
 );
 
 const showScore = (id) => {
-  if (document.getElementById(`score-${id}`)) {
+  if (document.getElementById(`score-${id}`).children.length) {
     document.getElementById(`score-${id}`).style.display = 'block';
   }
 };
 
 const hideScore = (id) => {
-  if (document.getElementById(`score-${id}`)) {
+  if (document.getElementById(`score-${id}`).children.length) {
     document.getElementById(`score-${id}`).style.display = 'none';
   }
 };
@@ -115,7 +115,7 @@ export const Match = (playerA, playerB, winner, style1, matchId, score) => (
     </div>
 
     <div id={`score-${matchId}`} className="score">
-      {score ? (
+      {winner && score && score.p1_set1 ? (
         <table>
           <tr>
             <td className={score.p1_set1 > score.p2_set1 ? 'setWinner' : false}>
@@ -246,7 +246,7 @@ export const NextMatch = (
       </span>
     </div>
     <div id={`score-${matchId}`} className="score">
-      {score ? (
+      {winner && score && score.p1_set1 ? (
         <table>
           <tr>
             <td className={score.p1_set1 > score.p2_set1 ? 'setWinner' : false}>

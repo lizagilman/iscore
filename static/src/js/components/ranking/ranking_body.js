@@ -47,6 +47,8 @@ const getFlagIcon = (countryCode) => {
       return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Latvia.png';
     case 'CHA':
       return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Chad.png';
+    case 'GER':
+      return 'https://cdn2.iconfinder.com/data/icons/world-flag-icons/256/Flag_of_Germany.png';
     default:
       return false;
   }

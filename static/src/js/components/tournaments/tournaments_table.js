@@ -66,10 +66,11 @@ export default class TournamentsTable extends React.Component {
 
   saveNewTournament() {
     this.setState({ displayModal: false, displayFeedbackModal: true });
-    const { WizardStore } = this.props.stores;
-    WizardStore.createNewTournament().then((feedback) => {
-      if (feedback) {
+    const { WizardStore, TournamentsStore } = this.props.stores;
+    WizardStore.createNewTournament().then((response) => {
+      if (response) {
         this.setState({ feedbackText: 'Tournament created Successfully!' });
+        TournamentsStore.addCreatedTournament(response);
       } else {
         this.setState({ feedbackText: 'Failed to create tournament!' });
       }
@@ -160,7 +161,12 @@ export default class TournamentsTable extends React.Component {
     const createRow = (item, index) => (
       <TableRow key={index}>
         <TableRowColumn>
-          <Link to={{ pathname: `/tournament/${item.id}`, state: { tournamentName: item.name } }}>
+          <Link
+            to={{
+              pathname: `/tournament/${item.id}`,
+              state: { tournamentName: item.name },
+            }}
+          >
             <div style={nameStyle} onClick={() => this.onLinkClick(item.id)}>
               {item.name}
             </div>

@@ -269,7 +269,7 @@ export default class Draws extends React.Component {
                   <a key={index}>{category.category}</a>
 
                   <FlatButton
-                    label="Display Draw"
+                    label="Generate Draw"
                     primary={true}
                     onClick={() => {
                       this.setState({ isLoading: true });

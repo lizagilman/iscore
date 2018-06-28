@@ -39,11 +39,11 @@ class RankingsStore {
   @action
   createNewRankingList() {
     const newRankingList = this.rankingListToCreate;
-    return Promise.resolve(createRankingListApi(newRankingList).then((response) => {
-      if (response) {
-        return Promise.resolve(uploadRankingListFileApi(response.id, this.fileToUpload).then((response) => {
+    return Promise.resolve(createRankingListApi(newRankingList).then((rankingList) => {
+      if (rankingList) {
+        return Promise.resolve(uploadRankingListFileApi(rankingList.id, this.fileToUpload).then((response) => {
           if (response.status < 400) {
-            return true;
+            return rankingList;
           }
           return false;
         }));
@@ -92,6 +92,11 @@ class RankingsStore {
   };
 
   @action setFileToUpload = file => (this.fileToUpload = file);
+
+  @action
+  addCreatedRankingList = (rankingList) => {
+    this.allRankings.push(rankingList);
+  };
 }
 
 const rankingsStore = new RankingsStore();

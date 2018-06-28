@@ -168,7 +168,7 @@ class Tournaments(models.Model):
     registration_start_date = models.DateTimeField(null=True, blank=True)
     registration_end_date = models.DateTimeField(null=True, blank=True)
     address = models.CharField(max_length=300, null=True, blank=True)
-    status = models.CharField(max_length=300, null=True, blank=True)
+    status = models.CharField(max_length=300, null=True, blank=True,default="Created")
     manager = models.ForeignKey(
         'Tournament_Managers', on_delete=models.CASCADE)
     has_schedule = models.BooleanField(default=False)

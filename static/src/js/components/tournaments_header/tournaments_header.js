@@ -43,9 +43,9 @@ const styles = {
   },
   menuIcon: {
     // padding: '-12px',
-    color: "white",
-    width: "53px",
-    height: "55px"
+    color: 'white',
+    width: '53px',
+    height: '55px',
   },
 
   coachTitleStyle: {
@@ -68,9 +68,9 @@ const styles = {
     fontSize: '3em',
   },
   coachAppBar: {
-    flexWrap: "wrap",
-    lineHeight: "4em",
-    paddingRight: "70px"
+    flexWrap: 'wrap',
+    lineHeight: '4em',
+    paddingRight: '70px',
   },
   tabs: {
     width: '100%',
@@ -83,15 +83,15 @@ const styles = {
   },
 
   orgAppBar: {
-    paddingTop:'1%',
+    paddingTop: '1%',
     height: '10em',
   },
   managerAppBar: {
-    paddingTop:'1%',
+    paddingTop: '1%',
     height: '10em',
   },
   umpireAppBar: {
-    paddingTop:'1%',
+    paddingTop: '1%',
     height: '10em',
   },
   menuItem: {
@@ -115,7 +115,7 @@ class ManagerHeader extends React.Component {
       umpire: false,
       goTo: false,
       open: false,
-        goToReg:false,
+      goToReg: false,
     };
   }
   logOut = () => {
@@ -129,26 +129,26 @@ class ManagerHeader extends React.Component {
     localStorage.removeItem('type');
     window.location.replace('/');
   };
-  handleToggle = e => {
+  handleToggle = (e) => {
     e.preventDefault();
 
     this.setState(
       prevState => ({
-        open: !prevState.open
+        open: !prevState.open,
       }),
       () => {
-        console.log("open is: ", this.state.open);
-      }
+        console.log('open is: ', this.state.open);
+      },
     );
   };
   handleCallToRouter = (value) => {
     this.props.history.push(value);
   };
-  goToSchedule = e => {
+  goToSchedule = (e) => {
     this.setState({ goTo: true });
     this.handleToggle(e);
   };
-  goToRegistration= e =>{
+  goToRegistration = (e) => {
     this.setState({ goToReg: true });
     this.handleToggle(e);
   };
@@ -211,8 +211,8 @@ class ManagerHeader extends React.Component {
               {this.state.open ? <Close /> : <Menu />}
             </IconButton>
           }
-          anchorOrigin={{ horizontal: "right", vertical: "top" }}
-          targetOrigin={{ horizontal: "right", vertical: "top" }}
+          anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
+          targetOrigin={{ horizontal: 'right', vertical: 'top' }}
           onClick={e => this.handleToggle(e)}
           style={styles.menuButton}
         />
@@ -234,7 +234,7 @@ class ManagerHeader extends React.Component {
             label="schedule"
             onClick={e => this.goToSchedule(e)}
           />
-           <FlatButton
+          <FlatButton
             style={styles.drawerElementsStyle}
             labelStyle={styles.drawerElementsLabel}
             label="players registration"
@@ -262,7 +262,11 @@ class ManagerHeader extends React.Component {
         <AppBar
           title={
             localStorage.type != 'coach'
-              ? `Welcome ${this.props.first_name} ${this.props.last_name} - ${this.props.type}` : ''}
+              ? `Welcome ${this.props.first_name} ${this.props.last_name} - ${
+                  this.props.type
+                }`
+              : ''
+          }
           titleStyle={localStorage.type != 'coach' ? styles.titleStyle : ''}
           style={
             this.props.type === 'Coach'
@@ -307,12 +311,12 @@ class ManagerHeader extends React.Component {
           {this.state.goTo && !this.state.open ? (
             <Redirect to="/coach/tournaments" />
           ) : (
-            ""
+            ''
           )}
           {this.state.goToReg && !this.state.open ? (
             <Redirect to="/coach" />
           ) : (
-            ""
+            ''
           )}
         </AppBar>
         <div>

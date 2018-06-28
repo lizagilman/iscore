@@ -100,7 +100,7 @@ export default class LogIn extends React.Component {
       alreadyUmpire: false,
       alreadyManager: false,
       alreadyOrg: false,
-      alreadyCoach: false
+      alreadyCoach: false,
     };
     this.setUserId = this.setUserId.bind(this);
     this.setToken = this.setToken.bind(this);
@@ -113,13 +113,13 @@ export default class LogIn extends React.Component {
     this.setLocalSLastName = this.setLocalSLastName.bind(this);
   }
   componentWillMount() {
-    if (localStorage.type === "manager") {
+    if (localStorage.type === 'manager') {
       this.setState({ alreadyManager: true });
-    } else if (localStorage.type === "coach") {
+    } else if (localStorage.type === 'coach') {
       this.setState({ alreadyCoach: true });
-    } else if (localStorage.type === "umpire") {
+    } else if (localStorage.type === 'umpire') {
       this.setState({ alreadyUmpire: true });
-    } else if (localStorage.type === "organization") {
+    } else if (localStorage.type === 'organization') {
       this.setState({ alreadyOrg: true });
     }
   }
@@ -474,7 +474,7 @@ export default class LogIn extends React.Component {
         {this.state.alreadyUmpire ? (
           <Redirect
             to={{
-              pathname: "/umpire/tournaments"
+              pathname: '/umpire/tournaments',
             }}
           />
         ) : (
@@ -483,7 +483,7 @@ export default class LogIn extends React.Component {
         {this.state.alreadyManager ? (
           <Redirect
             to={{
-              pathname: "/tournaments"
+              pathname: '/tournaments',
             }}
           />
         ) : (
@@ -492,7 +492,7 @@ export default class LogIn extends React.Component {
         {this.state.alreadyCoach ? (
           <Redirect
             to={{
-              pathname: "/coach"
+              pathname: '/coach',
             }}
           />
         ) : (
@@ -501,7 +501,7 @@ export default class LogIn extends React.Component {
         {this.state.alreadyOrg ? (
           <Redirect
             to={{
-              pathname: "/rankings"
+              pathname: '/rankings',
             }}
           />
         ) : (
