@@ -263,7 +263,7 @@ body {
 }
 
 .stage {
-  background-color: rgba(0, 150, 136, 0.32);
+  background-color: rgba(0, 150, 136, 0.46);
   margin: 10px;
   text-align: center;
   line-height: 75px;
@@ -274,7 +274,6 @@ body {
   display: inline-block;
   width: 13%;
   color: #ffffff;
-  /*color: #ff4081;*/
   font-weight: bold;
 }
 
@@ -330,11 +329,9 @@ body {
 
 #breadcrumbs {
   list-style-type: none;
+  margin-top: 1.5%
 }
 
-#breadcrumbs:first-child {
-
-}
 
 #breadcrumbs li{
   float:  left;

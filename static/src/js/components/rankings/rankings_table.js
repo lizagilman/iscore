@@ -58,9 +58,10 @@ export default class RankingsTable extends React.Component {
   saveNewRankingList() {
     this.setState({ displayModal: false, displayFeedbackModal: true });
     const { RankingsStore } = this.props.stores;
-    RankingsStore.createNewRankingList().then((feedback) => {
-      if (feedback) {
+    RankingsStore.createNewRankingList().then((response) => {
+      if (response) {
         this.setState({ feedbackText: 'Ranking list created Successfully!' });
+        RankingsStore.addCreatedRankingList(response);
       } else {
         this.setState({ feedbackText: 'Failed to create ranking list!' });
       }

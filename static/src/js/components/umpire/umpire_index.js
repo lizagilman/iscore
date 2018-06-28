@@ -19,7 +19,6 @@ class LiveMatch extends React.Component {
 
     this.state = {
       startDisabled: false,
-      serving: false,
       intervalId: null,
       startTime: false,
       currentCount: null,
@@ -74,35 +73,33 @@ class LiveMatch extends React.Component {
   startMatch = () => {
     const intervalId = setInterval(this.timer, 1000);
     const date = new Date();
-    this.setState({ date: date });
+    this.setState({ date });
     this.setState({
-      intervalId: intervalId,
+      intervalId,
       startTime: true,
-      startDisabled: true
+      startDisabled: true,
     });
   };
 
   timer = () => {
-    let curr = new Date();
-    let newTime = new Date();
+    const curr = new Date();
+    const newTime = new Date();
     newTime.setSeconds(curr.getSeconds() - this.state.date.getSeconds());
     newTime.setMinutes(curr.getMinutes() - this.state.date.getMinutes());
     newTime.setHours(curr.getHours() - this.state.date.getHours());
-    let timeStr =
-      newTime.getHours() +
-      ":" +
-      newTime.getMinutes() +
-      ":" +
-      newTime.getSeconds();
-    this.setState({ currentCount: timeStr }, () => {
-      console.log("currentCount", this.state.currentCount);
-    });
+    const timeStr =
+      `${newTime.getHours()
+      }:${
+        newTime.getMinutes()
+      }:${
+        newTime.getSeconds()}`;
+    this.setState({ currentCount: timeStr });
     const newTimeToSend = this.state.score;
     newTimeToSend.currentTime = timeStr;
     this.setState({ score: newTimeToSend });
     this.updateLiveScore(newTimeToSend);
   };
-  update_state = data => {
+  update_state = (data) => {
     this.setState(data);
   };
 
@@ -115,6 +112,9 @@ class LiveMatch extends React.Component {
 
     getPlayerIdByPlayerName(match.player1).then((response) => {
       LiveScore.PLAYER_1 = response[0].id;
+      const score = this.state.score;
+      score.serving = LiveScore.PLAYER_1;
+      this.setState({ score });
     });
 
     getPlayerIdByPlayerName(match.player2).then((response) => {
@@ -301,13 +301,11 @@ class LiveMatch extends React.Component {
 
   updateWinner(playerId) {
     this.setState({ displayFeedbackModal: true, startTime: false });
-    updateMatchWinnerApi(this.state.score.match_id, playerId).then(
-      responseUpdate => {
-        responseUpdate.status > 400
-          ? this.setState({ feedbackText: "Failed to update winner!" })
-          : this.setState({ feedbackText: "winner updated!" });
-      }
-    );
+    updateMatchWinnerApi(this.state.score.match_id, playerId).then((responseUpdate) => {
+      responseUpdate.status > 400
+        ? this.setState({ feedbackText: 'Failed to update winner!' })
+        : this.setState({ feedbackText: 'winner updated!' });
+    });
   }
 
   closeFeedbackModal(e) {
@@ -594,14 +592,16 @@ class LiveMatch extends React.Component {
                   <h3>
                     {this.state.score.currentTime
                       ? this.state.score.currentTime
-                      : this.state.currentCount ? this.state.currentCount : ""}
+                      : this.state.currentCount ? this.state.currentCount : ''}
                   </h3>
                 </div>
                 <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                   <RaisedButton
                     label="Start Match"
                     secondary={true}
-                    disabled={this.state.startDisabled || this.state.score.currentTime}
+                    disabled={
+                      this.state.startDisabled || this.state.score.currentTime
+                    }
                     labelStyle={LiveScore.styles.start}
                     onClick={() => this.startMatch()}
                   />

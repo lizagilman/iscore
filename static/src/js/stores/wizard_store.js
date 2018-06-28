@@ -26,7 +26,7 @@ class WizardStore {
   createNewTournament = () =>
     Promise.resolve(createTournamentApi(this.tournament).then((response) => {
       if (response) {
-        return true;
+        return response;
       }
       this.tournament = initialState;
       return false;

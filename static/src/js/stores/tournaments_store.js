@@ -9,10 +9,11 @@ class TournamentsStore {
   @observable allTournaments = [];
   @observable TournamentsByManager = [];
   @action
-  fetchAllTournaments = () => Promise.resolve(getAllTournamentsApi().then((tournamentsJson) => {
-    this.allTournaments = tournamentsJson;
-    return this.allTournaments;
-  }));
+  fetchAllTournaments = () =>
+    Promise.resolve(getAllTournamentsApi().then((tournamentsJson) => {
+      this.allTournaments = tournamentsJson;
+      return this.allTournaments;
+    }));
 
   @action
   fetchTournamentsByManagerId = id =>
@@ -32,6 +33,11 @@ class TournamentsStore {
   getSingleTournament = (id) => {
     const singleTournament = this.allTournaments.filter(tournament => tournament.id === id);
     return singleTournament.length ? singleTournament[0] : false;
+  };
+
+  @action
+  addCreatedTournament = (tournament) => {
+    this.allTournaments.push(tournament);
   };
 }
 
