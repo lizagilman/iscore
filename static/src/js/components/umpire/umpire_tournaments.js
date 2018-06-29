@@ -12,7 +12,6 @@ import {
 } from 'material-ui/Table';
 import Spinner from '../spinner/spinner';
 import MainCard from '../main_card/main_card_index';
-import UmpireMatches from './umpire_matches';
 
 const nameStyle = {
   paddingRight: '100px',
@@ -43,13 +42,6 @@ export default class UmpireTournaments extends React.Component {
 
     const selectedTournament = UmpireStore.getSingleTournament(id);
     UmpireStore.setCurrentTournament(selectedTournament);
-
-    // this.props.setUrlContent(
-    //   e,
-    //   '/schedule',
-    //   `/umpire/tournament/${id}/matches`,
-    //   'UmpireMatches',
-    // );
   }
 
   componentWillMount() {

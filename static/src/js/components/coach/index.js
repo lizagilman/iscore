@@ -109,6 +109,7 @@ export default class CoachPage extends React.Component {
     this.handleOptionsSubmit = this.handleOptionsSubmit.bind(this);
     this.buttonClicked = this.buttonClicked.bind(this);
     this.registerPlayers = this.registerPlayers.bind(this);
+    this.uncheckSelected = this.uncheckSelected.bind(this);
     this.state = {
       coach_name: 'Haim',
       first_name: this.props.location.firstName,
@@ -214,7 +215,32 @@ export default class CoachPage extends React.Component {
       self.setState({ optionsPlayers: playdoc });
     }
   }
-
+  uncheckSelected() {
+    if (this.state.players && this.state.is_cat === true) {
+      console.log('in createPlayerOptions', this.state.players);
+      const self = this;
+      const playdoc = [];
+      this.state.players
+        ? this.state.players.map((player, index) =>
+          playdoc.push(<MyCheckbox
+                contentEditable={true}
+                ref={(instance) => {
+                  this.child = instance;
+                }}
+                label={player.name}
+                value={player.id}
+                changed={(o) => {
+                  const playersSelection = self.state.playersSelection;
+                  playersSelection[o.playerId] = o.isChecked;
+                  self.setState({ playersSelection });
+                }}
+                uncheck={true}
+                submit={false}
+              />))
+        : false;
+      self.setState({ optionsPlayers: playdoc });
+    }
+  }
   handleChangeTour = (value) => {
     console.log('tour selected: ', value);
     this.setState({ tournamentSelected: value });
@@ -247,6 +273,7 @@ export default class CoachPage extends React.Component {
     if (selectedPlayers.length === 0) {
       return this.handleOpen('No players were selected.');
     }
+    this.uncheckSelected();
   };
 
   registerPlayers(playerId) {

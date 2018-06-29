@@ -147,7 +147,7 @@ export default class UmpireMatches extends React.Component {
             }}
           >
             <div onClick={e => this.onLinkClick(match.id, e)}>
-              <FlatButton label="Start Match" primary={true} />
+              <FlatButton label={localStorage.type == 'umpire' ? 'Start Match' : 'View' } primary={true} />
             </div>
           </Link>
         </TableRowColumn>
