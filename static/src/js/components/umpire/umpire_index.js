@@ -93,6 +93,7 @@ class LiveMatch extends React.Component {
         newTime.getMinutes()
       }:${
         newTime.getSeconds()}`;
+
     this.setState({ currentCount: timeStr });
     const newTimeToSend = this.state.score;
     newTimeToSend.currentTime = timeStr;
@@ -344,38 +345,46 @@ class LiveMatch extends React.Component {
             >
               <div class="row">
                 <div className="col-md-3">
-                  <FloatingActionButton
-                    backgroundColor={'red'}
-                    mini={true}
-                    className={LiveScore.styles.minusButton}
-                    onClick={() =>
-                      this.updateScore(
-                        LiveScore.PLAYER_1,
-                        this.state.score.p1_points,
-                        LiveScore.SUBTRACT,
-                      )
-                    }
-                  >
-                    <h1>-</h1>
-                  </FloatingActionButton>
+                  {localStorage.type == 'umpire' ? (
+                    <FloatingActionButton
+                      backgroundColor={'red'}
+                      mini={true}
+                      className={LiveScore.styles.minusButton}
+                      onClick={() =>
+                        this.updateScore(
+                          LiveScore.PLAYER_1,
+                          this.state.score.p1_points,
+                          LiveScore.SUBTRACT,
+                        )
+                      }
+                    >
+                      <h1>-</h1>
+                    </FloatingActionButton>
+                  ) : (
+                    ''
+                  )}
                 </div>
                 <div class="col-md-6">
                   <h3>{match.player1}</h3>
                 </div>
                 <div className="col-md-3">
-                  <FloatingActionButton
-                    backgroundColor={'rgb(0, 150, 136)'}
-                    className={LiveScore.styles.addButton}
-                    onClick={() =>
-                      this.updateScore(
-                        LiveScore.PLAYER_1,
-                        this.state.score.p1_points,
-                        LiveScore.ADD,
-                      )
-                    }
-                  >
-                    <ContentAdd />
-                  </FloatingActionButton>
+                  {localStorage.type == 'umpire' ? (
+                    <FloatingActionButton
+                      backgroundColor={'rgb(0, 150, 136)'}
+                      className={LiveScore.styles.addButton}
+                      onClick={() =>
+                        this.updateScore(
+                          LiveScore.PLAYER_1,
+                          this.state.score.p1_points,
+                          LiveScore.ADD,
+                        )
+                      }
+                    >
+                      <ContentAdd />
+                    </FloatingActionButton>
+                  ) : (
+                    ''
+                  )}
                 </div>
                 <div class="col-md-12">
                   <Paper style={LiveScore.styles.paperScore}>
@@ -421,38 +430,46 @@ class LiveMatch extends React.Component {
             >
               <div class="row">
                 <div className="col-md-3">
-                  <FloatingActionButton
-                    backgroundColor={'red'}
-                    mini={true}
-                    className={LiveScore.styles.minusButton}
-                    onClick={() =>
-                      this.updateScore(
-                        LiveScore.PLAYER_2,
-                        this.state.score.p2_points,
-                        LiveScore.SUBTRACT,
-                      )
-                    }
-                  >
-                    <h1>-</h1>
-                  </FloatingActionButton>
+                  {localStorage.type == 'umpire' ? (
+                    <FloatingActionButton
+                      backgroundColor={'red'}
+                      mini={true}
+                      className={LiveScore.styles.minusButton}
+                      onClick={() =>
+                        this.updateScore(
+                          LiveScore.PLAYER_2,
+                          this.state.score.p2_points,
+                          LiveScore.SUBTRACT,
+                        )
+                      }
+                    >
+                      <h1>-</h1>
+                    </FloatingActionButton>
+                  ) : (
+                    ''
+                  )}
                 </div>
                 <div class="col-md-6">
                   <h3>{match.player2}</h3>
                 </div>
                 <div className="col-md-3">
-                  <FloatingActionButton
-                    backgroundColor={'rgb(0, 150, 136)'}
-                    className={LiveScore.styles.addButton}
-                    onClick={() =>
-                      this.updateScore(
-                        LiveScore.PLAYER_2,
-                        this.state.score.p2_points,
-                        LiveScore.ADD,
-                      )
-                    }
-                  >
-                    <ContentAdd />
-                  </FloatingActionButton>
+                  {localStorage.type == 'umpire' ? (
+                    <FloatingActionButton
+                      backgroundColor={'rgb(0, 150, 136)'}
+                      className={LiveScore.styles.addButton}
+                      onClick={() =>
+                        this.updateScore(
+                          LiveScore.PLAYER_2,
+                          this.state.score.p2_points,
+                          LiveScore.ADD,
+                        )
+                      }
+                    >
+                      <ContentAdd />
+                    </FloatingActionButton>
+                  ) : (
+                    ''
+                  )}
                 </div>
                 <div class="col-md-12">
                   <Paper style={LiveScore.styles.paperScore}>
@@ -596,15 +613,21 @@ class LiveMatch extends React.Component {
                   </h3>
                 </div>
                 <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                  <RaisedButton
-                    label="Start Match"
-                    secondary={true}
-                    disabled={
-                      this.state.startDisabled || this.state.score.currentTime
-                    }
-                    labelStyle={LiveScore.styles.start}
-                    onClick={() => this.startMatch()}
-                  />
+
+                  {localStorage.type == 'umpire' ? (
+                    <RaisedButton
+                      label="Start Match"
+                      secondary={true}
+                      disabled={
+                        this.state.startDisabled || this.state.score.currentTime
+                      }
+                      labelStyle={LiveScore.styles.start}
+                      onClick={() => this.startMatch()}
+                    />
+                  ) : (
+                    ''
+                  )}
+
                 </div>
               </div>
             </div>

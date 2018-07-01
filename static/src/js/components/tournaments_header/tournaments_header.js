@@ -148,7 +148,9 @@ class ManagerHeader extends React.Component {
     this.setState({ goTo: true });
     this.handleToggle(e);
   };
+
   goToRegistration = (e) => {
+
     this.setState({ goToReg: true });
     this.handleToggle(e);
   };

@@ -43,6 +43,7 @@ export default class MyChackbox extends React.Component {
     super(props);
 
     this.updateCheck = this.updateCheck.bind(this);
+    this.toggleChecked = this.toggleChecked.bind(this);
 
     this.changed = this.props.changed;
 
@@ -53,7 +54,14 @@ export default class MyChackbox extends React.Component {
     };
   }
 
-
+  toggleChecked() {
+    this.setState(oldState => ({
+      checked: !oldState.checked,
+    }));
+  }
+  uncheck() {
+    this.setState({ checked: false });
+  }
   updateCheck(evt, isChecked) {
     console.log(`update check player id${this.state.value}`);
 
@@ -63,10 +71,7 @@ export default class MyChackbox extends React.Component {
         playerId: this.state.value,
       });
     }
-
-    this.setState(oldState => ({
-      checked: !oldState.checked,
-    }));
+    this.toggleChecked();
   }
   render() {
     return (
@@ -75,11 +80,11 @@ export default class MyChackbox extends React.Component {
           <Column span="12">
             <div style={styles.checkboxDiv}>
               <Checkbox
-                 checkedIcon={<CheckCircle/>}
-                  uncheckedIcon={<Done/>}
-                 iconStyle={styles.checkbox}
+                checkedIcon={<CheckCircle />}
+                uncheckedIcon={<Done />}
+                iconStyle={styles.checkbox}
                 label={this.props.label}
-                checked={this.state.checked}
+                checked={this.props.uncheck ? false : this.state.checked}
                 value={this.state.value}
                 onCheck={(e, i) => this.updateCheck(e, i)}
               />
